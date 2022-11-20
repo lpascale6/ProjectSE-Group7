@@ -3,7 +3,7 @@ This is the repository for the project of Software Engineering of the group numb
 
 # Group members
 1. Lo Sapio Leonardo, l.losapio1@studenti.unisa.it, 0622702053
-2. Pascale Luigi, l.pascale6@studenti.unisa.it, TO BE ADDED
+2. Pascale Luigi, l.pascale6@studenti.unisa.it, 0622701895
 3. Pepe Paolo, p.pepe17@studenti.unisa.it, 0622702005
 4. Vicidomini Luigi, l.vicidomini11@studenti.unisa.it, 0622701949
 
