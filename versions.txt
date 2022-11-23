@@ -1,5 +1,0 @@
-Versioni:
-java: jdk 1.8 (Java 8)
-javafx: incluso con java 8
-netbeans: 15.0
-Scene Builder: ???
