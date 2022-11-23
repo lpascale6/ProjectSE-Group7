@@ -1,14 +1,70 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.image.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.geometry.*?>
 <?import java.lang.*?>
 <?import java.util.*?>
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="200" prefWidth="320" xmlns:fx="http://javafx.com/fxml/1" fx:controller="projectse_group7.FXMLDocumentController">
-    <children>
-        <Button layoutX="126" layoutY="90" text="Click Me!" onAction="#handleButtonAction" fx:id="button" />
-        <Label layoutX="126" layoutY="120" minHeight="16" minWidth="69" fx:id="label" />
-    </children>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="projectse_group7.FXMLDocumentController">
+   <children>
+      <VBox layoutX="250.0" layoutY="100.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="200.0" prefWidth="100.0" spacing="5.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
+         <children>
+            <ToolBar maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="150.0" prefWidth="990.0">
+               <items>
+                  <HBox spacing="10.0">
+                     <children>
+                        <TitledPane animated="false" collapsible="false" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="130.0" prefWidth="300.0" text="Shapes selection">
+                          <content>
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                 <children>
+                                    <HBox prefHeight="100.0" prefWidth="300.0" spacing="5.0">
+                                       <children>
+                                          <ToggleButton fx:id="lineToggleButton" mnemonicParsing="false" prefHeight="30.0" prefWidth="50.0" selected="true">
+                                             <graphic>
+                                                <Line endX="30.0" endY="-5.0" startY="5.0" />
+                                             </graphic>
+                                          </ToggleButton>
+                                          <ToggleButton fx:id="rectangleToggleButton" mnemonicParsing="false" prefHeight="30.0" prefWidth="50.0">
+                                             <graphic>
+                                                <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ffffff00" height="20.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                                             </graphic>
+                                          </ToggleButton>
+                                          <ToggleButton fx:id="ellipseToggleButton" mnemonicParsing="false" prefHeight="30.0" prefWidth="50.0">
+                                             <graphic>
+                                                <Ellipse fill="#ffffff00" radiusX="15.0" radiusY="10.0" stroke="BLACK" strokeType="INSIDE" />
+                                             </graphic>
+                                          </ToggleButton>
+                                       </children>
+                                       <padding>
+                                          <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                       </padding>
+                                    </HBox>
+                                 </children>
+                              </AnchorPane>
+                          </content>
+                        </TitledPane>
+                        <Separator orientation="VERTICAL" />
+                        <TitledPane animated="false" collapsible="false" maxHeight="-Infinity" prefHeight="130.0" prefWidth="300.0" text="Colors">
+                          <content>
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                          </content>
+                        </TitledPane>
+                        <Separator orientation="VERTICAL" />
+                        <TitledPane animated="false" collapsible="false" maxHeight="-Infinity" prefHeight="130.0" prefWidth="300.0" text="Tools">
+                          <content>
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                          </content>
+                        </TitledPane>
+                     </children>
+                  </HBox>
+               </items>
+            </ToolBar>
+            <Pane fx:id="drawingPane" prefHeight="600.0" prefWidth="200.0" style="-fx-border-color: gray;" />
+         </children>
+      </VBox>
+   </children>
 </AnchorPane>
