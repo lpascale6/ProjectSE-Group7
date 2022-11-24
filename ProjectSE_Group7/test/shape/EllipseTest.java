@@ -1,160 +1,234 @@
 package shape;
+
+import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import org.junit.*;
+import static org.junit.Assert.*;
 
 /**
  *
  * @author group7
  */
-public class Ellipse extends javafx.scene.shape.Ellipse {
+public class EllipseTest {
     
+    private Ellipse ellipse;
+
     /**
-     * Creates an empty instance of Ellipse.
-     */ 
-    public Ellipse() {
-        super();
-    }
-    
-    /**
-     * Creates an instance of Ellipse of the given size. 
-     * @param width width of the ellipse
-     * @param height height of the ellipse
-     */ 
-    public Ellipse(double width, double height) {
-        super(width, height);
-    }
-    
-    /**
-     * Creates an instance of Ellipse of the given position and size.
-     * @param hPosition the x coordinate of the center of the ellipse
-     * @param vPosition the y coordinate of the center of the ellipse
-     * @param width width of the ellipse
-     * @param height height of the ellipse
-     */ 
-    public Ellipse(double hPosition, double vPosition, double width, double height) {
-        super(hPosition, vPosition, width, height);
-    }
-    
-    /**
-     * Creates an instance of Ellipse of the given position, size and outline color.
-     * @param hPosition the x coordinate of the center of the ellipse
-     * @param vPosition the y coordinate of the center of the ellipse
-     * @param width width of the ellipse
-     * @param height height of the ellipse
-     * @param outlineColor the outline color of the shape
-     */ 
-    public Ellipse(double hPosition, double vPosition, double width, double height, Paint outlineColor) {
-        super(hPosition, vPosition, width, height);
-        this.setStroke(outlineColor);
-    }
-    
-    /**
-     * Creates an instance of Ellipse of the given position, size, outline and fill colors.
-     * @param hPosition the x coordinate of the center of the ellipse
-     * @param vPosition the y coordinate of the center of the ellipse
-     * @param width width of the ellipse
-     * @param height height of the ellipse
-     * @param outlineColor the outline color of the shape
-     * @param fillColor the internal color of the shape
+     * The set up of the test, 
+     * contains the operations that must be done only once before the test starts;
+     * It only contains the creation of an empty object Ellipse.
      */
-    public Ellipse(double hPosition, double vPosition, double width, double height, Paint outlineColor, Paint fillColor) {
-        super(hPosition, vPosition, width, height);
-        this.setStroke(outlineColor);
-        this.setFill(fillColor);
+    @Before
+    public void setUp() {
+        ellipse = new Ellipse();
+    }
+
+    /**
+     * Test of setCenterHorizontalPosition method,
+     * of class Ellipse, with zero, positive and negative values.
+     */  
+    @Test
+    public void testSetCenterHorizontalPosition() {
+        //zero
+        double hPosition = 0.0;
+        ellipse.setCenterHorizontalPosition(hPosition);
+        assertEquals(hPosition, ellipse.getCenterHorizontalPosition(), 0);   
+        //positive
+        hPosition = 5.0;
+        ellipse.setCenterHorizontalPosition(hPosition);
+        assertEquals(hPosition, ellipse.getCenterHorizontalPosition(), 0);   
+        //negative
+        hPosition = -5.0;
+        ellipse.setCenterHorizontalPosition(hPosition);
+        assertEquals(hPosition, ellipse.getCenterHorizontalPosition(), 0); 
     }
     
     /**
-     * Sets the value of the property centerX (Horizontal position of the center).
-     * @param hPosition the x coordinate of the center of the ellipse  
-     */ 
-    public void setCenterHorizontalPosition(double hPosition) {
-        super.setCenterX(hPosition);
+     * Test of getCenterHorizontalPosition method,
+     * of class Ellipse.
+     */  
+    @Test
+    public void testGetCenterHorizontalPosition() {
+        double hPosition = 1.0;
+        double vPosition = 0.0;
+        double width = 0.0;
+        double height = 0.0;
+        ellipse = new Ellipse(hPosition, vPosition, width, height);
+        double expectedHPosition = 1.0;
+        assertEquals(expectedHPosition, ellipse.getCenterHorizontalPosition(), 0); 
+    }
+
+    /**
+     * Test of setCenterVerticalPosition method,
+     * of class Ellipse, with zero, positive and negative values.
+     */  
+    @Test
+    public void testSetCenterVerticalPosition() {
+        //zero
+        double vPosition = 0.0;
+        ellipse.setCenterVerticalPosition(vPosition);
+        assertEquals(vPosition, ellipse.getCenterVerticalPosition(), 0);
+        //positive
+        vPosition = 10.0;
+        ellipse.setCenterVerticalPosition(vPosition);
+        assertEquals(vPosition, ellipse.getCenterVerticalPosition(), 0); 
+        //negative
+        vPosition = -10.0;
+        ellipse.setCenterVerticalPosition(vPosition);
+        assertEquals(vPosition, ellipse.getCenterVerticalPosition(), 0);
+    }
+
+    /**
+     * Test of getCenterVerticalPosition method,
+     * of class Ellipse.
+     */  
+    @Test
+    public void testGetCenterVerticalPosition() {
+        double hPosition = 0.0;
+        double vPosition = 1.0;
+        double width = 0.0;
+        double height = 0.0;
+        ellipse = new Ellipse(hPosition, vPosition, width, height);
+        double expectedVPosition = 1.0;
+        assertEquals(expectedVPosition, ellipse.getCenterVerticalPosition(), 0); 
     }
     
     /**
-     * Returns the value of the property centerX (Horizontal position of the center).
-     * @return 
+     * Test of setWidth method,
+     * of class Ellipse, with zero, positive and negative values.
+     */  
+    @Test
+    public void testSetWidth() {
+        //zero
+        double width = 0.0;
+        ellipse.setWidth(width);
+        assertEquals(width, ellipse.getWidth(), 0);
+        //positive
+        width = 15.0;
+        ellipse.setWidth(width);
+        assertEquals(width, ellipse.getWidth(), 0);
+        //negative
+        width = -15.0;
+        ellipse.setWidth(width);
+        assertEquals(width, ellipse.getWidth(), 0);  
+    }
+    
+    /**
+     * Test of getWidth method,
+     * of class Ellipse.
+     */  
+    @Test
+    public void testGetWidth() {
+        double width = 1.0;
+        double height = 0.0;
+        ellipse = new Ellipse(width, height);
+        double expectedWidth = 1.0;
+        assertEquals(expectedWidth, ellipse.getWidth(), 0); 
+    }
+
+    /**
+     * Test of setHeight method, 
+     * of class Ellipse, with zero, positive and negative values.
      */
-    public double getCenterHorizontalPosition() {
-        return super.getCenterX();
+    @Test
+    public void testSetHeight() {
+        //zero
+        double height = 0.0;
+        ellipse.setHeight(height);
+        assertEquals(height, ellipse.getHeight(), 0);
+        //positive
+        height = 20.0;
+        ellipse.setHeight(height);
+        assertEquals(height, ellipse.getHeight(), 0);
+        //negative
+        height = -20.0;
+        ellipse.setHeight(height);
+        assertEquals(height, ellipse.getHeight(), 0);
     }
     
     /**
-     * Sets the value of the property centerY (Vertical position of the center).
-     * @param vPosition the y coordinate of the center of the ellipse
+     * Test of getHeight method,
+     * of class Ellipse.
+     */  
+    @Test
+    public void testGetHeight() {
+        double width = 0.0;
+        double height = 1.0;
+        ellipse = new Ellipse(width, height);
+        double expectedHeight = 1.0;
+        assertEquals(expectedHeight, ellipse.getHeight(), 0); 
+    }
+
+    /**
+     * Test of setOutlineColor method, 
+     * of class Ellipse, with null value and two test values.
      */
-    public void setCenterVerticalPosition(double vPosition) {
-        super.setCenterY(vPosition);
+    @Test
+    public void testSetOutlineColor() {
+        //null
+        Paint outlineColor = null;
+        ellipse.setOutlineColor(outlineColor);
+        assertEquals(outlineColor, ellipse.getOutlineColor());
+        //value 1
+        outlineColor = Color.BLUE;
+        ellipse.setOutlineColor(outlineColor);
+        assertEquals(outlineColor, ellipse.getOutlineColor());
+        //value 2
+        outlineColor = Color.RED;
+        ellipse.setOutlineColor(outlineColor);
+        assertEquals(outlineColor, ellipse.getOutlineColor());
     }
     
     /**
-     * Returns the value of the property centerY (Vertical position of the center).
-     * @return 
+     * Test of getOutlineColor method,
+     * of class Ellipse.
+     */  
+    @Test
+    public void testGetOutlineColor() {
+        double hPosition = 0.0;
+        double vposition = 0.0;
+        double width = 0.0;
+        double height = 0.0;
+        Paint outlineColor = Color.BLUE;
+        ellipse = new Ellipse(hPosition, vposition, width, height, outlineColor);
+        Paint expectedOutlineColor = Color.BLUE;
+        assertEquals(expectedOutlineColor, ellipse.getOutlineColor()); 
+    }
+
+    /**
+     * Test of setFillColor method, 
+     * of class Ellipse, with null value and two test values.
      */
-    public double getCenterVerticalPosition() {
-        return super.getCenterY();
+    @Test
+    public void testSetFillColor() {
+        //null
+        Paint fillColor = null;
+        ellipse.setFillColor(fillColor);
+        assertEquals(fillColor, ellipse.getFillColor());
+        //value 1
+        fillColor = Color.BLUE;
+        ellipse.setFillColor(fillColor);
+        assertEquals(fillColor, ellipse.getFillColor());
+        //value 2
+        fillColor = Color.RED;
+        ellipse.setFillColor(fillColor);
+        assertEquals(fillColor, ellipse.getFillColor());
     }
     
     /**
-     * Sets the value of the property radiusX (width of the ellipse).
-     * @param width width of the ellipse
-     */
-    public void setWidth(double width) {
-        super.setRadiusX(width);
-    }
-    
-    /**
-     * Returns the value of the property radiusX (width of the ellipse).
-     * @return 
-     */
-    public double getWidth() {
-        return super.getRadiusX();
-    }
-    
-    /**
-     * Sets the value of the property radiusY (height of the ellipse).
-     * @param height height of the ellipse
-     */
-    public void setHeight(double height) {
-        super.setRadiusY(height);
-    }
-    
-    /**
-     * Returns the value of the property radiusY (height of the ellipse).
-     * @return 
-     */
-    public double getHeight() {
-        return super.getRadiusY();
-    }
-    
-    /**
-     * Sets the value of the property stroke (outline color of the ellipse).
-     * @param outlineColor outline color of the ellipse
-     */
-    public void setOutlineColor(Paint outlineColor) {
-        super.setStroke(outlineColor);
-    }
-    
-    /**
-     * Returns the value of the property stroke (outline color of the ellipse).
-     * @return 
-     */
-    public Paint getOutlineColor() {
-        return super.getStroke();
-    }
-    
-    /**
-     * Sets the value of the property fill (internal color of the ellipse).
-     * @param fillColor internal color of the ellipse
-     */
-    public void setFillColor(Paint fillColor) {
-        super.setFill(fillColor);
-    }
-    
-    /**
-     * Returns the value of the property fill (internal color of the ellipse).
-     * @return 
-     */
-    public Paint getFillColor() {
-        return super.getFill();
+     * Test of getFillColor method,
+     * of class Ellipse.
+     */  
+    @Test
+    public void getFillColor() {
+        double hPosition = 0.0;
+        double vposition = 0.0;
+        double width = 0.0;
+        double height = 0.0;
+        Paint outlineColor = null;
+        Paint fillColor = Color.BLUE;
+        ellipse = new Ellipse(hPosition, vposition, width, height, outlineColor, fillColor);
+        Paint expectedFillColor = Color.BLUE;
+        assertEquals(expectedFillColor, ellipse.getFillColor()); 
     }
 }
