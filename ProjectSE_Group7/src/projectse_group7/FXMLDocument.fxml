@@ -50,7 +50,37 @@
                         <Separator orientation="VERTICAL" />
                         <TitledPane animated="false" collapsible="false" maxHeight="-Infinity" prefHeight="130.0" prefWidth="305.0" text="Colors">
                           <content>
-                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                 <children>
+                                    <HBox prefHeight="100.0" spacing="5.0">
+                                       <children>
+                                          <VBox prefHeight="200.0" prefWidth="100.0" spacing="2.5">
+                                             <children>
+                                                <Label text="Outline Color" />
+                                                <ToggleButton fx:id="outlineColorToggleButton" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" selected="true" />
+                                                <Label text="Fill Color" />
+                                                <ToggleButton fx:id="fillColorToggleButton" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" />
+                                             </children>
+                                             <padding>
+                                                <Insets left="5.0" />
+                                             </padding>
+                                          </VBox>
+                                          <Separator orientation="VERTICAL" prefHeight="200.0" />
+                                          <ScrollPane hbarPolicy="NEVER" prefHeight="200.0" prefWidth="200.0">
+                                            <content>
+                                              <AnchorPane prefHeight="100.0" prefWidth="180.0">
+                                                   <children>
+                                                      <Button layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#setRedColor" text="Red" />
+                                                      <Button layoutX="14.0" layoutY="61.0" mnemonicParsing="false" onAction="#setBlueColor" text="Blue" />
+                                                      <Button layoutX="114.0" layoutY="14.0" mnemonicParsing="false" onAction="#setYellowColor" text="Yellow" />
+                                                      <Button layoutX="114.0" layoutY="61.0" mnemonicParsing="false" onAction="#setBlackColor" text="Black" />
+                                                   </children>
+                                                </AnchorPane>
+                                            </content>
+                                          </ScrollPane>
+                                       </children>
+                                    </HBox>
+                                 </children></AnchorPane>
                           </content>
                         </TitledPane>
                         <Separator orientation="VERTICAL" />

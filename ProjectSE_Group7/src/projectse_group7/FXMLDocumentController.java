@@ -2,6 +2,7 @@ package projectse_group7;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ToggleButton;
@@ -25,13 +26,24 @@ public class FXMLDocumentController implements Initializable {
     private ToggleButton ellipseToggleButton;
     @FXML
     private Pane drawingPane;
-
+    @FXML
+    private ToggleButton outlineColorToggleButton;
+    @FXML
+    private ToggleButton fillColorToggleButton;
+   
     // toggle group variable, useful for selecting only 
     // once toggle button at a time
     ToggleGroup shapeToggleGroup;
+    
+    // color selection section variables
+    ToggleGroup colorToggleGroup;
+    Color selectedOutlineColor = Color.BLACK;
+    Color selectedFillColor = Color.WHITE;
 
+    // drawing variables
     Shape creatingShape;
     boolean isDrawing = false;
+    
 
     /**
      * Sets up all the toggle buttons in the "Shape selection" section by
@@ -51,6 +63,19 @@ public class FXMLDocumentController implements Initializable {
             }
         });
     }
+    
+    private void setupColorToggleButtons() {
+        colorToggleGroup = new ToggleGroup();
+        outlineColorToggleButton.setToggleGroup(colorToggleGroup);
+        fillColorToggleButton.setToggleGroup(colorToggleGroup);
+        
+        // to make sure that a toggle button in the group is always selected
+        colorToggleGroup.selectedToggleProperty().addListener((obsValue, oldValue, newValue) -> {
+            if (newValue == null) {
+                oldValue.setSelected(true);
+            }
+        });
+    }
 
     private void setupDrawingPane() {
 
@@ -64,6 +89,8 @@ public class FXMLDocumentController implements Initializable {
                         Line line = new Line();
                         line.setStartX(event.getX());
                         line.setStartY(event.getY());
+                        line.setStroke(selectedOutlineColor);
+                        
                         creatingShape = line;
                         //drawingPane.getChildren().add((Shape) line);
                         isDrawing = true;
@@ -83,6 +110,8 @@ public class FXMLDocumentController implements Initializable {
                     Rectangle rectangle = new Rectangle();
                     rectangle.setX(event.getX());
                     rectangle.setY(event.getY());
+                    rectangle.setStroke(selectedOutlineColor);
+                    rectangle.setFill(selectedFillColor);
 
                     drawingPane.getChildren().add((Shape) rectangle);
                     isDrawing = true;
@@ -124,13 +153,62 @@ public class FXMLDocumentController implements Initializable {
             event.consume();
         });
     }
-
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
         // setting up all toggle buttons
         setupShapeToggleButtons();
+        setupColorToggleButtons();
         setupDrawingPane();
+    }
+
+    @FXML
+    private void setRedColor(ActionEvent event) {
+        if(colorToggleGroup.getSelectedToggle() == outlineColorToggleButton) {
+            System.out.println("Outline color changed to RED");
+            selectedOutlineColor = Color.RED;
+        }
+        else {
+            System.out.println("Fill color changed to RED");
+            selectedFillColor = Color.RED;
+        }
+    }
+
+    @FXML
+    private void setBlueColor(ActionEvent event) {
+        if(colorToggleGroup.getSelectedToggle() == outlineColorToggleButton) {
+            System.out.println("Outline color changed to BLUE");
+            selectedOutlineColor = Color.BLUE;
+        }
+        else {
+            System.out.println("Fill color changed to BLUE");
+            selectedFillColor = Color.BLUE;
+        }
+    }
+
+    @FXML
+    private void setYellowColor(ActionEvent event) {
+        if(colorToggleGroup.getSelectedToggle() == outlineColorToggleButton) {
+            System.out.println("Outline color changed to YELLOW");
+            selectedOutlineColor = Color.YELLOW;
+        }
+        else {
+            System.out.println("Fill color changed to YELLLOW");
+            selectedFillColor = Color.YELLOW;
+        }
+    }
+
+    @FXML
+    private void setBlackColor(ActionEvent event) {
+        if(colorToggleGroup.getSelectedToggle() == outlineColorToggleButton) {
+            System.out.println("Outline color changed to BLACK");
+            selectedOutlineColor = Color.BLACK;
+        }
+        else {
+            System.out.println("Fill color changed to BLACK");
+            selectedFillColor = Color.BLACK;
+        }
     }
 
 }
