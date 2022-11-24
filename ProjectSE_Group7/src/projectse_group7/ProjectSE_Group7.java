@@ -19,6 +19,8 @@ public class ProjectSE_Group7 extends Application {
         Scene scene = new Scene(root);
         
         stage.setScene(scene);
+        stage.setTitle("Shape Draw Editor");
+        stage.setResizable(false);
         stage.show();
     }
 
