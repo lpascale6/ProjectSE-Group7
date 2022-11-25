@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.shape.*?>
 <?import javafx.geometry.*?>
@@ -9,15 +10,15 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="projectse_group7.FXMLDocumentController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="projectse_group7.FXMLDocumentController">
    <children>
       <VBox layoutX="250.0" layoutY="100.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="200.0" prefWidth="100.0" spacing="5.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
          <children>
-            <ToolBar maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="150.0" prefWidth="990.0">
+            <ToolBar maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="145.0" prefWidth="990.0">
                <items>
-                  <HBox spacing="10.0">
+                  <HBox spacing="12.0">
                      <children>
-                        <TitledPane animated="false" collapsible="false" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="130.0" prefWidth="305.0" text="Shapes selection">
+                        <TitledPane animated="false" collapsible="false" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="130.0" prefWidth="300.0" text="Shapes selection">
                           <content>
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                  <children>
@@ -27,16 +28,25 @@
                                              <graphic>
                                                 <Line endX="30.0" endY="-5.0" startY="5.0" />
                                              </graphic>
+                                             <tooltip>
+                                                <Tooltip text="Line" />
+                                             </tooltip>
                                           </ToggleButton>
                                           <ToggleButton fx:id="rectangleToggleButton" mnemonicParsing="false" prefHeight="30.0" prefWidth="50.0">
                                              <graphic>
-                                                <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ffffff00" height="20.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                                                <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ffffff80" height="20.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
                                              </graphic>
+                                             <tooltip>
+                                                <Tooltip text="Rectangle" />
+                                             </tooltip>
                                           </ToggleButton>
                                           <ToggleButton fx:id="ellipseToggleButton" mnemonicParsing="false" prefHeight="30.0" prefWidth="50.0">
                                              <graphic>
-                                                <Ellipse fill="#ffffff00" radiusX="15.0" radiusY="10.0" stroke="BLACK" strokeType="INSIDE" />
+                                                <Ellipse fill="#ffffff7e" radiusX="15.0" radiusY="10.0" stroke="BLACK" strokeType="INSIDE" />
                                              </graphic>
+                                             <tooltip>
+                                                <Tooltip text="Ellipse" />
+                                             </tooltip>
                                           </ToggleButton>
                                        </children>
                                        <padding>
@@ -48,43 +58,121 @@
                           </content>
                         </TitledPane>
                         <Separator orientation="VERTICAL" />
-                        <TitledPane animated="false" collapsible="false" maxHeight="-Infinity" prefHeight="130.0" prefWidth="305.0" text="Colors">
+                        <TitledPane animated="false" collapsible="false" maxHeight="-Infinity" prefHeight="130.0" prefWidth="300.0" text="Colors">
                           <content>
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                  <children>
-                                    <HBox prefHeight="100.0" spacing="5.0">
+                                    <HBox maxWidth="1.7976931348623157E308" prefHeight="100.0" spacing="5.0">
                                        <children>
-                                          <VBox prefHeight="200.0" prefWidth="100.0" spacing="2.5">
+                                          <VBox prefHeight="200.0" prefWidth="100.0" spacing="2.0">
                                              <children>
                                                 <Label text="Outline Color" />
-                                                <ToggleButton fx:id="outlineColorToggleButton" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" selected="true" />
+                                                <ToggleButton fx:id="outlineColorToggleButton" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" selected="true">
+                                                   <graphic>
+                                                      <Circle fx:id="outlineColorImage" radius="10.0" stroke="BLACK" strokeType="INSIDE" />
+                                                   </graphic>
+                                                </ToggleButton>
                                                 <Label text="Fill Color" />
-                                                <ToggleButton fx:id="fillColorToggleButton" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" />
+                                                <ToggleButton fx:id="fillColorToggleButton" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0">
+                                                   <graphic>
+                                                      <Circle fx:id="fillColorImage" fill="WHITE" radius="10.0" stroke="BLACK" strokeType="INSIDE" />
+                                                   </graphic>
+                                                </ToggleButton>
                                              </children>
                                              <padding>
                                                 <Insets left="5.0" />
                                              </padding>
                                           </VBox>
                                           <Separator orientation="VERTICAL" prefHeight="200.0" />
-                                          <ScrollPane hbarPolicy="NEVER" prefHeight="200.0" prefWidth="200.0">
-                                            <content>
-                                              <AnchorPane prefHeight="100.0" prefWidth="180.0">
+                                          <VBox spacing="2.0">
+                                             <children>
+                                                <Label text="Available colors" />
+                                                <VBox spacing="25.0">
                                                    <children>
-                                                      <Button layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#setRedColor" text="Red" />
-                                                      <Button layoutX="14.0" layoutY="61.0" mnemonicParsing="false" onAction="#setBlueColor" text="Blue" />
-                                                      <Button layoutX="114.0" layoutY="14.0" mnemonicParsing="false" onAction="#setYellowColor" text="Yellow" />
-                                                      <Button layoutX="114.0" layoutY="61.0" mnemonicParsing="false" onAction="#setBlackColor" text="Black" />
+                                                      <HBox layoutX="14.0" layoutY="14.0" spacing="10.0">
+                                                         <children>
+                                                            <Button layoutX="114.0" layoutY="61.0" mnemonicParsing="false" onAction="#setBlackColor" prefHeight="30.0" prefWidth="30.0">
+                                                               <graphic>
+                                                                  <Circle radius="10.0" stroke="BLACK" strokeType="INSIDE" />
+                                                               </graphic>
+                                                               <tooltip>
+                                                                  <Tooltip text="Black" />
+                                                               </tooltip>
+                                                            </Button>
+                                                            <Button mnemonicParsing="false" onAction="#setGreyColor" prefHeight="30.0" prefWidth="30.0">
+                                                               <graphic>
+                                                                  <Circle fill="GREY" radius="10.0" stroke="BLACK" strokeType="INSIDE" />
+                                                               </graphic>
+                                                               <tooltip>
+                                                                  <Tooltip text="Grey" />
+                                                               </tooltip>
+                                                            </Button>
+                                                            <Button mnemonicParsing="false" onAction="#setWhiteColor" prefHeight="30.0" prefWidth="30.0">
+                                                               <graphic>
+                                                                  <Circle fill="WHITE" radius="10.0" stroke="BLACK" strokeType="INSIDE" />
+                                                               </graphic>
+                                                               <tooltip>
+                                                                  <Tooltip text="White" />
+                                                               </tooltip>
+                                                            </Button>
+                                                            <Button mnemonicParsing="false" onAction="#setBlueColor" prefHeight="30.0" prefWidth="30.0">
+                                                               <graphic>
+                                                                  <Circle fill="BLUE" radius="10.0" stroke="BLACK" strokeType="INSIDE" />
+                                                               </graphic>
+                                                               <tooltip>
+                                                                  <Tooltip text="Blue" />
+                                                               </tooltip>
+                                                            </Button>
+                                                         </children>
+                                                      </HBox>
+                                                      <HBox layoutX="14.0" layoutY="14.0" spacing="10.0">
+                                                         <children>
+                                                            <Button mnemonicParsing="false" onAction="#setRedColor" prefHeight="30.0" prefWidth="30.0">
+                                                               <graphic>
+                                                                  <Circle fill="RED" radius="10.0" stroke="BLACK" strokeType="INSIDE" />
+                                                               </graphic>
+                                                               <tooltip>
+                                                                  <Tooltip text="Red" />
+                                                               </tooltip>
+                                                            </Button>
+                                                            <Button mnemonicParsing="false" onAction="#setOrangeColor" prefHeight="30.0" prefWidth="30.0">
+                                                               <graphic>
+                                                                  <Circle fill="ORANGE" radius="10.0" stroke="BLACK" strokeType="INSIDE" />
+                                                               </graphic>
+                                                               <tooltip>
+                                                                  <Tooltip text="Orange" />
+                                                               </tooltip>
+                                                            </Button>
+                                                            <Button layoutX="114.0" layoutY="14.0" mnemonicParsing="false" onAction="#setYellowColor" prefHeight="30.0" prefWidth="30.0">
+                                                               <graphic>
+                                                                  <Circle fill="YELLOW" radius="10.0" stroke="BLACK" strokeType="INSIDE" />
+                                                               </graphic>
+                                                               <tooltip>
+                                                                  <Tooltip text="Yellow" />
+                                                               </tooltip>
+                                                            </Button>
+                                                            <Button mnemonicParsing="false" onAction="#setGreenColor" prefHeight="30.0" prefWidth="30.0">
+                                                               <graphic>
+                                                                  <Circle fill="GREEN" radius="10.0" stroke="BLACK" strokeType="INSIDE" />
+                                                               </graphic>
+                                                               <tooltip>
+                                                                  <Tooltip text="Green" />
+                                                               </tooltip>
+                                                            </Button>
+                                                         </children>
+                                                      </HBox>
                                                    </children>
-                                                </AnchorPane>
-                                            </content>
-                                          </ScrollPane>
+                                                </VBox>
+                                             </children>
+                                          </VBox>
                                        </children>
                                     </HBox>
-                                 </children></AnchorPane>
+                                 </children>
+                              </AnchorPane>
                           </content>
                         </TitledPane>
                         <Separator orientation="VERTICAL" />
-                        <TitledPane animated="false" collapsible="false" maxHeight="-Infinity" prefHeight="130.0" prefWidth="305.0" text="Tools">
+                        <TitledPane animated="false" collapsible="false" disable="true" maxHeight="-Infinity" prefHeight="130.0" prefWidth="305.0" text="Tools">
                           <content>
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
                           </content>
@@ -99,7 +187,7 @@
                   <Insets />
                </VBox.margin>
             </ToolBar>
-            <Pane fx:id="drawingPane" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="600.0" prefWidth="990.0" style="-fx-border-color: gray; -fx-background-color: white;" />
+            <Pane fx:id="drawingPane" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="640.0" prefWidth="990.0" style="-fx-border-color: gray; -fx-background-color: white;" />
          </children>
       </VBox>
    </children>
