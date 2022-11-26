@@ -14,10 +14,13 @@ public class LineTest {
     
     public LineTest() {
     }
+
+    
     
     @Before
     public void setUpClass() {
     }
+
     
    
 
@@ -304,6 +307,41 @@ public class LineTest {
         instance = new Line(2.0, 4.0, 12.5, 15.2, expResult);
         result = instance.getColor();
         assertEquals(expResult, result);
+    }
+
+    /**
+     * Test of toString method, of class Line.
+     */
+    @Test
+    public void testToString() {
+        System.out.println("toString 0.0 0.0 10.0 10.0 #ffffff");
+        Double expLineStartX = 0.0;
+        Double expLineStartY = 0.0;
+        Double expLineEndX = 10.0;
+        Double expLineEndY = 10.0;
+        String expLineColorStr = "#ffffff";
+        Paint expLineColor = Paint.valueOf(expLineColorStr);
+        
+        String expRepresentation = "line;" + expLineStartX + ";" + expLineStartY + ";" + expLineEndX + ";" + expLineEndY + ";" + expLineColorStr;
+        Line resLine = new Line(expLineStartX, expLineStartY, expLineEndX, expLineEndY, expLineColor);
+        String resRepresentation = resLine.toString();
+        
+        assertEquals(expRepresentation, resRepresentation);
+        
+        
+        System.out.println("toString -5.3 -10.2 15.1 9.7 #0a0f0d");
+        expLineStartX = -5.3;
+        expLineStartY = -10.2;
+        expLineEndX = 15.1;
+        expLineEndY = 9.7;
+        expLineColorStr = "#0a0f0d";
+        expLineColor = Paint.valueOf(expLineColorStr);
+        
+        expRepresentation = "line;" + expLineStartX + ";" + expLineStartY + ";" + expLineEndX + ";" + expLineEndY + ";" + expLineColorStr;
+        resLine = new Line(expLineStartX, expLineStartY, expLineEndX, expLineEndY, expLineColor);
+        resRepresentation = resLine.toString();
+        
+        assertEquals(expRepresentation, resRepresentation);
     }
     
 }
