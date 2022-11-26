@@ -231,4 +231,22 @@ public class EllipseTest {
         Paint expectedFillColor = Color.BLUE;
         assertEquals(expectedFillColor, ellipse.getFillColor()); 
     }
+    
+    /**
+     * Test of toString method, of class Rectangle.
+     */
+    @Test
+    public void testToString(){
+        System.out.println("toString");
+        
+        ellipse.setCenterHorizontalPosition(2.0);
+        ellipse.setCenterVerticalPosition(4.2);
+        ellipse.setWidth(4.7);
+        ellipse.setHeight(3.3);
+        ellipse.setOutlineColor(Color.BLUE);
+        ellipse.setFillColor(Color.GREEN);
+        String expRes = "ellipse;2.0;4.2;4.7;3.3;#0000ff;#008000";
+        String result = ellipse.toString();
+        assertEquals(expRes, result);
+    }
 }

@@ -295,4 +295,21 @@ public class RectangleTest {
         assertEquals(color, result);
     }
     
+    /**
+     * Test of toString method, of class Rectangle.
+     */
+    @Test
+    public void testToString(){
+        System.out.println("toString");
+        
+        instance.setX_(2.0);
+        instance.setY_(4.2);
+        instance.setWidth_(4.7);
+        instance.setHeight_(3.3);
+        instance.setOutlineColor(Color.BLUE);
+        instance.setFillColor(Color.GREEN);
+        String expRes = "rectangle;2.0;4.2;4.7;3.3;#0000ff;#008000";
+        String result = instance.toString();
+        assertEquals(expRes, result);
+    }
 }

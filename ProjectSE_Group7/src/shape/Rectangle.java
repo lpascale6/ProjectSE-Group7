@@ -1,5 +1,6 @@
 package shape;
 
+import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
 /**
@@ -142,5 +143,34 @@ public class Rectangle extends javafx.scene.shape.Rectangle{
         return this.getStroke();
     }
 
+    /**
+     * It returns the string representation of the rectangle
+     * @return 
+     */
+    @Override
+    public String toString() {
+        Color outlineColor = (Color) this.getOutlineColor();
+        Color fillColor = (Color) this.getFillColor();
+        return "rectangle;" + this.getX_() + ";" + this.getY_() + ";" + this.getWidth_() + ";" 
+                + this.getHeight_() + ";" + toHexString(outlineColor) + ";" + toHexString(fillColor);
+    }
+    
+    /**
+     * Function that returns a hexadecimal representation of a Color object
+     * @param color Input Color object.
+     * @return 
+     */
+    private static String toHexString(Color color) {
+        int r = ((int) Math.round(color.getRed()     * 255));
+        int g = ((int) Math.round(color.getGreen()   * 255));
+        int b = ((int) Math.round(color.getBlue()    * 255));
+
+        return String.format("#%02x%02x%02x", r, g, b).toLowerCase(); 
+    }
+    
+    
+    
+    
+    
     
 }

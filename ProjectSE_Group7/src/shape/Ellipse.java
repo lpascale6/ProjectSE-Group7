@@ -1,4 +1,5 @@
 package shape;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
 /**
@@ -156,5 +157,26 @@ public class Ellipse extends javafx.scene.shape.Ellipse {
      */
     public Paint getFillColor() {
         return super.getFill();
+    }
+    
+    /**
+     * It returns the string representation of the ellipse
+     * @return 
+     */
+    @Override
+    public String toString() {
+        Color outlineColor = (Color) this.getOutlineColor();
+        Color fillColor = (Color) this.getFillColor();
+        return "ellipse;" + this.getCenterHorizontalPosition()+ ";" + this.getCenterVerticalPosition()+ ";" + 
+                this.getWidth()+ ";" + this.getHeight()+ ";" + toHexString(outlineColor) + ";" + toHexString(fillColor);
+    }
+    
+        private static String toHexString(Color color) {
+        int r = ((int) Math.round(color.getRed()     * 255));
+        int g = ((int) Math.round(color.getGreen()   * 255));
+        int b = ((int) Math.round(color.getBlue()    * 255));
+
+        return String.format("#%02x%02x%02x", r, g, b).toLowerCase();
+        
     }
 }
