@@ -53,6 +53,7 @@ public class LoadCommand implements Command {
                 Paint color = Paint.valueOf(data[5]);
 
                 Line lineShape = new Line(startX, startY, endX, endY, color);
+                lineShape.setStrokeWidth(3);
                 shapeList.add(lineShape);  //add reconstructed line segment to shape list.
 
             } else if ("rectangle".equals(shapeType) && data.length == 7) { //if shape type is rectangle, reconstruct rectangle.
@@ -64,6 +65,7 @@ public class LoadCommand implements Command {
                 Paint fill = Paint.valueOf(data[6]);
 
                 Rectangle rectangleShape = new Rectangle(x, y, width, height, fill, outer);
+                rectangleShape.setStrokeWidth(3);
                 shapeList.add(rectangleShape); //add reconstructed rectangle to shape list.
 
             } else if ("ellipse".equals(shapeType) && data.length == 7) { //if shape type is ellipse, reconstruct ellipse.
@@ -75,6 +77,7 @@ public class LoadCommand implements Command {
                 Paint fillColor = Paint.valueOf(data[6]);
 
                 Ellipse ellipseShape = new Ellipse(hPosition, vPosition, width, height, outlineColor, fillColor);
+                ellipseShape.setStrokeWidth(3);
                 shapeList.add(ellipseShape); //add reconstructed ellipse to shape list.
 
             } else { //throw expection if shape type is different from the expected ones or if the formatting of the line is wrong.
@@ -85,6 +88,7 @@ public class LoadCommand implements Command {
         }
         reader.close(); //close file reader.
 
+        this.drawingPane.getChildren().clear();
         this.drawingPane.getChildren().addAll(shapeList); //add all reconstructed shapes to drawing pane.
     }
 

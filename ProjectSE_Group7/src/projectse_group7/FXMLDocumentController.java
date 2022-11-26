@@ -1,16 +1,26 @@
 package projectse_group7;
 
+import command.LoadCommand;
+import command.SaveCommand;
+import java.io.File;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.MenuBar;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Shape;
+import javafx.stage.FileChooser;
 import shape.*;
 
 /**
@@ -19,6 +29,9 @@ import shape.*;
  */
 public class FXMLDocumentController implements Initializable {
 
+    @FXML
+    private MenuBar menuBar;
+    
     // toggle group variable, useful for selecting only 
     // one toggle button at a time
     ToggleGroup shapeToggleGroup;
@@ -45,7 +58,7 @@ public class FXMLDocumentController implements Initializable {
     // drawing variables
     Shape creatingShape;
     double strokeWidth = 3.0;   // value chosen as stroke width
-    boolean isDrawing = false;  
+    boolean isDrawing = false;
     double xStartPoint;
     double yStartPoint;
     @FXML
@@ -140,7 +153,7 @@ public class FXMLDocumentController implements Initializable {
                 }
             }
         });
-        
+
         // setting up the event called on the drawingPane when the mouse 
         // is dragged over the drawingPane
         drawingPane.setOnMouseDragged(event -> {
@@ -150,6 +163,8 @@ public class FXMLDocumentController implements Initializable {
                 double x = event.getX();
                 double y = event.getY();
 
+                // this controll is for checking if the coordinate 
+                // is out of the borders of the drawingPane
                 if (x > (strokeWidth / 2)
                         && y > (strokeWidth / 2)
                         && x < (drawingPane.getWidth() - (strokeWidth / 2))
@@ -381,16 +396,83 @@ public class FXMLDocumentController implements Initializable {
         changeToggleButtonColor(Color.GREEN);
     }
 
+    /**
+     * Saves the current state of the drawing into a file chosen by the user.
+     * @param event The event created when the load menu item is clicked.
+     */
     @FXML
     private void saveDrawing(ActionEvent event) {
-        System.out.println("SAVED");
+        // setting up the file chooser
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save as...");
+        
+        // setting up extension filter to save only a .txt file
+        FileChooser.ExtensionFilter extensionFilter = new FileChooser.ExtensionFilter("TXT files (*.txt)", "*.txt");
+        fileChooser.getExtensionFilters().add(extensionFilter);
+        
+        File selectedFile = fileChooser.showSaveDialog(menuBar.getScene().getWindow());
+
+        if (selectedFile != null) {
+
+            // creating a list containing all the shapes of the drawing
+            ArrayList<Shape> shapeList = new ArrayList<>();
+            for (Object shape : drawingPane.getChildren().toArray()) {
+                shapeList.add((Shape) shape);
+            }
+            SaveCommand saveCommand = new SaveCommand(selectedFile, shapeList);
+            try {
+                saveCommand.execute();
+            } catch (Exception ex) {
+                // an error occurred during the save operation
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error while saving the file");
+                alert.setHeaderText("Error");
+                alert.setContentText("An error occurred while trying to save the file");
+                alert.showAndWait();
+            }
+
+        }
     }
 
+    /**
+     * Loads a drawing from a file chosen by the user.
+     * @param event The event created when the load menu item is clicked.
+     */
     @FXML
     private void loadDrawing(ActionEvent event) {
-        System.out.println("LOADED");
+        // setting up the file chooser
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Load from...");
+        
+        // setting up extension filter to save only a .txt file
+        FileChooser.ExtensionFilter extensionFilter = new FileChooser.ExtensionFilter("TXT files (*.txt)", "*.txt");
+        fileChooser.getExtensionFilters().add(extensionFilter);
+        
+        File selectedFile = fileChooser.showOpenDialog(menuBar.getScene().getWindow());
+        
+        if (selectedFile != null) {
+            LoadCommand loadCommand = new LoadCommand(selectedFile, drawingPane);
+            try {
+                loadCommand.execute();
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("File loaded successfully");
+                alert.setHeaderText("Information");
+                alert.setContentText("The file has been loaded successfully");
+                alert.showAndWait();
+            } catch (Exception ex) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error while loading from file");
+                alert.setHeaderText("Error");
+                alert.setContentText("An error occurred while trying to load the file: wrong file representation");
+                alert.showAndWait();
+            }
+        }
     }
 
+    /**
+     * Removes all the shapes from the drawing.
+     * @param event The event created when the clear drawing menu item is clicked. 
+     */
     @FXML
     private void newDrawing(ActionEvent event) {
         drawingPane.getChildren().clear();
