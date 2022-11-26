@@ -6,8 +6,6 @@ import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -15,7 +13,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -31,7 +28,7 @@ public class FXMLDocumentController implements Initializable {
 
     @FXML
     private MenuBar menuBar;
-    
+
     // toggle group variable, useful for selecting only 
     // one toggle button at a time
     ToggleGroup shapeToggleGroup;
@@ -120,36 +117,38 @@ public class FXMLDocumentController implements Initializable {
         // setting up the event called on the drawingPane when the 
         // mouse button has been pressed
         drawingPane.setOnMousePressed(event -> {
+            if (event.isPrimaryButtonDown()) {
+                // starts to draw only if a shape toggle button is selected
+                if (lineToggleButton.isSelected() || rectangleToggleButton.isSelected() || ellipseToggleButton.isSelected()) {
+                    isDrawing = true;
+                    // sets the starting coordinate of the new shape
+                    xStartPoint = event.getX();
+                    yStartPoint = event.getY();
 
-            // starts to draw only if a shape toggle button is selected
-            if (lineToggleButton.isSelected() || rectangleToggleButton.isSelected() || ellipseToggleButton.isSelected()) {
-                isDrawing = true;
-                // sets the starting coordinate of the new shape
-                xStartPoint = event.getX();
-                yStartPoint = event.getY();
-
-                // sets up the new shape by creating a new shape and 
-                // adding it to the drawingPane
-                if (lineToggleButton.isSelected()) {
-                    startDrawingLine(xStartPoint, yStartPoint);
-                } else if (rectangleToggleButton.isSelected()) {
-                    startDrawingRectangle(xStartPoint, yStartPoint);
-                } else if (ellipseToggleButton.isSelected()) {
-                    startDrawingEllipse(xStartPoint, yStartPoint);
+                    // sets up the new shape by creating a new shape and 
+                    // adding it to the drawingPane
+                    if (lineToggleButton.isSelected()) {
+                        startDrawingLine(xStartPoint, yStartPoint);
+                    } else if (rectangleToggleButton.isSelected()) {
+                        startDrawingRectangle(xStartPoint, yStartPoint);
+                    } else if (ellipseToggleButton.isSelected()) {
+                        startDrawingEllipse(xStartPoint, yStartPoint);
+                    }
                 }
             }
-
         });
 
         // setting up the event called on the drawingPane when the mouse 
         // click has been released
         drawingPane.setOnMouseReleased(event -> {
-            if (lineToggleButton.isSelected() || rectangleToggleButton.isSelected() || ellipseToggleButton.isSelected()) {
-                isDrawing = false;
-                // if the starting coordinate of the shape corresponds to the ending coordinate,
-                // the shape is removed from the drawingPane
-                if (event.getX() == xStartPoint && event.getY() == yStartPoint) {
-                    drawingPane.getChildren().remove(drawingPane.getChildren().size() - 1);
+            if (event.isPrimaryButtonDown()) {
+                if (lineToggleButton.isSelected() || rectangleToggleButton.isSelected() || ellipseToggleButton.isSelected()) {
+                    isDrawing = false;
+                    // if the starting coordinate of the shape corresponds to the ending coordinate,
+                    // the shape is removed from the drawingPane
+                    if (event.getX() == xStartPoint && event.getY() == yStartPoint) {
+                        drawingPane.getChildren().remove(drawingPane.getChildren().size() - 1);
+                    }
                 }
             }
         });
@@ -157,29 +156,30 @@ public class FXMLDocumentController implements Initializable {
         // setting up the event called on the drawingPane when the mouse 
         // is dragged over the drawingPane
         drawingPane.setOnMouseDragged(event -> {
-            // if the user is drawing, it keeps updating the shape the user is 
-            // creating and checks if the mouse is out of the border of the drawingPane
-            if (isDrawing) {
-                double x = event.getX();
-                double y = event.getY();
+            if (event.isPrimaryButtonDown()) {
+                // if the user is drawing, it keeps updating the shape the user is 
+                // creating and checks if the mouse is out of the border of the drawingPane
+                if (isDrawing) {
+                    double x = event.getX();
+                    double y = event.getY();
 
-                // this controll is for checking if the coordinate 
-                // is out of the borders of the drawingPane
-                if (x > (strokeWidth / 2)
-                        && y > (strokeWidth / 2)
-                        && x < (drawingPane.getWidth() - (strokeWidth / 2))
-                        && y < (drawingPane.getHeight() - (strokeWidth / 2))) {
-                    if (lineToggleButton.isSelected()) {
-                        drawLine(x, y);
-                    } else if (rectangleToggleButton.isSelected()) {
-                        drawRectangle(x, y);
-                    } else if (ellipseToggleButton.isSelected()) {
-                        drawEllipse(x, y);
+                    // this controll is for checking if the coordinate 
+                    // is out of the borders of the drawingPane
+                    if (x > (strokeWidth / 2)
+                            && y > (strokeWidth / 2)
+                            && x < (drawingPane.getWidth() - (strokeWidth / 2))
+                            && y < (drawingPane.getHeight() - (strokeWidth / 2))) {
+                        if (lineToggleButton.isSelected()) {
+                            drawLine(x, y);
+                        } else if (rectangleToggleButton.isSelected()) {
+                            drawRectangle(x, y);
+                        } else if (ellipseToggleButton.isSelected()) {
+                            drawEllipse(x, y);
+                        }
                     }
+
                 }
-
             }
-
         });
     }
 
@@ -398,6 +398,7 @@ public class FXMLDocumentController implements Initializable {
 
     /**
      * Saves the current state of the drawing into a file chosen by the user.
+     *
      * @param event The event created when the load menu item is clicked.
      */
     @FXML
@@ -405,11 +406,11 @@ public class FXMLDocumentController implements Initializable {
         // setting up the file chooser
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save as...");
-        
+
         // setting up extension filter to save only a .txt file
         FileChooser.ExtensionFilter extensionFilter = new FileChooser.ExtensionFilter("TXT files (*.txt)", "*.txt");
         fileChooser.getExtensionFilters().add(extensionFilter);
-        
+
         File selectedFile = fileChooser.showSaveDialog(menuBar.getScene().getWindow());
 
         if (selectedFile != null) {
@@ -436,6 +437,7 @@ public class FXMLDocumentController implements Initializable {
 
     /**
      * Loads a drawing from a file chosen by the user.
+     *
      * @param event The event created when the load menu item is clicked.
      */
     @FXML
@@ -443,13 +445,13 @@ public class FXMLDocumentController implements Initializable {
         // setting up the file chooser
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Load from...");
-        
+
         // setting up extension filter to save only a .txt file
         FileChooser.ExtensionFilter extensionFilter = new FileChooser.ExtensionFilter("TXT files (*.txt)", "*.txt");
         fileChooser.getExtensionFilters().add(extensionFilter);
-        
+
         File selectedFile = fileChooser.showOpenDialog(menuBar.getScene().getWindow());
-        
+
         if (selectedFile != null) {
             LoadCommand loadCommand = new LoadCommand(selectedFile, drawingPane);
             try {
@@ -471,7 +473,9 @@ public class FXMLDocumentController implements Initializable {
 
     /**
      * Removes all the shapes from the drawing.
-     * @param event The event created when the clear drawing menu item is clicked. 
+     *
+     * @param event The event created when the clear drawing menu item is
+     * clicked.
      */
     @FXML
     private void newDrawing(ActionEvent event) {
