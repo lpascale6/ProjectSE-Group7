@@ -48,7 +48,7 @@ public class Rectangle extends javafx.scene.shape.Rectangle{
      * Method to get the X coordinate of the upper-left corner of the rectangle
      * @return 
      */
-    public double getX_() {
+    public double getRectangleX() {
         return this.getX();
     }
 
@@ -56,7 +56,7 @@ public class Rectangle extends javafx.scene.shape.Rectangle{
      * Method to set the X coordinate of the upper-left corner of the rectangle
      * @param x New X coordinate of the upper-left corner of the rectangle
      */
-    public void setX_(double x) {
+    public void setRectangleX(double x) {
         this.setX(x);
     }
 
@@ -65,7 +65,7 @@ public class Rectangle extends javafx.scene.shape.Rectangle{
      * Method to get the Y coordinate of the upper-left corner of the rectangle
      * @return 
      */
-    public double getY_() {
+    public double getRectangleY() {
         return this.getY();
     }
 
@@ -74,7 +74,7 @@ public class Rectangle extends javafx.scene.shape.Rectangle{
      * Method to set the Y coordinate of the upper-left corner of the rectangle
      * @param y New Y coordinate of the upper-left corner of the rectangle
      */
-    public void setY_(double y) {
+    public void setRectangleY(double y) {
         this.setY(y);
     }
 
@@ -82,7 +82,7 @@ public class Rectangle extends javafx.scene.shape.Rectangle{
      * Method to get the width of the rectangle
      * @return 
      */
-    public double getWidth_() {
+    public double getRectangleWidth() {
         return this.getWidth();
     }
 
@@ -90,7 +90,7 @@ public class Rectangle extends javafx.scene.shape.Rectangle{
      * Method to set the width of the rectangle
      * @param width New width of the rectangle
      */
-    public void setWidth_(double width) {
+    public void setRectangleWidth(double width) {
         this.setWidth(width);
     }
 
@@ -98,7 +98,7 @@ public class Rectangle extends javafx.scene.shape.Rectangle{
      * Method to get the height of the rectangle
      * @return 
      */
-    public double getHeight_() {
+    public double getRectangleHeight() {
         return this.getHeight();
     }
     
@@ -107,7 +107,7 @@ public class Rectangle extends javafx.scene.shape.Rectangle{
      * Method to set the height of the rectangle.
      * @param height New height of the rectangle.
      */
-    public void setHeight_(double height) {
+    public void setRectangleHeight(double height) {
         this.setHeight(height);
     }
     
@@ -151,8 +151,8 @@ public class Rectangle extends javafx.scene.shape.Rectangle{
     public String toString() {
         Color outlineColor = (Color) this.getOutlineColor();
         Color fillColor = (Color) this.getFillColor();
-        return "rectangle;" + this.getX_() + ";" + this.getY_() + ";" + this.getWidth_() + ";" 
-                + this.getHeight_() + ";" + toHexString(outlineColor) + ";" + toHexString(fillColor);
+        return "rectangle;" + this.getRectangleX() + ";" + this.getRectangleY() + ";" + this.getRectangleWidth() + ";" 
+                + this.getRectangleHeight() + ";" + toHexString(outlineColor) + ";" + toHexString(fillColor);
     }
     
     /**

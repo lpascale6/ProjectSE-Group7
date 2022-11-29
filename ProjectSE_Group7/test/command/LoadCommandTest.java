@@ -107,10 +107,10 @@ public class LoadCommandTest {
         
         Rectangle resRect = (Rectangle) shapeList.get(1);
 
-        Double resRectX = resRect.getX_();
-        Double resRectY = resRect.getY_();
-        Double resRectWidth = resRect.getWidth_();
-        Double resRectHeight = resRect.getHeight_();
+        Double resRectX = resRect.getRectangleX();
+        Double resRectY = resRect.getRectangleY();
+        Double resRectWidth = resRect.getRectangleWidth();
+        Double resRectHeight = resRect.getRectangleHeight();
         Paint resRectFill = resRect.getFillColor();
         Paint resRectOuter = resRect.getOutlineColor();
 
@@ -128,10 +128,10 @@ public class LoadCommandTest {
         
         Ellipse resEll = (Ellipse) shapeList.get(2);
 
-        Double resEllHPos = resEll.getCenterHorizontalPosition();
-        Double resEllVPos = resEll.getCenterVerticalPosition();
-        Double resEllWidth = resEll.getWidth();
-        Double resEllHeight = resEll.getHeight();
+        Double resEllHPos = resEll.getEllipseCenterX();
+        Double resEllVPos = resEll.getEllipseCenterY();
+        Double resEllWidth = resEll.getEllipseRadiusX();
+        Double resEllHeight = resEll.getEllipseRadiusY();
         Paint resEllFill = resEll.getFillColor();
         Paint resEllOut = resEll.getOutlineColor();
 

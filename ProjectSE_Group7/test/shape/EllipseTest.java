@@ -24,139 +24,139 @@ public class EllipseTest {
     }
 
     /**
-     * Test of setCenterHorizontalPosition method,
-     * of class Ellipse, with zero, positive and negative values.
+     * Test of setEllipseCenterX method,
+ of class Ellipse, with zero, positive and negative values.
      */  
     @Test
-    public void testSetCenterHorizontalPosition() {
+    public void testSetEllipseCenterX() {
         //zero
         double hPosition = 0.0;
-        ellipse.setCenterHorizontalPosition(hPosition);
-        assertEquals(hPosition, ellipse.getCenterHorizontalPosition(), 0);   
+        ellipse.setEllipseCenterX(hPosition);
+        assertEquals(hPosition, ellipse.getEllipseCenterX(), 0);   
         //positive
         hPosition = 5.0;
-        ellipse.setCenterHorizontalPosition(hPosition);
-        assertEquals(hPosition, ellipse.getCenterHorizontalPosition(), 0);   
+        ellipse.setEllipseCenterX(hPosition);
+        assertEquals(hPosition, ellipse.getEllipseCenterX(), 0);   
         //negative
         hPosition = -5.0;
-        ellipse.setCenterHorizontalPosition(hPosition);
-        assertEquals(hPosition, ellipse.getCenterHorizontalPosition(), 0); 
+        ellipse.setEllipseCenterX(hPosition);
+        assertEquals(hPosition, ellipse.getEllipseCenterX(), 0); 
     }
     
     /**
-     * Test of getCenterHorizontalPosition method,
-     * of class Ellipse.
+     * Test of getEllipseCenterX method,
+ of class Ellipse.
      */  
     @Test
-    public void testGetCenterHorizontalPosition() {
+    public void testGetEllipseCenterX() {
         double hPosition = 1.0;
         double vPosition = 0.0;
         double width = 0.0;
         double height = 0.0;
         ellipse = new Ellipse(hPosition, vPosition, width, height);
         double expectedHPosition = 1.0;
-        assertEquals(expectedHPosition, ellipse.getCenterHorizontalPosition(), 0); 
+        assertEquals(expectedHPosition, ellipse.getEllipseCenterX(), 0); 
     }
 
     /**
-     * Test of setCenterVerticalPosition method,
-     * of class Ellipse, with zero, positive and negative values.
+     * Test of setEllipseCenterY method,
+ of class Ellipse, with zero, positive and negative values.
      */  
     @Test
-    public void testSetCenterVerticalPosition() {
+    public void testSetEllipseCenterY() {
         //zero
         double vPosition = 0.0;
-        ellipse.setCenterVerticalPosition(vPosition);
-        assertEquals(vPosition, ellipse.getCenterVerticalPosition(), 0);
+        ellipse.setEllipseCenterY(vPosition);
+        assertEquals(vPosition, ellipse.getEllipseCenterY(), 0);
         //positive
         vPosition = 10.0;
-        ellipse.setCenterVerticalPosition(vPosition);
-        assertEquals(vPosition, ellipse.getCenterVerticalPosition(), 0); 
+        ellipse.setEllipseCenterY(vPosition);
+        assertEquals(vPosition, ellipse.getEllipseCenterY(), 0); 
         //negative
         vPosition = -10.0;
-        ellipse.setCenterVerticalPosition(vPosition);
-        assertEquals(vPosition, ellipse.getCenterVerticalPosition(), 0);
+        ellipse.setEllipseCenterY(vPosition);
+        assertEquals(vPosition, ellipse.getEllipseCenterY(), 0);
     }
 
     /**
-     * Test of getCenterVerticalPosition method,
-     * of class Ellipse.
+     * Test of getEllipseCenterY method,
+ of class Ellipse.
      */  
     @Test
-    public void testGetCenterVerticalPosition() {
+    public void testGetEllipseCenterY() {
         double hPosition = 0.0;
         double vPosition = 1.0;
         double width = 0.0;
         double height = 0.0;
         ellipse = new Ellipse(hPosition, vPosition, width, height);
         double expectedVPosition = 1.0;
-        assertEquals(expectedVPosition, ellipse.getCenterVerticalPosition(), 0); 
+        assertEquals(expectedVPosition, ellipse.getEllipseCenterY(), 0); 
     }
     
     /**
-     * Test of setWidth method,
-     * of class Ellipse, with zero, positive and negative values.
+     * Test of setEllipseRadiusX method,
+ of class Ellipse, with zero, positive and negative values.
      */  
     @Test
-    public void testSetWidth() {
+    public void testSetEllipseRadiusX() {
         //zero
         double width = 0.0;
-        ellipse.setWidth(width);
-        assertEquals(width, ellipse.getWidth(), 0);
+        ellipse.setEllipseRadiusX(width);
+        assertEquals(width, ellipse.getEllipseRadiusX(), 0);
         //positive
         width = 15.0;
-        ellipse.setWidth(width);
-        assertEquals(width, ellipse.getWidth(), 0);
+        ellipse.setEllipseRadiusX(width);
+        assertEquals(width, ellipse.getEllipseRadiusX(), 0);
         //negative
         width = -15.0;
-        ellipse.setWidth(width);
-        assertEquals(width, ellipse.getWidth(), 0);  
+        ellipse.setEllipseRadiusX(width);
+        assertEquals(width, ellipse.getEllipseRadiusX(), 0);  
     }
     
     /**
-     * Test of getWidth method,
-     * of class Ellipse.
+     * Test of getEllipseRadiusX method,
+ of class Ellipse.
      */  
     @Test
-    public void testGetWidth() {
+    public void testGetEllipseRadiusX() {
         double width = 1.0;
         double height = 0.0;
         ellipse = new Ellipse(width, height);
         double expectedWidth = 1.0;
-        assertEquals(expectedWidth, ellipse.getWidth(), 0); 
+        assertEquals(expectedWidth, ellipse.getEllipseRadiusX(), 0); 
     }
 
     /**
-     * Test of setHeight method, 
-     * of class Ellipse, with zero, positive and negative values.
+     * Test of setEllipseRadiusY method, 
+ of class Ellipse, with zero, positive and negative values.
      */
     @Test
-    public void testSetHeight() {
+    public void testSetEllipseRadiusY() {
         //zero
         double height = 0.0;
-        ellipse.setHeight(height);
-        assertEquals(height, ellipse.getHeight(), 0);
+        ellipse.setEllipseRadiusY(height);
+        assertEquals(height, ellipse.getEllipseRadiusY(), 0);
         //positive
         height = 20.0;
-        ellipse.setHeight(height);
-        assertEquals(height, ellipse.getHeight(), 0);
+        ellipse.setEllipseRadiusY(height);
+        assertEquals(height, ellipse.getEllipseRadiusY(), 0);
         //negative
         height = -20.0;
-        ellipse.setHeight(height);
-        assertEquals(height, ellipse.getHeight(), 0);
+        ellipse.setEllipseRadiusY(height);
+        assertEquals(height, ellipse.getEllipseRadiusY(), 0);
     }
     
     /**
-     * Test of getHeight method,
-     * of class Ellipse.
+     * Test of getEllipseRadiusY method,
+ of class Ellipse.
      */  
     @Test
-    public void testGetHeight() {
+    public void testGetEllipseRadiusY() {
         double width = 0.0;
         double height = 1.0;
         ellipse = new Ellipse(width, height);
         double expectedHeight = 1.0;
-        assertEquals(expectedHeight, ellipse.getHeight(), 0); 
+        assertEquals(expectedHeight, ellipse.getEllipseRadiusY(), 0); 
     }
 
     /**
@@ -239,10 +239,10 @@ public class EllipseTest {
     public void testToString(){
         System.out.println("toString");
         
-        ellipse.setCenterHorizontalPosition(2.0);
-        ellipse.setCenterVerticalPosition(4.2);
-        ellipse.setWidth(4.7);
-        ellipse.setHeight(3.3);
+        ellipse.setEllipseCenterX(2.0);
+        ellipse.setEllipseCenterY(4.2);
+        ellipse.setEllipseRadiusX(4.7);
+        ellipse.setEllipseRadiusY(3.3);
         ellipse.setOutlineColor(Color.BLUE);
         ellipse.setFillColor(Color.GREEN);
         String expRes = "ellipse;2.0;4.2;4.7;3.3;#0000ff;#008000";
