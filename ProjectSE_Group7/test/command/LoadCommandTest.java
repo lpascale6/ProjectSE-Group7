@@ -128,10 +128,10 @@ public class LoadCommandTest {
         
         Ellipse resEll = (Ellipse) shapeList.get(2);
 
-        Double resEllHPos = resEll.getCenterHorizontalPosition();
-        Double resEllVPos = resEll.getCenterVerticalPosition();
-        Double resEllWidth = resEll.getWidth();
-        Double resEllHeight = resEll.getHeight();
+        Double resEllHPos = resEll.getEllipseCenterX();
+        Double resEllVPos = resEll.getEllipseCenterY();
+        Double resEllWidth = resEll.getEllipseRadiusX();
+        Double resEllHeight = resEll.getEllipseRadiusY();
         Paint resEllFill = resEll.getFillColor();
         Paint resEllOut = resEll.getOutlineColor();
 

@@ -67,7 +67,7 @@ public class Ellipse extends javafx.scene.shape.Ellipse {
      * Sets the value of the property centerX (Horizontal position of the center).
      * @param hPosition the x coordinate of the center of the ellipse  
      */ 
-    public void setCenterHorizontalPosition(double hPosition) {
+    public void setEllipseCenterX(double hPosition) {
         super.setCenterX(hPosition);
     }
     
@@ -75,7 +75,7 @@ public class Ellipse extends javafx.scene.shape.Ellipse {
      * Returns the value of the property centerX (Horizontal position of the center).
      * @return 
      */
-    public double getCenterHorizontalPosition() {
+    public double getEllipseCenterX() {
         return super.getCenterX();
     }
     
@@ -83,7 +83,7 @@ public class Ellipse extends javafx.scene.shape.Ellipse {
      * Sets the value of the property centerY (Vertical position of the center).
      * @param vPosition the y coordinate of the center of the ellipse
      */
-    public void setCenterVerticalPosition(double vPosition) {
+    public void setEllipseCenterY(double vPosition) {
         super.setCenterY(vPosition);
     }
     
@@ -91,7 +91,7 @@ public class Ellipse extends javafx.scene.shape.Ellipse {
      * Returns the value of the property centerY (Vertical position of the center).
      * @return 
      */
-    public double getCenterVerticalPosition() {
+    public double getEllipseCenterY() {
         return super.getCenterY();
     }
     
@@ -99,7 +99,7 @@ public class Ellipse extends javafx.scene.shape.Ellipse {
      * Sets the value of the property radiusX (width of the ellipse).
      * @param width width of the ellipse
      */
-    public void setWidth(double width) {
+    public void setEllipseRadiusX(double width) {
         super.setRadiusX(width);
     }
     
@@ -107,7 +107,7 @@ public class Ellipse extends javafx.scene.shape.Ellipse {
      * Returns the value of the property radiusX (width of the ellipse).
      * @return 
      */
-    public double getWidth() {
+    public double getEllipseRadiusX() {
         return super.getRadiusX();
     }
     
@@ -115,7 +115,7 @@ public class Ellipse extends javafx.scene.shape.Ellipse {
      * Sets the value of the property radiusY (height of the ellipse).
      * @param height height of the ellipse
      */
-    public void setHeight(double height) {
+    public void setEllipseRadiusY(double height) {
         super.setRadiusY(height);
     }
     
@@ -123,7 +123,7 @@ public class Ellipse extends javafx.scene.shape.Ellipse {
      * Returns the value of the property radiusY (height of the ellipse).
      * @return 
      */
-    public double getHeight() {
+    public double getEllipseRadiusY() {
         return super.getRadiusY();
     }
     
@@ -167,8 +167,8 @@ public class Ellipse extends javafx.scene.shape.Ellipse {
     public String toString() {
         Color outlineColor = (Color) this.getOutlineColor();
         Color fillColor = (Color) this.getFillColor();
-        return "ellipse;" + this.getCenterHorizontalPosition()+ ";" + this.getCenterVerticalPosition()+ ";" + 
-                this.getWidth()+ ";" + this.getHeight()+ ";" + toHexString(outlineColor) + ";" + toHexString(fillColor);
+        return "ellipse;" + this.getEllipseCenterX()+ ";" + this.getEllipseCenterY()+ ";" + 
+                this.getEllipseRadiusX()+ ";" + this.getEllipseRadiusY()+ ";" + toHexString(outlineColor) + ";" + toHexString(fillColor);
     }
     
         private static String toHexString(Color color) {

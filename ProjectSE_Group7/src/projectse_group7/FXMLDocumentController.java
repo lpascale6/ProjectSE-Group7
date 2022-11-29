@@ -281,21 +281,21 @@ public class FXMLDocumentController implements Initializable {
         // if the x coordinate is before the x vertex coordinate, 
         // it becomes the new x coordinate for the vertex
         if (x < xStartPoint) {
-            ellipse.setCenterHorizontalPosition((x + xStartPoint) / 2);
+            ellipse.setEllipseCenterX((x + xStartPoint) / 2);
         } else {
-            ellipse.setCenterHorizontalPosition((x + xStartPoint) / 2);
+            ellipse.setEllipseCenterX((x + xStartPoint) / 2);
         }
 
         // if the y coordinate is before the y vertex coordinate, 
         // it becomes the new y coordinate for the vertex
         if (y < yStartPoint) {
-            ellipse.setCenterVerticalPosition((y + yStartPoint) / 2);
+            ellipse.setEllipseCenterY((y + yStartPoint) / 2);
         } else {
-            ellipse.setCenterVerticalPosition((y + yStartPoint) / 2);
+            ellipse.setEllipseCenterY((y + yStartPoint) / 2);
         }
 
-        ellipse.setWidth(Math.abs(xStartPoint - x) / 2);
-        ellipse.setHeight(Math.abs(yStartPoint - y) / 2);
+        ellipse.setEllipseRadiusX(Math.abs(xStartPoint - x) / 2);
+        ellipse.setEllipseRadiusY(Math.abs(yStartPoint - y) / 2);
     }
 
     @Override
