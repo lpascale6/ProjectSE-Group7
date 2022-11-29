@@ -23,15 +23,15 @@ public class DrawingPane extends Pane{
     private Color selectedOutlineColor = Color.BLACK;
     private Color selectedFillColor = Color.WHITE;
     
-    private ToggleButton lineToggleButton;
-    private ToggleButton rectangleToggleButton;
-    private ToggleButton ellipseToggleButton;
+    private final ToggleButton lineToggleButton;
+    private final ToggleButton rectangleToggleButton;
+    private final ToggleButton ellipseToggleButton;
 
     /**
      * DrawingPane constructor, it sets up all the attibututes and functions the object needs. 
-     * @param lineToggleButton The toggle button that indicates that the line
-     * @param rectangleToggleButton
-     * @param ellipseToggleButton 
+     * @param lineToggleButton Toggle button object that indicates if the user wants to draw a line.
+     * @param rectangleToggleButton Toggle button object that indicates if the user wants to draw a rectangle.
+     * @param ellipseToggleButton Toggle button object that indicates if the user wants to draw a ellipse.
      */
     public DrawingPane(ToggleButton lineToggleButton, ToggleButton rectangleToggleButton, ToggleButton ellipseToggleButton) {
         this.lineToggleButton = lineToggleButton;
@@ -53,13 +53,16 @@ public class DrawingPane extends Pane{
     }
     
     /**
-     * Sets the selectedOuColor to the new color passed as argument.
-     * @param color The new outline color
+     * Sets the selectedFillColor to the new color passed as argument.
+     * @param color The new fill color
      */
     public void setFillColor(Color color) {
         this.selectedFillColor = color;
     }
     
+    /**
+     * Sets up all the mouse event useful for drawing on this pane.
+     */
     private void setup() {
         // setting up the event called on the drawingPane when the 
         // mouse button has been pressed
