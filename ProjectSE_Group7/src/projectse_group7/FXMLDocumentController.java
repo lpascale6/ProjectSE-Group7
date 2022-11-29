@@ -2,6 +2,7 @@ package projectse_group7;
 
 import command.LoadCommand;
 import command.SaveCommand;
+import gui.DrawingPane;
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Shape;
@@ -28,6 +30,8 @@ public class FXMLDocumentController implements Initializable {
 
     @FXML
     private MenuBar menuBar;
+    @FXML
+    private Pane pane;
 
     // toggle group variable, useful for selecting only 
     // one toggle button at a time
@@ -41,8 +45,6 @@ public class FXMLDocumentController implements Initializable {
 
     // color selection section variables
     ToggleGroup colorToggleGroup;
-    Color selectedOutlineColor = Color.BLACK;
-    Color selectedFillColor = Color.WHITE;
     @FXML
     private ToggleButton outlineColorToggleButton;
     @FXML
@@ -53,13 +55,7 @@ public class FXMLDocumentController implements Initializable {
     private Circle fillColorImage;
 
     // drawing variables
-    Shape creatingShape;
-    double strokeWidth = 3.0;   // value chosen as stroke width
-    boolean isDrawing = false;
-    double xStartPoint;
-    double yStartPoint;
-    @FXML
-    private Pane drawingPane;
+    private DrawingPane drawingPane;
 
     /**
      * Sets up all the toggle buttons in the "Shape selection" section by
@@ -89,10 +85,10 @@ public class FXMLDocumentController implements Initializable {
     private void changeToggleButtonColor(Color color) {
         if (colorToggleGroup.getSelectedToggle() == outlineColorToggleButton) {
             outlineColorImage.setFill(color);
-            selectedOutlineColor = color;
+            drawingPane.setOutlineColor(color);
         } else {
             fillColorImage.setFill(color);
-            selectedFillColor = color;
+            drawingPane.setFillColor(color);
         }
     }
 
@@ -113,199 +109,15 @@ public class FXMLDocumentController implements Initializable {
         });
     }
 
-    private void setupDrawingPane() {
-        // setting up the event called on the drawingPane when the 
-        // mouse button has been pressed
-        drawingPane.setOnMousePressed(event -> {
-            if (event.isPrimaryButtonDown()) {
-                // starts to draw only if a shape toggle button is selected
-                if (lineToggleButton.isSelected() || rectangleToggleButton.isSelected() || ellipseToggleButton.isSelected()) {
-                    isDrawing = true;
-                    // sets the starting coordinate of the new shape
-                    xStartPoint = event.getX();
-                    yStartPoint = event.getY();
-
-                    // sets up the new shape by creating a new shape and 
-                    // adding it to the drawingPane
-                    if (lineToggleButton.isSelected()) {
-                        startDrawingLine(xStartPoint, yStartPoint);
-                    } else if (rectangleToggleButton.isSelected()) {
-                        startDrawingRectangle(xStartPoint, yStartPoint);
-                    } else if (ellipseToggleButton.isSelected()) {
-                        startDrawingEllipse(xStartPoint, yStartPoint);
-                    }
-                }
-            }
-        });
-
-        // setting up the event called on the drawingPane when the mouse 
-        // click has been released
-        drawingPane.setOnMouseReleased(event -> {
-            if (event.isPrimaryButtonDown()) {
-                if (lineToggleButton.isSelected() || rectangleToggleButton.isSelected() || ellipseToggleButton.isSelected()) {
-                    isDrawing = false;
-                    // if the starting coordinate of the shape corresponds to the ending coordinate,
-                    // the shape is removed from the drawingPane
-                    if (event.getX() == xStartPoint && event.getY() == yStartPoint) {
-                        drawingPane.getChildren().remove(drawingPane.getChildren().size() - 1);
-                    }
-                }
-            }
-        });
-
-        // setting up the event called on the drawingPane when the mouse 
-        // is dragged over the drawingPane
-        drawingPane.setOnMouseDragged(event -> {
-            if (event.isPrimaryButtonDown()) {
-                // if the user is drawing, it keeps updating the shape the user is 
-                // creating and checks if the mouse is out of the border of the drawingPane
-                if (isDrawing) {
-                    double x = event.getX();
-                    double y = event.getY();
-
-                    // this controll is for checking if the coordinate 
-                    // is out of the borders of the drawingPane
-                    if (x > (strokeWidth / 2)
-                            && y > (strokeWidth / 2)
-                            && x < (drawingPane.getWidth() - (strokeWidth / 2))
-                            && y < (drawingPane.getHeight() - (strokeWidth / 2))) {
-                        if (lineToggleButton.isSelected()) {
-                            drawLine(x, y);
-                        } else if (rectangleToggleButton.isSelected()) {
-                            drawRectangle(x, y);
-                        } else if (ellipseToggleButton.isSelected()) {
-                            drawEllipse(x, y);
-                        }
-                    }
-
-                }
-            }
-        });
-    }
-
-    /**
-     * Starts setting up a possible Line shape and insert the shape in the
-     * drawing.
-     *
-     * @param x The starting x coordinate of the Line.
-     * @param y The starting y coordinate of the Line.
-     */
-    private void startDrawingLine(double x, double y) {
-        creatingShape = new Line(x, y, x, y);
-        creatingShape.setStroke(selectedOutlineColor);
-        creatingShape.setStrokeWidth(strokeWidth);
-        drawingPane.getChildren().add(creatingShape);
-    }
-
-    /**
-     * Starts setting up a possible Rectangle shape and insert the shape in the
-     * drawing.
-     *
-     * @param x The starting x coordinate of the Rectangle.
-     * @param y The starting y coordinate of the Rectangle.
-     */
-    private void startDrawingRectangle(double x, double y) {
-        creatingShape = new Rectangle(x, y, 0, 0);
-        creatingShape.setStroke(selectedOutlineColor);
-        creatingShape.setFill(selectedFillColor);
-        creatingShape.setStrokeWidth(strokeWidth);
-        drawingPane.getChildren().add(creatingShape);
-    }
-
-    /**
-     * Starts setting up a possible Ellipse shape and insert the shape in the
-     * drawing.
-     *
-     * @param x The starting x coordinate of the Ellipse.
-     * @param y The starting y coordinate of the Ellipse.
-     */
-    private void startDrawingEllipse(double x, double y) {
-        creatingShape = new Ellipse(x, y, 0, 0);
-        creatingShape.setStroke(selectedOutlineColor);
-        creatingShape.setFill(selectedFillColor);
-        creatingShape.setStrokeWidth(strokeWidth);
-        drawingPane.getChildren().add(creatingShape);
-    }
-
-    /**
-     * Draws the Line in the drawing.
-     *
-     * @param x The ending x coordinate of the Line.
-     * @param y The ending y coordinate of the Line.
-     */
-    private void drawLine(double x, double y) {
-        Line line = (Line) creatingShape;
-        line.setLineEndingX(x);
-        line.setEndY(y);
-    }
-
-    /**
-     * Draws the Rectangle in the drawing.
-     *
-     * @param x The ending x coordinate of the Rectangle.
-     * @param y The ending y coordinate of the Rectangle.
-     */
-    private void drawRectangle(double x, double y) {
-        Rectangle rectangle = (Rectangle) creatingShape;
-        // if the x coordinate is before the x vertex coordinate, 
-        // it becomes the new x coordinate for the vertex
-        if (x < xStartPoint) {
-            rectangle.setRectangleX(x);
-        } else {
-            rectangle.setRectangleX(xStartPoint);
-        }
-
-        // if the y coordinate is before the y vertex coordinate, 
-        // it becomes the new y coordinate for the vertex
-        if (y < yStartPoint) {
-            rectangle.setRectangleY(y);
-        } else {
-            rectangle.setRectangleY(yStartPoint);
-        }
-
-        rectangle.setRectangleWidth(Math.abs(xStartPoint - x));
-        rectangle.setRectangleHeight(Math.abs(yStartPoint - y));
-    }
-
-    /**
-     * Draws the Ellipse in the drawing.
-     *
-     * @param x The ending x coordinate of the imaginary rectangle bounding the
-     * Ellipse.
-     * @param y The ending y coordinate of the imaginary rectangle bounding the
-     * Ellipse.
-     */
-    private void drawEllipse(double x, double y) {
-        Ellipse ellipse = (Ellipse) creatingShape;
-
-        // if the x coordinate is before the x vertex coordinate, 
-        // it becomes the new x coordinate for the vertex
-        if (x < xStartPoint) {
-            ellipse.setEllipseCenterX((x + xStartPoint) / 2);
-        } else {
-            ellipse.setEllipseCenterX((x + xStartPoint) / 2);
-        }
-
-        // if the y coordinate is before the y vertex coordinate, 
-        // it becomes the new y coordinate for the vertex
-        if (y < yStartPoint) {
-            ellipse.setEllipseCenterY((y + yStartPoint) / 2);
-        } else {
-            ellipse.setEllipseCenterY((y + yStartPoint) / 2);
-        }
-
-        ellipse.setEllipseRadiusX(Math.abs(xStartPoint - x) / 2);
-        ellipse.setEllipseRadiusY(Math.abs(yStartPoint - y) / 2);
-    }
-
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        // setting up the drawing pane
+        drawingPane = new DrawingPane(lineToggleButton, rectangleToggleButton, ellipseToggleButton);
+        pane.getChildren().add(drawingPane);
 
         // setting up all toggle buttons
         setupShapeToggleButtons();
         setupColorToggleButtons();
-        // setting up the drawing pane
-        setupDrawingPane();
     }
 
     /**
