@@ -1,6 +1,7 @@
 package gui;
 
 import javafx.scene.control.ToggleButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
@@ -30,6 +31,9 @@ public class DrawingPane extends Pane{
     private final ToggleButton rectangleToggleButton;
     private final ToggleButton ellipseToggleButton;
     private final ToggleButton selectShapeToggleButton;
+    
+    private Shape selectedShape;
+    private Paint selectedShapePrevColor;
 
     /**
      * DrawingPane constructor, it sets up all the attibututes and functions the object needs. 
@@ -90,6 +94,14 @@ public class DrawingPane extends Pane{
                         startDrawingEllipse(xStartPoint, yStartPoint);
                     }
                 }
+                if(selectShapeToggleButton.isSelected()){
+                    // if there was already a selected shape, we reset it to its previous settings
+                    if(selectedShape != null){
+                        selectedShape.setStroke(selectedShapePrevColor);
+                        selectedShape.getStrokeDashArray().clear();
+                    }
+                    selectedShape = null;
+                }
             }
         });
 
@@ -149,24 +161,8 @@ public class DrawingPane extends Pane{
         creatingShape = new Line(x, y, x, y);
         creatingShape.setStroke(selectedOutlineColor);
         creatingShape.setStrokeWidth(strokeWidth);
-        creatingShape.setOnMouseEntered(e -> {
-            if (selectShapeToggleButton.isSelected()){
-                Shape shape = (Shape) e.getSource();
-                shape.setStroke(Color.BLUE);
-            }
-        });
-        creatingShape.setOnMouseExited(e -> {
-            if (selectShapeToggleButton.isSelected()){
-                Shape shape = (Shape) e.getSource();
-                shape.setStroke(selectedOutlineColor);
-            }
-        });
         creatingShape.setOnMouseClicked(e -> {
-            if (selectShapeToggleButton.isSelected()){
-                Shape shape = (Shape) e.getSource();
-                //TODO: funzione select
-                System.out.println("Cliccato");
-            }
+            selectShape(e);
         });
         this.getChildren().add(creatingShape);
     }
@@ -183,24 +179,8 @@ public class DrawingPane extends Pane{
         creatingShape.setStroke(selectedOutlineColor);
         creatingShape.setFill(selectedFillColor);
         creatingShape.setStrokeWidth(strokeWidth);
-        creatingShape.setOnMouseEntered(e -> {
-            if (selectShapeToggleButton.isSelected()){
-                Shape shape = (Shape) e.getSource();
-                shape.setStroke(Color.BLUE);
-            }
-        });
-        creatingShape.setOnMouseExited(e -> {
-            if (selectShapeToggleButton.isSelected()){
-                Shape shape = (Shape) e.getSource();
-                shape.setStroke(selectedOutlineColor);
-            }
-        });
         creatingShape.setOnMouseClicked(e -> {
-            if (selectShapeToggleButton.isSelected()){
-                Shape shape = (Shape) e.getSource();
-                //TODO: funzione select
-                System.out.println("Cliccato");
-            }
+            selectShape(e);
         });
         this.getChildren().add(creatingShape);
     }
@@ -217,26 +197,8 @@ public class DrawingPane extends Pane{
         creatingShape.setStroke(selectedOutlineColor);
         creatingShape.setFill(selectedFillColor);
         creatingShape.setStrokeWidth(strokeWidth);
-        
-        creatingShape.setOnMouseEntered(e -> {
-            if (selectShapeToggleButton.isSelected()){
-                Shape shape = (Shape) e.getSource();
-                shape.setStroke(Color.BLUE);
-                shape.setStrokeDashOffset(5);
-            }
-        });
-        creatingShape.setOnMouseExited(e -> {
-            if (selectShapeToggleButton.isSelected()){
-                Shape shape = (Shape) e.getSource();
-                shape.setStroke(selectedOutlineColor);
-            }
-        });
         creatingShape.setOnMouseClicked(e -> {
-            if (selectShapeToggleButton.isSelected()){
-                Shape shape = (Shape) e.getSource();
-                //TODO: funzione select
-                System.out.println("Cliccato");
-            }
+            selectShape(e);
         });
         this.getChildren().add(creatingShape);
     }
@@ -310,5 +272,20 @@ public class DrawingPane extends Pane{
 
         ellipse.setEllipseRadiusX(Math.abs(xStartPoint - x) / 2);
         ellipse.setEllipseRadiusY(Math.abs(yStartPoint - y) / 2);
+    }
+    
+    private void selectShape(MouseEvent e){
+        if (selectShapeToggleButton.isSelected()){
+                Shape shape = (Shape) e.getSource();
+                // if there was already a selected shape, we reset it to its previous settings
+                if(selectedShape != null){
+                    selectedShape.setStroke(selectedShapePrevColor);
+                    selectedShape.getStrokeDashArray().clear();
+                }
+                selectedShape = shape;
+                selectedShapePrevColor = shape.getStroke();
+                selectedShape.setStroke(Color.BLACK);
+                selectedShape.getStrokeDashArray().addAll(25d, 10d); 
+            }
     }
 }
