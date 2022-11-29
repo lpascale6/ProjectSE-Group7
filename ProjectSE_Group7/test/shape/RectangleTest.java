@@ -21,202 +21,202 @@ public class RectangleTest {
     }
 
     /**
-     * Test of getX_ method, of class Rectangle.
+     * Test of getRectangleX method, of class Rectangle.
      */
     @Test
-    public void testGetX_() {
-        System.out.println("getX_");
+    public void testGetRectangleX() {
+        System.out.println("getRectangleX");
         
         //Test setting a positive x's value
         double x = 3.0;
-        instance.setX_(x);
-        double result = instance.getX_();
+        instance.setRectangleX(x);
+        double result = instance.getRectangleX();
         assertEquals(x, result, 0);
         
         
         //Test setting 0.0 as x's value
         x = 3.0;
-        instance.setX_(x);
-        result = instance.getX_();
+        instance.setRectangleX(x);
+        result = instance.getRectangleX();
         assertEquals(x, result, 0);
         
         //Test setting a negative as x's value
         x = -3.0;
-        instance.setX_(x);
-        result = instance.getX_();
+        instance.setRectangleX(x);
+        result = instance.getRectangleX();
         assertEquals(x, result, 0);
     }
 
     /**
-     * Test of setX_ method, of class Rectangle.
+     * Test of setRectangleX method, of class Rectangle.
      */
     @Test
-    public void testSetX_() {
-        System.out.println("setX_");
+    public void testSetRectangleX() {
+        System.out.println("setRectangleX");
         
         //Test with positive x's value
         double x = 3.0;
-        instance.setX_(x);
-        assertEquals(x, instance.getX_(), 0);
+        instance.setRectangleX(x);
+        assertEquals(x, instance.getRectangleX(), 0);
         
         //Test with 0.0 as x's value
         x = 0.0;
-        instance.setX_(x);
-        assertEquals(x, instance.getX_(), 0);
+        instance.setRectangleX(x);
+        assertEquals(x, instance.getRectangleX(), 0);
         
         //Test with negative value as x's value
         x = -3.0;
-        instance.setX_(x);
-        assertEquals(x, instance.getX_(), 0);
+        instance.setRectangleX(x);
+        assertEquals(x, instance.getRectangleX(), 0);
     }
 
     /**
-     * Test of getY_ method, of class Rectangle.
+     * Test of getRectangleY method, of class Rectangle.
      */
     @Test
-    public void testGetY_() {
-        System.out.println("getY_");
+    public void testGetRectangleY() {
+        System.out.println("getRectangleY");
         
         //Test setting a positive y's value
         double y = 3.0;
-        instance.setY_(y);
-        double result = instance.getY_();
+        instance.setRectangleY(y);
+        double result = instance.getRectangleY();
         assertEquals(y, result, 0);
         
         //Test setting 0.0 as y's value
         y = 3.0;
-        instance.setY_(y);
-        result = instance.getY_();
+        instance.setRectangleY(y);
+        result = instance.getRectangleY();
         assertEquals(y, result, 0);
         
         //Test setting a negative as y's value
         y = -3.0;
-        instance.setY_(y);
-        result = instance.getY_();
+        instance.setRectangleY(y);
+        result = instance.getRectangleY();
         assertEquals(y, result, 0);
         
     }
 
     /**
-     * Test of setY_ method, of class Rectangle.
+     * Test of setRectangleY method, of class Rectangle.
      */
     @Test
-    public void testSetY_() {
-        System.out.println("setY_");
+    public void testSetRectangleY() {
+        System.out.println("setRectangleY");
         
         //Test with positive y's value
         double y = 3.0;
-        instance.setY_(y);
-        assertEquals(y, instance.getY_(), 0);
+        instance.setRectangleY(y);
+        assertEquals(y, instance.getRectangleY(), 0);
         
         //Test with 0.0 as y's value
         y = 0.0;
-        instance.setY_(y);
-        assertEquals(y, instance.getY_(), 0);
+        instance.setRectangleY(y);
+        assertEquals(y, instance.getRectangleY(), 0);
         
         //Test with negative x's value
         y = -3.0;
-        instance.setY_(y);
-        assertEquals(y, instance.getY_(), 0);
+        instance.setRectangleY(y);
+        assertEquals(y, instance.getRectangleY(), 0);
 
     }
 
     /**
-     * Test of getWidth_ method, of class Rectangle.
+     * Test of getRectangleWidth method, of class Rectangle.
      */
     @Test
-    public void testGetWidth_() {
-        System.out.println("getWidth_");
+    public void testGetRectangleWidth() {
+        System.out.println("getRectangleWidth");
         
         //Test setting a positive width's value
         double width = 3.0;
-        instance.setWidth_(width);
-        double result = instance.getWidth_();
+        instance.setRectangleWidth(width);
+        double result = instance.getRectangleWidth();
         assertEquals(width, result, 0);
         
         //Test setting 0.0 as width's value
         width = 3.0;
-        instance.setWidth_(width);
-        result = instance.getWidth_();
+        instance.setRectangleWidth(width);
+        result = instance.getRectangleWidth();
         assertEquals(width, result, 0);
         
         //Test setting a negative as width's value
         width = -3.0;
-        instance.setWidth_(width);
-        result = instance.getWidth_();
+        instance.setRectangleWidth(width);
+        result = instance.getRectangleWidth();
         assertEquals(width, result, 0);
     }
 
     /**
-     * Test of setWidth_ method, of class Rectangle.
+     * Test of setRectangleWidth method, of class Rectangle.
      */
     @Test
-    public void testSetWidth_() {
-        System.out.println("setWidth_");
+    public void testSetRectangleWidth() {
+        System.out.println("setRectangleWidth");
         
         //Test with positive width's value
         double width = 3.0;
-        instance.setWidth_(width);
-        assertEquals(width, instance.getWidth_(), 0);
+        instance.setRectangleWidth(width);
+        assertEquals(width, instance.getRectangleWidth(), 0);
         
         //Test with 0.0 as width's value
         width = 0.0;
-        instance.setWidth_(width);
-        assertEquals(width, instance.getWidth_(), 0);
+        instance.setRectangleWidth(width);
+        assertEquals(width, instance.getRectangleWidth(), 0);
         
         //Test with negative width's value
         width = -3.0;
-        instance.setWidth_(width);
-        assertEquals(width, instance.getWidth_(), 0);
+        instance.setRectangleWidth(width);
+        assertEquals(width, instance.getRectangleWidth(), 0);
     }
 
     /**
-     * Test of getHeight_ method, of class Rectangle.
+     * Test of getRectangleHeight method, of class Rectangle.
      */
     @Test
-    public void testGetHeight_() {
-        System.out.println("getHeight_");
+    public void testGetRectangleHeight() {
+        System.out.println("getRectangleHeight");
         
         //Test setting a positive heigtht's value
         double height = 3.0;
-        instance.setHeight_(height);
-        double result = instance.getHeight_();
+        instance.setRectangleHeight(height);
+        double result = instance.getRectangleHeight();
         assertEquals(height, result, 0);
         
         //Test setting 0.0 as height's value
         height = 3.0;
-        instance.setHeight_(height);
-        result = instance.getHeight_();
+        instance.setRectangleHeight(height);
+        result = instance.getRectangleHeight();
         assertEquals(height, result, 0);
         
         //Test setting a negative as y's value
         height = -3.0;
-        instance.setHeight_(height);
-        result = instance.getHeight_();
+        instance.setRectangleHeight(height);
+        result = instance.getRectangleHeight();
         assertEquals(height, result, 0);
     }
 
     /**
-     * Test of setHeight_ method, of class Rectangle.
+     * Test of setRectangleHeight method, of class Rectangle.
      */
     @Test
-    public void testSetHeight_() {
-        System.out.println("setHeight_");
+    public void testSetRectangleHeight() {
+        System.out.println("setRectangleHeight");
         
         //Test with positive height's value
         double height = 3.0;
-        instance.setHeight_(height);
-        assertEquals(height, instance.getHeight_(), 0);
+        instance.setRectangleHeight(height);
+        assertEquals(height, instance.getRectangleHeight(), 0);
         
         //Test with 0.0 as height's value
         height = 0.0;
-        instance.setHeight_(height);
-        assertEquals(height, instance.getHeight_(), 0);
+        instance.setRectangleHeight(height);
+        assertEquals(height, instance.getRectangleHeight(), 0);
         
         //Test with negative height's value
         height = -3.0;
-        instance.setHeight_(height);
-        assertEquals(height, instance.getHeight_(), 0);
+        instance.setRectangleHeight(height);
+        assertEquals(height, instance.getRectangleHeight(), 0);
     }
 
     /**
@@ -302,10 +302,10 @@ public class RectangleTest {
     public void testToString(){
         System.out.println("toString");
         
-        instance.setX_(2.0);
-        instance.setY_(4.2);
-        instance.setWidth_(4.7);
-        instance.setHeight_(3.3);
+        instance.setRectangleX(2.0);
+        instance.setRectangleY(4.2);
+        instance.setRectangleWidth(4.7);
+        instance.setRectangleHeight(3.3);
         instance.setOutlineColor(Color.BLUE);
         instance.setFillColor(Color.GREEN);
         String expRes = "rectangle;2.0;4.2;4.7;3.3;#0000ff;#008000";

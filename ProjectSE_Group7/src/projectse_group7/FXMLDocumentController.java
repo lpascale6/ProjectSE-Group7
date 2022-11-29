@@ -250,21 +250,21 @@ public class FXMLDocumentController implements Initializable {
         // if the x coordinate is before the x vertex coordinate, 
         // it becomes the new x coordinate for the vertex
         if (x < xStartPoint) {
-            rectangle.setX_(x);
+            rectangle.setRectangleX(x);
         } else {
-            rectangle.setX_(xStartPoint);
+            rectangle.setRectangleX(xStartPoint);
         }
 
         // if the y coordinate is before the y vertex coordinate, 
         // it becomes the new y coordinate for the vertex
         if (y < yStartPoint) {
-            rectangle.setY_(y);
+            rectangle.setRectangleY(y);
         } else {
-            rectangle.setY_(yStartPoint);
+            rectangle.setRectangleY(yStartPoint);
         }
 
-        rectangle.setWidth_(Math.abs(xStartPoint - x));
-        rectangle.setHeight_(Math.abs(yStartPoint - y));
+        rectangle.setRectangleWidth(Math.abs(xStartPoint - x));
+        rectangle.setRectangleHeight(Math.abs(yStartPoint - y));
     }
 
     /**
