@@ -235,7 +235,7 @@ public class FXMLDocumentController implements Initializable {
      */
     private void drawLine(double x, double y) {
         Line line = (Line) creatingShape;
-        line.setEndingX(x);
+        line.setLineEndingX(x);
         line.setEndY(y);
     }
 

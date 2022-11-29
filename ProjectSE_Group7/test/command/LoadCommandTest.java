@@ -88,11 +88,11 @@ public class LoadCommandTest {
         
         Line resLine = (Line) shapeList.get(0);
 
-        Double resLineStartX = resLine.getStartingX();
-        Double resLineStartY = resLine.getStartingY();
-        Double resLineEndX = resLine.getEndingX();
-        Double resLineEndY = resLine.getEndingY();
-        Paint resLineColor = resLine.getColor();
+        Double resLineStartX = resLine.getLineStartingX();
+        Double resLineStartY = resLine.getLineStartingY();
+        Double resLineEndX = resLine.getLineEndingX();
+        Double resLineEndY = resLine.getLineEndingY();
+        Paint resLineColor = resLine.getLineColor();
 
         
         System.out.println("line test");

@@ -41,7 +41,7 @@ public class Line extends javafx.scene.shape.Line {
      */
     public Line(double startX, double startY, double endX, double endY, Paint color) {
         super(startX, startY, endX, endY);
-        this.setColor(color);
+        this.setLineColor(color);
     }
 
     /**
@@ -49,7 +49,7 @@ public class Line extends javafx.scene.shape.Line {
      *
      * @param startX the new starting X coordinate.
      */
-    public void setStartingX(double startX) {
+    public void setLineStartingX(double startX) {
         super.setStartX(startX);
 
     }
@@ -59,7 +59,7 @@ public class Line extends javafx.scene.shape.Line {
      *
      * @param startY the new starting Y coordinate.
      */
-    public void setStartingY(double startY) {
+    public void setLineStartingY(double startY) {
         super.setStartY(startY);
     }
 
@@ -68,7 +68,7 @@ public class Line extends javafx.scene.shape.Line {
      *
      * @param endX the new ending X coordinate.
      */
-    public void setEndingX(double endX) {
+    public void setLineEndingX(double endX) {
         super.setEndX(endX);
     }
 
@@ -77,7 +77,7 @@ public class Line extends javafx.scene.shape.Line {
      *
      * @param endY the new ending Y coordinate.
      */
-    public void setEndingY(double endY) {
+    public void setLineEndingY(double endY) {
         super.setEndY(endY);
     }
 
@@ -86,7 +86,7 @@ public class Line extends javafx.scene.shape.Line {
      *
      * @return the current starting X coordinate.
      */
-    public double getStartingX() {
+    public double getLineStartingX() {
         return super.getStartX();
     }
 
@@ -95,7 +95,7 @@ public class Line extends javafx.scene.shape.Line {
      *
      * @return the current starting Y coordinate.
      */
-    public double getStartingY() {
+    public double getLineStartingY() {
         return super.getStartY();
     }
 
@@ -104,7 +104,7 @@ public class Line extends javafx.scene.shape.Line {
      *
      * @return the current ending X coordinate.
      */
-    public double getEndingX() {
+    public double getLineEndingX() {
         return super.getEndX();
     }
 
@@ -113,7 +113,7 @@ public class Line extends javafx.scene.shape.Line {
      *
      * @return the current ending Y coordinate.
      */
-    public double getEndingY() {
+    public double getLineEndingY() {
         return super.getEndY();
     }
 
@@ -122,7 +122,7 @@ public class Line extends javafx.scene.shape.Line {
      *
      * @param color the new color.
      */
-    public void setColor(Paint color) {
+    public void setLineColor(Paint color) {
         super.setStroke(color);
     }
 
@@ -131,7 +131,7 @@ public class Line extends javafx.scene.shape.Line {
      *
      * @return the current color.
      */
-    public Paint getColor() {
+    public Paint getLineColor() {
         return super.getStroke();
     }
 
@@ -143,12 +143,12 @@ public class Line extends javafx.scene.shape.Line {
     @Override
     public String toString() {
         String representation = "line;";
-        representation += this.getStartingX() + ";";
-        representation += this.getStartingY() + ";";
-        representation += this.getEndingX() + ";";
-        representation += this.getEndingY() + ";";
+        representation += this.getLineStartingX() + ";";
+        representation += this.getLineStartingY() + ";";
+        representation += this.getLineEndingX() + ";";
+        representation += this.getLineEndingY() + ";";
         
-        representation += toHexString((Color)this.getColor());
+        representation += toHexString((Color)this.getLineColor());
 
         return representation;
     }
