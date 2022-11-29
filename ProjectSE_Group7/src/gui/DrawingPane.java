@@ -3,7 +3,10 @@ package gui;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Shape;
+import javafx.scene.shape.StrokeLineCap;
+import javafx.scene.shape.StrokeType;
 import shape.Ellipse;
 import shape.Line;
 import shape.Rectangle;
@@ -26,6 +29,7 @@ public class DrawingPane extends Pane{
     private final ToggleButton lineToggleButton;
     private final ToggleButton rectangleToggleButton;
     private final ToggleButton ellipseToggleButton;
+    private final ToggleButton selectShapeToggleButton;
 
     /**
      * DrawingPane constructor, it sets up all the attibututes and functions the object needs. 
@@ -33,10 +37,11 @@ public class DrawingPane extends Pane{
      * @param rectangleToggleButton Toggle button object that indicates if the user wants to draw a rectangle.
      * @param ellipseToggleButton Toggle button object that indicates if the user wants to draw a ellipse.
      */
-    public DrawingPane(ToggleButton lineToggleButton, ToggleButton rectangleToggleButton, ToggleButton ellipseToggleButton) {
+    public DrawingPane(ToggleButton lineToggleButton, ToggleButton rectangleToggleButton, ToggleButton ellipseToggleButton, ToggleButton selectShapeToggleButton) {
         this.lineToggleButton = lineToggleButton;
         this.rectangleToggleButton = rectangleToggleButton;
         this.ellipseToggleButton = ellipseToggleButton;
+        this.selectShapeToggleButton = selectShapeToggleButton;
         this.setPrefSize(990, 615);
         this.setStyle("-fx-background-color:white");
         this.setStyle("-fx-border-color:grey");
@@ -144,6 +149,25 @@ public class DrawingPane extends Pane{
         creatingShape = new Line(x, y, x, y);
         creatingShape.setStroke(selectedOutlineColor);
         creatingShape.setStrokeWidth(strokeWidth);
+        creatingShape.setOnMouseEntered(e -> {
+            if (selectShapeToggleButton.isSelected()){
+                Shape shape = (Shape) e.getSource();
+                shape.setStroke(Color.BLUE);
+            }
+        });
+        creatingShape.setOnMouseExited(e -> {
+            if (selectShapeToggleButton.isSelected()){
+                Shape shape = (Shape) e.getSource();
+                shape.setStroke(selectedOutlineColor);
+            }
+        });
+        creatingShape.setOnMouseClicked(e -> {
+            if (selectShapeToggleButton.isSelected()){
+                Shape shape = (Shape) e.getSource();
+                //TODO: funzione select
+                System.out.println("Cliccato");
+            }
+        });
         this.getChildren().add(creatingShape);
     }
 
@@ -159,6 +183,25 @@ public class DrawingPane extends Pane{
         creatingShape.setStroke(selectedOutlineColor);
         creatingShape.setFill(selectedFillColor);
         creatingShape.setStrokeWidth(strokeWidth);
+        creatingShape.setOnMouseEntered(e -> {
+            if (selectShapeToggleButton.isSelected()){
+                Shape shape = (Shape) e.getSource();
+                shape.setStroke(Color.BLUE);
+            }
+        });
+        creatingShape.setOnMouseExited(e -> {
+            if (selectShapeToggleButton.isSelected()){
+                Shape shape = (Shape) e.getSource();
+                shape.setStroke(selectedOutlineColor);
+            }
+        });
+        creatingShape.setOnMouseClicked(e -> {
+            if (selectShapeToggleButton.isSelected()){
+                Shape shape = (Shape) e.getSource();
+                //TODO: funzione select
+                System.out.println("Cliccato");
+            }
+        });
         this.getChildren().add(creatingShape);
     }
 
@@ -174,6 +217,27 @@ public class DrawingPane extends Pane{
         creatingShape.setStroke(selectedOutlineColor);
         creatingShape.setFill(selectedFillColor);
         creatingShape.setStrokeWidth(strokeWidth);
+        
+        creatingShape.setOnMouseEntered(e -> {
+            if (selectShapeToggleButton.isSelected()){
+                Shape shape = (Shape) e.getSource();
+                shape.setStroke(Color.BLUE);
+                shape.setStrokeDashOffset(5);
+            }
+        });
+        creatingShape.setOnMouseExited(e -> {
+            if (selectShapeToggleButton.isSelected()){
+                Shape shape = (Shape) e.getSource();
+                shape.setStroke(selectedOutlineColor);
+            }
+        });
+        creatingShape.setOnMouseClicked(e -> {
+            if (selectShapeToggleButton.isSelected()){
+                Shape shape = (Shape) e.getSource();
+                //TODO: funzione select
+                System.out.println("Cliccato");
+            }
+        });
         this.getChildren().add(creatingShape);
     }
 

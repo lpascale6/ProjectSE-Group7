@@ -56,6 +56,8 @@ public class FXMLDocumentController implements Initializable {
 
     // drawing variables
     private DrawingPane drawingPane;
+    @FXML
+    private ToggleButton selectShapeToggleButton;
 
     /**
      * Sets up all the toggle buttons in the "Shape selection" section by
@@ -67,6 +69,7 @@ public class FXMLDocumentController implements Initializable {
         lineToggleButton.setToggleGroup(shapeToggleGroup);
         rectangleToggleButton.setToggleGroup(shapeToggleGroup);
         ellipseToggleButton.setToggleGroup(shapeToggleGroup);
+        selectShapeToggleButton.setToggleGroup(shapeToggleGroup);
 
         // to make sure that a toggle button in the group is always selected
         shapeToggleGroup.selectedToggleProperty().addListener((obsValue, oldValue, newValue) -> {
@@ -112,7 +115,7 @@ public class FXMLDocumentController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // setting up the drawing pane
-        drawingPane = new DrawingPane(lineToggleButton, rectangleToggleButton, ellipseToggleButton);
+        drawingPane = new DrawingPane(lineToggleButton, rectangleToggleButton, ellipseToggleButton, selectShapeToggleButton);
         pane.getChildren().add(drawingPane);
 
         // setting up all toggle buttons
