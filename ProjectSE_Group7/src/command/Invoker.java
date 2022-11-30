@@ -30,4 +30,8 @@ public class Invoker {
         Command command = this.commands.pop();
         command.undo();
     }
+    
+    public void clearStack() {
+        this.commands.clear();
+    }
 }

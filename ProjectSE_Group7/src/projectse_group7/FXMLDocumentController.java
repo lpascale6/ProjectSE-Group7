@@ -8,8 +8,6 @@ import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -18,13 +16,14 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Shape;
 import javafx.stage.FileChooser;
-import shape.*;
 
 /**
  *
@@ -32,6 +31,7 @@ import shape.*;
  */
 public class FXMLDocumentController implements Initializable {
 
+    // invoker that contains and executes all the operations on the drawing
     private Invoker invoker;
     @FXML
     private MenuBar menuBar;
@@ -96,9 +96,11 @@ public class FXMLDocumentController implements Initializable {
         if (colorToggleGroup.getSelectedToggle() == outlineColorToggleButton) {
             outlineColorImage.setFill(color);
             drawingPane.setOutlineColor(color);
+            drawingPane.changeSelectedShapeOutlineColor(color);
         } else {
             fillColorImage.setFill(color);
             drawingPane.setFillColor(color);
+            drawingPane.changeSelectedShapeFillColor(color);
         }
     }
 
@@ -126,6 +128,8 @@ public class FXMLDocumentController implements Initializable {
         // setting up the drawing pane
         drawingPane = new DrawingPane(invoker, lineToggleButton, rectangleToggleButton, ellipseToggleButton, selectShapeToggleButton, outlineColorImage, fillColorImage);
         pane.getChildren().add(drawingPane);
+        // to abilitate the user to use ctrl+z shortcut
+        undoMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.Z, KeyCombination.CONTROL_DOWN));
 
         // setting up all toggle buttons
         setupShapeToggleButtons();
@@ -306,6 +310,11 @@ public class FXMLDocumentController implements Initializable {
         drawingPane.clearDrawing();
     }
 
+    /**
+     * Undoes the last performed operation on the drawing.
+     * @param event The event created when the undo menu item is
+     * clicked or when CTRL+Z is pressed.
+     */
     @FXML
     private void undo(ActionEvent event) {
         try {

@@ -1,16 +1,19 @@
 package gui;
 
+import command.ChangeFillColorCommand;
+import command.ChangeOutlineColorCommand;
 import command.DeleteShapeCommand;
 import command.DrawShapeCommand;
 import command.Invoker;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javafx.beans.property.BooleanProperty;
+import command.ToTheBackCommand;
+import command.ToTheFrontCommand;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.value.ObservableBooleanValue;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -63,8 +66,8 @@ public class DrawingPane extends Pane {
      * user wants to draw a ellipse.
      * @param selectShapeToggleButton Toggle button object that indicates if the
      * user wants to perform operations on the shapes.
-     * @param outlineColorImage
-     * @param fillColorImage
+     * @param outlineColorImage Cirlce image that represents the selected outline color.
+     * @param fillColorImage Cirlce image that represents the selected fill color.
      */
     public DrawingPane(Invoker invoker, ToggleButton lineToggleButton, ToggleButton rectangleToggleButton, ToggleButton ellipseToggleButton, ToggleButton selectShapeToggleButton, Circle outlineColorImage, Circle fillColorImage) {
         this.invoker = invoker;
@@ -78,28 +81,54 @@ public class DrawingPane extends Pane {
         this.setStyle("-fx-background-color:white;"
                 + "-fx-border-color:grey;"
                 + "-fx-border-radius:5;");
-        this.setup();
-
+        setup();
         lineToggleButton.setOnAction(event -> deselectShape());
         rectangleToggleButton.setOnAction(event -> deselectShape());
         ellipseToggleButton.setOnAction(event -> deselectShape());
 
-        ContextMenu manageShape = new ContextMenu();
-        MenuItem deleteMenuItem = new MenuItem("Delete");
         isShapeSelected = new SimpleBooleanProperty(false);
-        
+        ContextMenu manageShape = new ContextMenu();
+
+        // setting up delete menu item and its operations
+        MenuItem deleteMenuItem = new MenuItem("Delete");
+        deleteMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.D, KeyCombination.CONTROL_DOWN));
         deleteMenuItem.disableProperty().bind(isShapeSelected.not());
         deleteMenuItem.setOnAction(event -> {
             DeleteShapeCommand deleteShapeCommand = new DeleteShapeCommand(selectedShape, this);
             try {
+                System.out.println("CIAO");
                 invoker.execute(deleteShapeCommand);
                 deselectShape();
-            } catch (Exception ex) {}
+            } catch (Exception ex) {
+            }
         });
-        
-        manageShape.getItems().addAll(deleteMenuItem);
+
+        // setting up toFront menu item and its operations
+        MenuItem toFrontMenuItem = new MenuItem("To the front");
+        toFrontMenuItem.disableProperty().bind(isShapeSelected.not());
+        toFrontMenuItem.setOnAction(event -> {
+            ToTheFrontCommand toTheFrontCommand = new ToTheFrontCommand(selectedShape, this);
+            try {
+                invoker.execute(toTheFrontCommand);
+            } catch (Exception ex) {
+            }
+        });
+
+        // setting up toBack menu item and its operations
+        MenuItem toBackMenuItem = new MenuItem("To the back");
+        toBackMenuItem.disableProperty().bind(isShapeSelected.not());
+        toBackMenuItem.setOnAction(event -> {
+            ToTheBackCommand toTheBackCommand = new ToTheBackCommand(selectedShape, this);
+            try {
+                invoker.execute(toTheBackCommand);
+            } catch (Exception ex) {
+            }
+        });
+
+        // adding all the menu items in the manage shape ContextMenu
+        manageShape.getItems().addAll(deleteMenuItem, toFrontMenuItem, toBackMenuItem);
         this.setOnContextMenuRequested(event -> {
-            if(selectShapeToggleButton.isSelected()) {
+            if (selectShapeToggleButton.isSelected()) {
                 manageShape.show(this.getScene().getWindow(), event.getScreenX(), event.getScreenY());
             }
         });
@@ -161,7 +190,7 @@ public class DrawingPane extends Pane {
                         this.getChildren().remove(border);
                     }
                     selectedShape = null;
-                    
+
                     isShapeSelected.set(false);
                 }
             }
@@ -343,7 +372,7 @@ public class DrawingPane extends Pane {
     /**
      * Selects a shape and creates a border around it.
      *
-     * @param e the mouse event that generated the call to selectShape
+     * @param e The mouse event that generated the call to selectShape.
      */
     public void selectShape(MouseEvent e) {
         if (selectShapeToggleButton.isSelected()) {
@@ -355,10 +384,7 @@ public class DrawingPane extends Pane {
             selectedShape = shape;
             outlineColorImage.setFill(selectedShape.getStroke());
             setOutlineColor((Color) selectedShape.getStroke());
-            if (selectedShape.getClass() == Line.class) {
-                fillColorImage.setFill(Color.WHITE);
-                setFillColor(Color.WHITE);
-            } else {
+            if (selectedShape.getClass() != Line.class) {
                 fillColorImage.setFill(selectedShape.getFill());
                 setFillColor((Color) selectedShape.getFill());
             }
@@ -370,11 +396,14 @@ public class DrawingPane extends Pane {
 
             border.getStrokeDashArray().addAll(2d, 21d);
             this.getChildren().add(border);
-            
+
             isShapeSelected.set(true);
         }
     }
 
+    /**
+     * Deselects the selected shape, if there is one.
+     */
     public void deselectShape() {
         if (selectedShape != null) {
             selectedShape = null;
@@ -384,10 +413,47 @@ public class DrawingPane extends Pane {
         }
     }
 
+    /**
+     * Clears the drawing by removing all the shapes in it and by removing all
+     * the performed operations in the invoker.
+     */
     public void clearDrawing() {
         this.getChildren().clear();
+        invoker.clearStack();
         selectedShape = null;
         border = null;
+    }
+
+    /**
+     * When a shape is selected, it changes the shape outline color to the one
+     * selected.
+     *
+     * @param outlineColor The new outline color of the selected shape.
+     */
+    public void changeSelectedShapeOutlineColor(Color outlineColor) {
+        if (selectedShape != null) {
+            ChangeOutlineColorCommand changeOutlineColorCommand = new ChangeOutlineColorCommand(selectedShape, outlineColor);
+            try {
+                invoker.execute(changeOutlineColorCommand);
+            } catch (Exception ex) {
+            }
+        }
+    }
+
+    /**
+     * When a shape is selected, it changes the shape fill color to the one
+     * selected.
+     *
+     * @param outlineColor The new fill color of the selected shape.
+     */
+    public void changeSelectedShapeFillColor(Color fillColor) {
+        if (selectedShape != null) {
+            ChangeFillColorCommand changeFillColorCommand = new ChangeFillColorCommand(selectedShape, fillColor);
+            try {
+                invoker.execute(changeFillColorCommand);
+            } catch (Exception ex) {
+            }
+        }
     }
 
 }

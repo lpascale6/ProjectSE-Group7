@@ -28,5 +28,6 @@ public class DrawShapeCommand implements Command{
     @Override
     public void undo() throws Exception {
         this.drawingPane.getChildren().remove(this.creatingShape);
+        this.drawingPane.deselectShape();
     }
 }
