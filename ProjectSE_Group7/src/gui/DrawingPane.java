@@ -1,7 +1,13 @@
 package gui;
 
+import command.DeleteShapeCommand;
 import command.DrawShapeCommand;
 import command.Invoker;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ObservableBooleanValue;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ToggleButton;
@@ -41,6 +47,7 @@ public class DrawingPane extends Pane {
     private final Circle outlineColorImage;
     private final Circle fillColorImage;
 
+    SimpleBooleanProperty isShapeSelected;
     private Shape selectedShape;
     private Border border;
 
@@ -78,8 +85,23 @@ public class DrawingPane extends Pane {
         ellipseToggleButton.setOnAction(event -> deselectShape());
 
         ContextMenu manageShape = new ContextMenu();
+        MenuItem deleteMenuItem = new MenuItem("Delete");
+        isShapeSelected = new SimpleBooleanProperty(false);
+        
+        deleteMenuItem.disableProperty().bind(isShapeSelected.not());
+        deleteMenuItem.setOnAction(event -> {
+            DeleteShapeCommand deleteShapeCommand = new DeleteShapeCommand(selectedShape, this);
+            try {
+                invoker.execute(deleteShapeCommand);
+                deselectShape();
+            } catch (Exception ex) {}
+        });
+        
+        manageShape.getItems().addAll(deleteMenuItem);
         this.setOnContextMenuRequested(event -> {
-            manageShape.show(this.getScene().getWindow(), event.getScreenX(), event.getScreenY());
+            if(selectShapeToggleButton.isSelected()) {
+                manageShape.show(this.getScene().getWindow(), event.getScreenX(), event.getScreenY());
+            }
         });
     }
 
@@ -139,6 +161,8 @@ public class DrawingPane extends Pane {
                         this.getChildren().remove(border);
                     }
                     selectedShape = null;
+                    
+                    isShapeSelected.set(false);
                 }
             }
         });
@@ -346,6 +370,8 @@ public class DrawingPane extends Pane {
 
             border.getStrokeDashArray().addAll(2d, 21d);
             this.getChildren().add(border);
+            
+            isShapeSelected.set(true);
         }
     }
 
@@ -354,6 +380,7 @@ public class DrawingPane extends Pane {
             selectedShape = null;
             this.getChildren().remove(border);
             border = null;
+            isShapeSelected.set(false);
         }
     }
 

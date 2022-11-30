@@ -8,11 +8,14 @@ import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.Pane;
@@ -29,6 +32,7 @@ import shape.*;
  */
 public class FXMLDocumentController implements Initializable {
 
+    private Invoker invoker;
     @FXML
     private MenuBar menuBar;
     @FXML
@@ -59,6 +63,8 @@ public class FXMLDocumentController implements Initializable {
     private DrawingPane drawingPane;
     @FXML
     private ToggleButton selectShapeToggleButton;
+    @FXML
+    private MenuItem undoMenuItem;
 
     /**
      * Sets up all the toggle buttons in the "Shape selection" section by
@@ -115,7 +121,8 @@ public class FXMLDocumentController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        Invoker invoker = Invoker.getInstance();
+        invoker = Invoker.getInstance();
+        
         // setting up the drawing pane
         drawingPane = new DrawingPane(invoker, lineToggleButton, rectangleToggleButton, ellipseToggleButton, selectShapeToggleButton, outlineColorImage, fillColorImage);
         pane.getChildren().add(drawingPane);
@@ -297,6 +304,13 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private void newDrawing(ActionEvent event) {
         drawingPane.clearDrawing();
+    }
+
+    @FXML
+    private void undo(ActionEvent event) {
+        try {
+            invoker.undo();
+        } catch (Exception ex) {}
     }
 
 }
