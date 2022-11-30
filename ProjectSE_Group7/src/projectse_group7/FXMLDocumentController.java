@@ -115,7 +115,7 @@ public class FXMLDocumentController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // setting up the drawing pane
-        drawingPane = new DrawingPane(lineToggleButton, rectangleToggleButton, ellipseToggleButton, selectShapeToggleButton);
+        drawingPane = new DrawingPane(lineToggleButton, rectangleToggleButton, ellipseToggleButton, selectShapeToggleButton, outlineColorImage, fillColorImage);
         pane.getChildren().add(drawingPane);
 
         // setting up all toggle buttons
@@ -294,7 +294,7 @@ public class FXMLDocumentController implements Initializable {
      */
     @FXML
     private void newDrawing(ActionEvent event) {
-        drawingPane.getChildren().clear();
+        drawingPane.clearDrawing();
     }
 
 }

@@ -5,9 +5,11 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Shape;
 import javafx.scene.shape.StrokeLineCap;
 import javafx.scene.shape.StrokeType;
+import shape.Border;
 import shape.Ellipse;
 import shape.Line;
 import shape.Rectangle;
@@ -32,24 +34,30 @@ public class DrawingPane extends Pane{
     private final ToggleButton ellipseToggleButton;
     private final ToggleButton selectShapeToggleButton;
     
+    private final Circle outlineColorImage;
+    private final Circle fillColorImage;
+    
     private Shape selectedShape;
-    private Paint selectedShapePrevColor;
+    private Border border;
 
     /**
      * DrawingPane constructor, it sets up all the attibututes and functions the object needs. 
      * @param lineToggleButton Toggle button object that indicates if the user wants to draw a line.
      * @param rectangleToggleButton Toggle button object that indicates if the user wants to draw a rectangle.
      * @param ellipseToggleButton Toggle button object that indicates if the user wants to draw a ellipse.
+     * @param selectShapeToggleButton Toggle button object that indicates if the user wants to perform operations on the shapes.
+     * @param outlineColorImage
+     * @param fillColorImage
      */
-    public DrawingPane(ToggleButton lineToggleButton, ToggleButton rectangleToggleButton, ToggleButton ellipseToggleButton, ToggleButton selectShapeToggleButton) {
+    public DrawingPane(ToggleButton lineToggleButton, ToggleButton rectangleToggleButton, ToggleButton ellipseToggleButton, ToggleButton selectShapeToggleButton, Circle outlineColorImage, Circle fillColorImage) {
         this.lineToggleButton = lineToggleButton;
         this.rectangleToggleButton = rectangleToggleButton;
         this.ellipseToggleButton = ellipseToggleButton;
         this.selectShapeToggleButton = selectShapeToggleButton;
+        this.outlineColorImage = outlineColorImage;
+        this.fillColorImage = fillColorImage;
         this.setPrefSize(990, 615);
-        this.setStyle("-fx-background-color:white");
-        this.setStyle("-fx-border-color:grey");
-        this.setStyle("-fx-border-radius:5");
+        this.setStyle("-fx-background-color:white" + "-fx-border-color:grey" + "-fx-border-radius:5");
         this.setup();
     }
 
@@ -79,6 +87,10 @@ public class DrawingPane extends Pane{
             if (event.isPrimaryButtonDown()) {
                 // starts to draw only if a shape toggle button is selected
                 if (lineToggleButton.isSelected() || rectangleToggleButton.isSelected() || ellipseToggleButton.isSelected()) {
+                    if (event.isSecondaryButtonDown()) {
+                        this.getChildren().remove(this.getChildren().size() - 1);
+                        return;
+                    }
                     isDrawing = true;
                     // sets the starting coordinate of the new shape
                     xStartPoint = event.getX();
@@ -97,8 +109,7 @@ public class DrawingPane extends Pane{
                 if(selectShapeToggleButton.isSelected()){
                     // if there was already a selected shape, we reset it to its previous settings
                     if(selectedShape != null){
-                        selectedShape.setStroke(selectedShapePrevColor);
-                        selectedShape.getStrokeDashArray().clear();
+                        this.getChildren().remove(border);
                     }
                     selectedShape = null;
                 }
@@ -274,18 +285,43 @@ public class DrawingPane extends Pane{
         ellipse.setEllipseRadiusY(Math.abs(yStartPoint - y) / 2);
     }
     
-    private void selectShape(MouseEvent e){
+    /**
+     * Selects a shape and creates a border around it.
+     * 
+     * @param e the mouse event that generated the call to selectShape
+     */
+    public void selectShape(MouseEvent e){
         if (selectShapeToggleButton.isSelected()){
                 Shape shape = (Shape) e.getSource();
                 // if there was already a selected shape, we reset it to its previous settings
                 if(selectedShape != null){
-                    selectedShape.setStroke(selectedShapePrevColor);
-                    selectedShape.getStrokeDashArray().clear();
+                    this.getChildren().remove(border);
                 }
                 selectedShape = shape;
-                selectedShapePrevColor = shape.getStroke();
-                selectedShape.setStroke(Color.BLACK);
-                selectedShape.getStrokeDashArray().addAll(25d, 10d); 
+                outlineColorImage.setFill(selectedShape.getStroke());
+                setOutlineColor((Color) selectedShape.getStroke());
+                if(selectedShape.getClass() == Line.class){
+                    fillColorImage.setFill(Color.WHITE);
+                    setFillColor(Color.WHITE);
+                }
+                else{
+                    fillColorImage.setFill(selectedShape.getFill());
+                    setFillColor((Color) selectedShape.getFill());
+                }
+                border = new Border(selectedShape.getLayoutBounds().getMinX(), selectedShape.getLayoutBounds().getMinY(), selectedShape.getLayoutBounds().getWidth(), selectedShape.getLayoutBounds().getHeight());
+                border.setFillColor(Color.TRANSPARENT);
+                border.setStroke(Color.BLACK);
+                border.setStrokeWidth(1);
+                border.getStrokeDashArray().addAll(2d, 21d);
+                this.getChildren().add(border);
             }
     }
+    
+    public void clearDrawing(){
+        this.getChildren().clear();
+        selectedShape = null;
+        border = null;
+    }
+    
+    
 }
