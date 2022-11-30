@@ -105,4 +105,9 @@ public class LoadCommand implements Command {
         this.drawingPane.getChildren().addAll(shapeList); //add all reconstructed shapes to drawing pane.
     }
 
+    @Override
+    public void undo() throws Exception {
+       return;
+    }
+
 }

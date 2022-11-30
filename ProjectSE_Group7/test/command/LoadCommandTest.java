@@ -1,5 +1,6 @@
 package command;
 
+import gui.DrawingPane;
 import java.io.File;
 import java.io.FileWriter;
 import java.util.ArrayList;
@@ -31,12 +32,11 @@ public class LoadCommandTest {
      */
     @Test
     public void testExecute() throws Exception {
-
-        Pane drawingPane = new Pane();
+ 
+        DrawingPane drawingPane = new DrawingPane(null, null, null, null, null, null, null);
         File file = new File("load_command_test.txt");
 
         FileWriter writer = new FileWriter("load_command_test.txt");
-
         
         Double expLineStartX = 0.0;
         Double expLineStartY = 0.0;

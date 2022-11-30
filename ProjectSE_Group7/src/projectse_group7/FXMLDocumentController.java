@@ -1,5 +1,6 @@
 package projectse_group7;
 
+import command.Invoker;
 import command.LoadCommand;
 import command.SaveCommand;
 import gui.DrawingPane;
@@ -114,8 +115,9 @@ public class FXMLDocumentController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        Invoker invoker = Invoker.getInstance();
         // setting up the drawing pane
-        drawingPane = new DrawingPane(lineToggleButton, rectangleToggleButton, ellipseToggleButton, selectShapeToggleButton, outlineColorImage, fillColorImage);
+        drawingPane = new DrawingPane(invoker, lineToggleButton, rectangleToggleButton, ellipseToggleButton, selectShapeToggleButton, outlineColorImage, fillColorImage);
         pane.getChildren().add(drawingPane);
 
         // setting up all toggle buttons

@@ -1,7 +1,6 @@
 package command;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.util.ArrayList;
 import javafx.scene.shape.Shape;
@@ -34,6 +33,11 @@ public class SaveCommand implements Command{
             }
             
             fw.close();
+    }
+
+    @Override
+    public void undo() throws Exception {
+        return;
     }
     
 }
