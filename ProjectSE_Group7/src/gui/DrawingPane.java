@@ -3,10 +3,14 @@ package gui;
 import command.ChangeFillColorCommand;
 import command.ChangeOutlineColorCommand;
 import command.DeleteShapeCommand;
-import command.DrawShapeCommand;
+import command.AddShapeCommand;
 import command.Invoker;
 import command.ToTheBackCommand;
 import command.ToTheFrontCommand;
+import javafx.animation.Interpolator;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
@@ -20,6 +24,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Shape;
 import javafx.scene.shape.StrokeType;
+import javafx.util.Duration;
 import shape.Border;
 import shape.Ellipse;
 import shape.Line;
@@ -42,22 +47,30 @@ public class DrawingPane extends Pane {
     private Color selectedOutlineColor = Color.BLACK;
     private Color selectedFillColor = Color.WHITE;
 
-    private final ToggleButton lineToggleButton;
-    private final ToggleButton rectangleToggleButton;
-    private final ToggleButton ellipseToggleButton;
-    private final ToggleButton selectShapeToggleButton;
+    private ToggleButton lineToggleButton;
+    private ToggleButton rectangleToggleButton;
+    private ToggleButton ellipseToggleButton;
+    private ToggleButton selectShapeToggleButton;
 
-    private final Circle outlineColorImage;
-    private final Circle fillColorImage;
+    private Circle outlineColorImage;
+    private Circle fillColorImage;
 
     SimpleBooleanProperty isShapeSelected;
     private Shape selectedShape;
     private Border border;
 
     /**
+     * Empty constructor of the DrawingPane class for test.
+     */
+    public DrawingPane() {
+        super();
+    }
+
+    /**
      * DrawingPane constructor, it sets up all the attibututes and functions the
      * object needs.
      *
+     * @param invoker The invoker of the command operations.
      * @param lineToggleButton Toggle button object that indicates if the user
      * wants to draw a line.
      * @param rectangleToggleButton Toggle button object that indicates if the
@@ -66,10 +79,13 @@ public class DrawingPane extends Pane {
      * user wants to draw a ellipse.
      * @param selectShapeToggleButton Toggle button object that indicates if the
      * user wants to perform operations on the shapes.
-     * @param outlineColorImage Cirlce image that represents the selected outline color.
-     * @param fillColorImage Cirlce image that represents the selected fill color.
+     * @param outlineColorImage Cirlce image that represents the selected
+     * outline color.
+     * @param fillColorImage Cirlce image that represents the selected fill
+     * color.
      */
     public DrawingPane(Invoker invoker, ToggleButton lineToggleButton, ToggleButton rectangleToggleButton, ToggleButton ellipseToggleButton, ToggleButton selectShapeToggleButton, Circle outlineColorImage, Circle fillColorImage) {
+        super();
         this.invoker = invoker;
         this.lineToggleButton = lineToggleButton;
         this.rectangleToggleButton = rectangleToggleButton;
@@ -96,7 +112,6 @@ public class DrawingPane extends Pane {
         deleteMenuItem.setOnAction(event -> {
             DeleteShapeCommand deleteShapeCommand = new DeleteShapeCommand(selectedShape, this);
             try {
-                System.out.println("CIAO");
                 invoker.execute(deleteShapeCommand);
                 deselectShape();
             } catch (Exception ex) {
@@ -253,9 +268,9 @@ public class DrawingPane extends Pane {
         creatingShape.setStroke(this.selectedOutlineColor);
         creatingShape.setStrokeWidth(this.strokeWidth);
         //DrawLineCommand 
-        DrawShapeCommand drawShapeCommand = new DrawShapeCommand(this, creatingShape);
+        AddShapeCommand addShapeCommand = new AddShapeCommand(this, creatingShape);
         try {
-            invoker.execute(drawShapeCommand);
+            invoker.execute(addShapeCommand);
         } catch (Exception ex) {
         }
     }
@@ -272,9 +287,9 @@ public class DrawingPane extends Pane {
         creatingShape.setStroke(selectedOutlineColor);
         creatingShape.setFill(selectedFillColor);
         creatingShape.setStrokeWidth(strokeWidth);
-        DrawShapeCommand drawShapeCommand = new DrawShapeCommand(this, creatingShape);
+        AddShapeCommand addShapeCommand = new AddShapeCommand(this, creatingShape);
         try {
-            invoker.execute(drawShapeCommand);
+            invoker.execute(addShapeCommand);
         } catch (Exception ex) {
         }
     }
@@ -291,9 +306,9 @@ public class DrawingPane extends Pane {
         creatingShape.setStroke(selectedOutlineColor);
         creatingShape.setFill(selectedFillColor);
         creatingShape.setStrokeWidth(strokeWidth);
-        DrawShapeCommand drawShapeCommand = new DrawShapeCommand(this, creatingShape);
+        AddShapeCommand addShapeCommand = new AddShapeCommand(this, creatingShape);
         try {
-            invoker.execute(drawShapeCommand);
+            invoker.execute(addShapeCommand);
         } catch (Exception ex) {
         }
     }
@@ -393,8 +408,18 @@ public class DrawingPane extends Pane {
             border.setFillColor(Color.TRANSPARENT);
             border.setStroke(Color.DARKCYAN);
             border.setStrokeWidth(strokeWidth);
+            border.getStrokeDashArray().addAll(15d, 10d);
 
-            border.getStrokeDashArray().addAll(2d, 21d);
+            // this part is to create the border animation
+            double maxOffset
+                    = border.getStrokeDashArray().stream().reduce(0d, (a, b) -> a + b);
+            Timeline timeLine = new Timeline(
+                    new KeyFrame(Duration.ZERO, new KeyValue(border.strokeDashOffsetProperty(), 0, Interpolator.LINEAR)),
+                    new KeyFrame(Duration.seconds(2), new KeyValue(border.strokeDashOffsetProperty(), maxOffset, Interpolator.LINEAR))
+            );
+            timeLine.setCycleCount(Timeline.INDEFINITE);
+            timeLine.play();
+
             this.getChildren().add(border);
 
             isShapeSelected.set(true);

@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 /**
@@ -20,6 +21,7 @@ public class ProjectSE_Group7 extends Application {
         
         stage.setScene(scene);
         stage.setTitle("Shape Draw Editor");
+        stage.getIcons().add(new Image("images/applicationLogo.png"));
         stage.setResizable(false);
         stage.show();
     }
