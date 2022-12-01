@@ -32,6 +32,10 @@ public class LoadCommand implements Command {
         this.drawingPane = drawingPane;
     }
 
+    /**
+     * Method that takes a list of shapes from a file and adds them to the drawing pane.
+     * @throws Exception 
+     */
     @Override
     public void execute() throws Exception {
 
@@ -105,6 +109,10 @@ public class LoadCommand implements Command {
         this.drawingPane.getChildren().addAll(shapeList); //add all reconstructed shapes to drawing pane.
     }
 
+    /**
+     * Load command cannot be undone.
+     * @throws Exception 
+     */
     @Override
     public void undo() throws Exception {
        return;
