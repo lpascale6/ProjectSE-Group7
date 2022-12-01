@@ -4,27 +4,47 @@ import command.ChangeFillColorCommand;
 import command.ChangeOutlineColorCommand;
 import command.DeleteShapeCommand;
 import command.AddShapeCommand;
+import command.CopyShapeCommand;
+import command.CutShapeCommand;
 import command.Invoker;
+import command.PasteShapeCommand;
 import command.ToTheBackCommand;
 import command.ToTheFrontCommand;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.geometry.Insets;
+import javafx.scene.SnapshotParameters;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.Slider;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.control.Tooltip;
+import javafx.scene.image.Image;
+import javafx.scene.image.WritableImage;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Shape;
 import javafx.scene.shape.StrokeType;
 import javafx.util.Duration;
+import static javax.swing.text.StyleConstants.Background;
 import shape.Border;
 import shape.Ellipse;
 import shape.Line;
@@ -59,7 +79,14 @@ public class DrawingPane extends Pane {
     private Shape selectedShape;
     private Border border;
     private Shape copiedShape = null;
-
+    
+    //grid
+    double gridSize = -1;
+    Paint bg1 = Paint.valueOf("linear-gradient(from 0.0% 0.0% to 0.0% 100.0%, 0xffffff 0.0%, 0xffffff 100.0%)");
+    BackgroundFill backgroundFill1 = new BackgroundFill(bg1, null, null);
+    Canvas canvas = new Canvas();
+    SnapshotParameters sp = new SnapshotParameters();
+    
     /**
      * Empty constructor of the DrawingPane class for test.
      */
@@ -86,7 +113,7 @@ public class DrawingPane extends Pane {
      * @param fillColorImage Cirlce image that represents the selected fill
      * color.
      */
-    public DrawingPane(Invoker invoker, ToggleButton lineToggleButton, ToggleButton rectangleToggleButton, ToggleButton ellipseToggleButton, ToggleButton selectShapeToggleButton, Circle outlineColorImage, Circle fillColorImage) {
+    public DrawingPane(Invoker invoker, ToggleButton lineToggleButton, ToggleButton rectangleToggleButton, ToggleButton ellipseToggleButton, ToggleButton selectShapeToggleButton, Circle outlineColorImage, Circle fillColorImage, Slider gridSlider, CheckBox gridCheckBox) {
         super();
         this.invoker = invoker;
         this.lineToggleButton = lineToggleButton;
@@ -96,8 +123,8 @@ public class DrawingPane extends Pane {
         this.outlineColorImage = outlineColorImage;
         this.fillColorImage = fillColorImage;
         this.setPrefSize(990, 615);
-        this.setStyle("-fx-background-color:white;"
-                + "-fx-border-color:grey;"
+        this.setBackground(new Background(backgroundFill1));
+        this.setStyle("-fx-border-color:grey;"
                 + "-fx-border-radius:5;");
         setup();
         lineToggleButton.setOnAction(event -> deselectShape());
@@ -106,7 +133,7 @@ public class DrawingPane extends Pane {
 
         isShapeSelected = new SimpleBooleanProperty(false);
         ContextMenu manageShape = new ContextMenu();
-
+        
         // setting up delete menu item and its operations
         MenuItem deleteMenuItem = new MenuItem("Delete");
         deleteMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.D, KeyCombination.CONTROL_DOWN));
@@ -146,21 +173,32 @@ public class DrawingPane extends Pane {
         MenuItem copyMenuItem = new MenuItem("Copy");
         copyMenuItem.disableProperty().bind(isShapeSelected.not());
         copyMenuItem.setOnAction(event -> {
-            // TO ADD
+            CopyShapeCommand copyShapeCommand = new CopyShapeCommand(this.selectedShape, this);
+            try {
+                invoker.execute(copyShapeCommand);
+            } catch (Exception ex) {
+            }
         });
         
         // setting up cut menu item and its operations
         MenuItem cutMenuItem = new MenuItem("Cut");
         cutMenuItem.disableProperty().bind(isShapeSelected.not());
         cutMenuItem.setOnAction(event -> {
-            // TO ADD
+            CutShapeCommand cutShapeCommand = new CutShapeCommand(this.selectedShape, this);
+            try {
+                invoker.execute(cutShapeCommand);
+            } catch (Exception ex) {
+            }
         });
         
         // setting up paste menu item and its operations
         MenuItem pasteMenuItem = new MenuItem("Paste");
-        pasteMenuItem.disableProperty().bind(isShapeSelected.not());
         pasteMenuItem.setOnAction(event -> {
-            // TO ADD
+            PasteShapeCommand pasteShapeCommand = new PasteShapeCommand(this);
+            try {
+                invoker.execute(pasteShapeCommand);
+            } catch (Exception ex) {
+            }
         }); 
 
         // adding all the menu items in the manage shape ContextMenu
@@ -519,5 +557,33 @@ public class DrawingPane extends Pane {
     public void setCopiedShape(Shape copiedShape) {
         this.copiedShape = copiedShape;
     }
-
+    
+    public void updateGrid(Slider gridSlider, CheckBox gridCheckBox) {
+        double size = gridSlider.getValue();
+        if (!gridCheckBox.isSelected() || size < 4) size = 0;
+        if (gridSize != size) {
+          if (size <= 0) {
+            this.setBackground(new Background(backgroundFill1));
+          } else {
+            Paint bg2 = patternTransparent(size);
+            BackgroundFill backgroundFill2 = new BackgroundFill(bg2, null, null);
+            this.setBackground(new Background(backgroundFill1, backgroundFill2));
+          }
+          gridSize = size;
+        }
+    }
+    
+    private ImagePattern patternTransparent(double size) {
+        canvas.setHeight(size);
+        canvas.setWidth(size);
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+        gc.clearRect(0, 0, size, size);
+        gc.setFill(Color.BLACK);
+        //gc.setLineWidth(2);
+        gc.strokeLine(0, 0, 0, size);
+        gc.strokeLine(1, 0, size, 0);
+        sp.setFill(Color.TRANSPARENT);
+        WritableImage image = canvas.snapshot(sp, null);
+        return new ImagePattern(image, 0, 0, size, size, false);
+    }
 }

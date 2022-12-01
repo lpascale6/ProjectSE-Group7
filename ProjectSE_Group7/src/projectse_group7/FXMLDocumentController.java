@@ -11,16 +11,25 @@ import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
+import javafx.scene.SnapshotParameters;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Alert;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.Slider;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.Tooltip;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Shape;
 import javafx.stage.FileChooser;
@@ -65,6 +74,12 @@ public class FXMLDocumentController implements Initializable {
     private ToggleButton selectShapeToggleButton;
     @FXML
     private MenuItem undoMenuItem;
+    @FXML
+    private CheckBox gridCheckBox;
+    @FXML
+    private Slider gridSlider;
+    
+    
 
     /**
      * Sets up all the toggle buttons in the "Shape selection" section by
@@ -125,9 +140,27 @@ public class FXMLDocumentController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         invoker = Invoker.getInstance();
         
+        
+        gridSlider.setMinWidth(150);
+        gridSlider.setMaxWidth(150);
+        gridSlider.setPadding(new Insets(6));
+        gridSlider.setTooltip(new Tooltip("Grid size"));
+        
+        gridCheckBox.setPadding(new Insets(6));
+        gridCheckBox.setTooltip(new Tooltip("Show grid"));
+        
+        gridCheckBox.setSelected(true);
         // setting up the drawing pane
-        drawingPane = new DrawingPane(invoker, lineToggleButton, rectangleToggleButton, ellipseToggleButton, selectShapeToggleButton, outlineColorImage, fillColorImage);
+        drawingPane = new DrawingPane(invoker, lineToggleButton, rectangleToggleButton, ellipseToggleButton, selectShapeToggleButton, outlineColorImage, fillColorImage, gridSlider, gridCheckBox);
+        gridCheckBox.selectedProperty().addListener((v, o, n) -> {
+          gridSlider.setDisable(!n.booleanValue());
+          drawingPane.updateGrid(gridSlider, gridCheckBox);
+        });
+        gridSlider.valueProperty().addListener((v, o, n) -> {
+          drawingPane.updateGrid(gridSlider, gridCheckBox);
+        });
         pane.getChildren().add(drawingPane);
+        
         // to abilitate the user to use ctrl+z shortcut
         undoMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.Z, KeyCombination.CONTROL_DOWN));
 
@@ -321,5 +354,7 @@ public class FXMLDocumentController implements Initializable {
             invoker.undo();
         } catch (Exception ex) {}
     }
+    
+    
 
 }
