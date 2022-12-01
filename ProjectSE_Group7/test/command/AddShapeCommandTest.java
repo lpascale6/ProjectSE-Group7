@@ -17,7 +17,7 @@ public class AddShapeCommandTest {
 
     private DrawingPane drawingPane;
     private Shape creatingShape;
-    
+
     /**
      * Setup method, it is called before each test.
      */
@@ -32,7 +32,7 @@ public class AddShapeCommandTest {
         Shape shape4 = new Rectangle();
         Shape shape5 = new Ellipse();
         Shape shape6 = new Ellipse();
-        
+
         // populating the drawing pane for testing
         drawingPane.getChildren().addAll(shape1, shape2, shape3, shape4, shape5, shape6);
     }
@@ -41,9 +41,9 @@ public class AddShapeCommandTest {
      * Test of execute method, of class AddShapeCommand.
      */
     @Test
-    public void testExecute() throws Exception { 
+    public void testExecute() throws Exception {
         System.out.println("Testing execute method of AddShapeCommand class.");
-        
+
         AddShapeCommand instance;
         // testing for the insertion of a Line Shape
         creatingShape = new Line();
@@ -53,7 +53,7 @@ public class AddShapeCommandTest {
         assertTrue(drawingPane.getChildren().contains(creatingShape));
         // the position of the added line should be the last in the children array, if not the test fails
         assertEquals(drawingPane.getChildren().indexOf(creatingShape), drawingPane.getChildren().size() - 1);
-        
+
         // testing for the insertion of a Rectangle Shape
         creatingShape = new Rectangle();
         instance = new AddShapeCommand(drawingPane, creatingShape);
@@ -62,7 +62,7 @@ public class AddShapeCommandTest {
         assertTrue(drawingPane.getChildren().contains(creatingShape));
         // the position of the added rectangle should be the last in the children array, if not the test fails
         assertEquals(drawingPane.getChildren().indexOf(creatingShape), drawingPane.getChildren().size() - 1);
-        
+
         // testing for the insertion of a Ellipse Shape
         creatingShape = new Ellipse();
         instance = new AddShapeCommand(drawingPane, creatingShape);
@@ -79,10 +79,10 @@ public class AddShapeCommandTest {
     @Test
     public void testUndo() throws Exception {
         System.out.println("Testing undo method of AddShapeCommand class.");
-        
+
         AddShapeCommand instance;
         int size;
-        
+
         // testing undo for the removal of a Line Shape
         creatingShape = new Line();
         instance = new AddShapeCommand(drawingPane, creatingShape);
@@ -92,10 +92,10 @@ public class AddShapeCommandTest {
         size = drawingPane.getChildren().size();
         // undo the operation by removing the inserted line from the drawing
         instance.undo();
-        
+
         assertFalse(drawingPane.getChildren().contains(creatingShape));
         assertEquals(size - 1, drawingPane.getChildren().size());
-        
+
         // testing undo for the removal of a Rectangle Shape
         creatingShape = new Rectangle();
         instance = new AddShapeCommand(drawingPane, creatingShape);
@@ -105,10 +105,10 @@ public class AddShapeCommandTest {
         size = drawingPane.getChildren().size();
         // undo the operation by removing the inserted rectangle from the drawing
         instance.undo();
-        
+
         assertFalse(drawingPane.getChildren().contains(creatingShape));
         assertEquals(size - 1, drawingPane.getChildren().size());
-        
+
         // testing undo for the removal of a Ellipse Shape
         creatingShape = new Ellipse();
         instance = new AddShapeCommand(drawingPane, creatingShape);
@@ -118,10 +118,10 @@ public class AddShapeCommandTest {
         size = drawingPane.getChildren().size();
         // undo the operation by removing the inserted ellipse from the drawing
         instance.undo();
-        
+
         assertFalse(drawingPane.getChildren().contains(creatingShape));
         assertEquals(size - 1, drawingPane.getChildren().size());
-       
+
     }
 
 }
