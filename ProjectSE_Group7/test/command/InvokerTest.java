@@ -23,13 +23,34 @@ import shape.Rectangle;
  */
 public class InvokerTest {
     Invoker invoker;
-    
+    Shape shape1;
+    Shape shape2;
+    Shape shape3;
+    DrawingPane drawingPane;
+    //commands to pass to the invoker
+    Command command1;
+    Command command2;
+    Command command3;
+    //expected stack
+    Stack<Command> expectedCommands;
+            
     public InvokerTest() {
     }
     
     @Before
     public void setUp() {
          invoker = Invoker.getInstance();
+         //variables to pass to the commands
+        shape1 = new Rectangle();
+        shape2 = new Line();
+        shape3 = new Ellipse();
+        drawingPane = new DrawingPane();
+        //commands to pass to the invoker
+        command1 = new AddShapeCommand(drawingPane, shape1);
+        command2 = new AddShapeCommand(drawingPane, shape2);
+        command3 = new AddShapeCommand(drawingPane, shape3);
+        //expected stack
+        expectedCommands = new Stack<Command>();
     }
 
     /**
@@ -37,16 +58,10 @@ public class InvokerTest {
      */
     @Test
     public void testExecute() throws Exception {
-        //variables to pass to the command
-        Shape shape = new Rectangle();
-        DrawingPane drawingPane = new DrawingPane();
-        //command to pass to the invoker
-        Command command = new AddShapeCommand(drawingPane, shape);
-        //expected stack
-        Stack<Command> expectedCommands = new Stack<Command>();
-        expectedCommands.push(command);
+        //the expected commands stack construction
+        expectedCommands.push(command1);
         //invoker execute
-        invoker.execute(command);
+        invoker.execute(command1);
         //control if the expected stack matches the actual stack
         assertEquals(expectedCommands.size(), invoker.getStack().size());
         for(int i=0; i<invoker.getStack().size(); i++){
@@ -59,17 +74,7 @@ public class InvokerTest {
      */
     @Test
     public void testUndo() throws Exception {
-        //variables to pass to the commands
-        Shape shape1 = new Rectangle();
-        Shape shape2 = new Line();
-        Shape shape3 = new Ellipse();
-        DrawingPane drawingPane = new DrawingPane();
-        //commands to pass to the invoker
-        Command command1 = new AddShapeCommand(drawingPane, shape1);
-        Command command2 = new AddShapeCommand(drawingPane, shape2);
-        Command command3 = new AddShapeCommand(drawingPane, shape3);
-        //expected stack
-        Stack<Command> expectedCommands = new Stack<Command>();
+        //the expected commands stack construction
         expectedCommands.push(command1);
         expectedCommands.push(command2);
         expectedCommands.pop();
@@ -91,15 +96,6 @@ public class InvokerTest {
      */
     @Test
     public void testClearStack() throws Exception {
-        //variables to pass to the commands
-        Shape shape1 = new Rectangle();
-        Shape shape2 = new Line();
-        Shape shape3 = new Ellipse();
-        DrawingPane drawingPane = new DrawingPane();
-        //commands to pass to the invoker
-        Command command1 = new AddShapeCommand(drawingPane, shape1);
-        Command command2 = new AddShapeCommand(drawingPane, shape2);
-        Command command3 = new AddShapeCommand(drawingPane, shape3);
         //invoker execute to fill the stack
         invoker.execute(command1);
         invoker.execute(command2);
