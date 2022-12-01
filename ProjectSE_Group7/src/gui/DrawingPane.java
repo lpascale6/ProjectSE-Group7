@@ -64,6 +64,7 @@ public class DrawingPane extends Pane {
      */
     public DrawingPane() {
         super();
+        invoker = Invoker.getInstance();
     }
 
     /**

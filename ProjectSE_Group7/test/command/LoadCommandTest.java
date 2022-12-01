@@ -33,7 +33,7 @@ public class LoadCommandTest {
     @Test
     public void testExecute() throws Exception {
  
-        DrawingPane drawingPane = new DrawingPane(null, null, null, null, null, null, null);
+        DrawingPane drawingPane = new DrawingPane();
         File file = new File("load_command_test.txt");
 
         FileWriter writer = new FileWriter("load_command_test.txt");
