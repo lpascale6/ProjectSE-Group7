@@ -58,6 +58,7 @@ public class DrawingPane extends Pane {
     SimpleBooleanProperty isShapeSelected;
     private Shape selectedShape;
     private Border border;
+    private Shape copiedShape = null;
 
     /**
      * Empty constructor of the DrawingPane class for test.
@@ -140,9 +141,30 @@ public class DrawingPane extends Pane {
             } catch (Exception ex) {
             }
         });
+        
+        // setting up copy menu item and its operations
+        MenuItem copyMenuItem = new MenuItem("Copy");
+        copyMenuItem.disableProperty().bind(isShapeSelected.not());
+        copyMenuItem.setOnAction(event -> {
+            // TO ADD
+        });
+        
+        // setting up cut menu item and its operations
+        MenuItem cutMenuItem = new MenuItem("Cut");
+        cutMenuItem.disableProperty().bind(isShapeSelected.not());
+        cutMenuItem.setOnAction(event -> {
+            // TO ADD
+        });
+        
+        // setting up paste menu item and its operations
+        MenuItem pasteMenuItem = new MenuItem("Paste");
+        pasteMenuItem.disableProperty().bind(isShapeSelected.not());
+        pasteMenuItem.setOnAction(event -> {
+            // TO ADD
+        }); 
 
         // adding all the menu items in the manage shape ContextMenu
-        manageShape.getItems().addAll(deleteMenuItem, toFrontMenuItem, toBackMenuItem);
+        manageShape.getItems().addAll(deleteMenuItem, toFrontMenuItem, toBackMenuItem, copyMenuItem, cutMenuItem, pasteMenuItem);
         this.setOnContextMenuRequested(event -> {
             if (selectShapeToggleButton.isSelected()) {
                 manageShape.show(this.getScene().getWindow(), event.getScreenX(), event.getScreenY());
@@ -470,7 +492,7 @@ public class DrawingPane extends Pane {
      * When a shape is selected, it changes the shape fill color to the one
      * selected.
      *
-     * @param outlineColor The new fill color of the selected shape.
+     * @param fillColor The new fill color of the selected shape.
      */
     public void changeSelectedShapeFillColor(Color fillColor) {
         if (selectedShape != null) {
@@ -480,6 +502,22 @@ public class DrawingPane extends Pane {
             } catch (Exception ex) {
             }
         }
+    }
+
+    /**
+     * Returns the copied shape.
+     * @return The copied shape.
+     */
+    public Shape getCopiedShape() {
+        return copiedShape;
+    }
+
+    /**
+     * Sets the copied shape attribute to the one passed as argument.
+     * @param copiedShape The new copied shape.
+     */
+    public void setCopiedShape(Shape copiedShape) {
+        this.copiedShape = copiedShape;
     }
 
 }
