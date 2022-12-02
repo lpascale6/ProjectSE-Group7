@@ -1,50 +1,23 @@
 package gui;
 
-import command.ChangeFillColorCommand;
-import command.ChangeOutlineColorCommand;
-import command.DeleteShapeCommand;
-import command.AddShapeCommand;
-import command.CopyShapeCommand;
-import command.CutShapeCommand;
-import command.Invoker;
-import command.PasteShapeCommand;
-import command.ToTheBackCommand;
-import command.ToTheFrontCommand;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javafx.animation.Interpolator;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
+import command.*;
+import javafx.animation.*;
+import javafx.scene.paint.*;
+import javafx.scene.*;
+import javafx.scene.control.*;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.geometry.Insets;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.Slider;
-import javafx.scene.control.ToggleButton;
-import javafx.scene.control.Tooltip;
-import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyCodeCombination;
-import javafx.scene.input.KeyCombination;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.ImagePattern;
-import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Shape;
 import javafx.scene.shape.StrokeType;
 import javafx.util.Duration;
-import static javax.swing.text.StyleConstants.Background;
 import shape.Border;
 import shape.Ellipse;
 import shape.Line;
@@ -62,7 +35,9 @@ public class DrawingPane extends Pane {
     private boolean isDrawing = false;
     private double xStartPoint;
     private double yStartPoint;
-    private double strokeWidth = 3;
+    private double xEndingPoint;
+    private double yEndingPoint;
+    private final double strokeWidth = 3;
 
     private Color selectedOutlineColor = Color.BLACK;
     private Color selectedFillColor = Color.WHITE;
@@ -77,16 +52,28 @@ public class DrawingPane extends Pane {
 
     SimpleBooleanProperty isShapeSelected;
     private Shape selectedShape;
-    private Border border;
+
     private Shape copiedShape = null;
-    
+
+    // move and resize 
+    private boolean isMoving = false;
+    double totalDeltaX = 0;
+    double totalDeltaY = 0;
+    private boolean isResizing = false;
+    private Group bordersGroup;
+    private Border border;
+    private Border topLeftBorder;
+    private Border topRightBorder;
+    private Border bottomLeftBorder;
+    private Border bottomRightBorder;
+
     //grid
     double gridSize = -1;
     Paint bg1 = Paint.valueOf("linear-gradient(from 0.0% 0.0% to 0.0% 100.0%, 0xffffff 0.0%, 0xffffff 100.0%)");
     BackgroundFill backgroundFill1 = new BackgroundFill(bg1, null, null);
     Canvas canvas = new Canvas();
     SnapshotParameters sp = new SnapshotParameters();
-    
+
     /**
      * Empty constructor of the DrawingPane class for test.
      */
@@ -122,7 +109,7 @@ public class DrawingPane extends Pane {
         this.selectShapeToggleButton = selectShapeToggleButton;
         this.outlineColorImage = outlineColorImage;
         this.fillColorImage = fillColorImage;
-        this.setPrefSize(990, 615);
+        this.setPrefSize(1240, 718);
         this.setBackground(new Background(backgroundFill1));
         this.setStyle("-fx-border-color:grey;"
                 + "-fx-border-radius:5;");
@@ -133,10 +120,9 @@ public class DrawingPane extends Pane {
 
         isShapeSelected = new SimpleBooleanProperty(false);
         ContextMenu manageShape = new ContextMenu();
-        
+
         // setting up delete menu item and its operations
         MenuItem deleteMenuItem = new MenuItem("Delete");
-        deleteMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.D, KeyCombination.CONTROL_DOWN));
         deleteMenuItem.disableProperty().bind(isShapeSelected.not());
         deleteMenuItem.setOnAction(event -> {
             DeleteShapeCommand deleteShapeCommand = new DeleteShapeCommand(selectedShape, this);
@@ -154,6 +140,7 @@ public class DrawingPane extends Pane {
             ToTheFrontCommand toTheFrontCommand = new ToTheFrontCommand(selectedShape, this);
             try {
                 invoker.execute(toTheFrontCommand);
+                deselectShape();
             } catch (Exception ex) {
             }
         });
@@ -165,10 +152,11 @@ public class DrawingPane extends Pane {
             ToTheBackCommand toTheBackCommand = new ToTheBackCommand(selectedShape, this);
             try {
                 invoker.execute(toTheBackCommand);
+                deselectShape();
             } catch (Exception ex) {
             }
         });
-        
+
         // setting up copy menu item and its operations
         MenuItem copyMenuItem = new MenuItem("Copy");
         copyMenuItem.disableProperty().bind(isShapeSelected.not());
@@ -179,7 +167,7 @@ public class DrawingPane extends Pane {
             } catch (Exception ex) {
             }
         });
-        
+
         // setting up cut menu item and its operations
         MenuItem cutMenuItem = new MenuItem("Cut");
         cutMenuItem.disableProperty().bind(isShapeSelected.not());
@@ -190,7 +178,7 @@ public class DrawingPane extends Pane {
             } catch (Exception ex) {
             }
         });
-        
+
         // setting up paste menu item and its operations
         MenuItem pasteMenuItem = new MenuItem("Paste");
         pasteMenuItem.setOnAction(event -> {
@@ -199,7 +187,7 @@ public class DrawingPane extends Pane {
                 invoker.execute(pasteShapeCommand);
             } catch (Exception ex) {
             }
-        }); 
+        });
 
         // adding all the menu items in the manage shape ContextMenu
         manageShape.getItems().addAll(deleteMenuItem, toFrontMenuItem, toBackMenuItem, copyMenuItem, cutMenuItem, pasteMenuItem);
@@ -263,13 +251,14 @@ public class DrawingPane extends Pane {
                 if (selectShapeToggleButton.isSelected()) {
                     // if there was already a selected shape, we reset it to its previous settings
                     if (selectedShape != null) {
-                        this.getChildren().remove(border);
+                        this.getChildren().remove(bordersGroup);
                     }
                     selectedShape = null;
 
                     isShapeSelected.set(false);
                 }
             }
+
         });
 
         // setting up the event called on the drawingPane when the mouse 
@@ -470,6 +459,146 @@ public class DrawingPane extends Pane {
             border.setStroke(Color.DARKCYAN);
             border.setStrokeWidth(strokeWidth);
             border.getStrokeDashArray().addAll(15d, 10d);
+            border.setCursor(Cursor.MOVE);
+
+            border.setOnMousePressed(event -> {
+                event.consume();
+            });
+
+            border.setOnDragDetected(event -> {
+                if (selectShapeToggleButton.isSelected()) {
+                    isMoving = true;
+                    xStartPoint = event.getX();
+                    yStartPoint = event.getY();
+                    xEndingPoint = event.getX();
+                    yEndingPoint = event.getY();
+                    totalDeltaX = 0;
+                    totalDeltaY = 0;
+                }
+
+            });
+
+            border.setOnMouseDragged(event -> {
+                if (selectShapeToggleButton.isSelected() && isMoving) {
+                    double x = event.getX();
+                    double y = event.getY();
+                    double deltaX = event.getX() - xEndingPoint;
+                    double deltaY = event.getY() - yEndingPoint;
+
+                    // this controll is for checking if the coordinate 
+                    // is out of the borders of the drawingPane
+                    if (border.getRectangleX() + deltaX > 0
+                            && border.getRectangleY() + deltaY > 0
+                            && border.getRectangleX() + deltaX + border.getRectangleWidth() < (this.getWidth())
+                            && border.getRectangleY() + deltaY + border.getRectangleHeight() < (this.getHeight())) {
+
+                        if (selectedShape.getClass() == Line.class) {
+                            Line line = (Line) selectedShape;
+                            line.moveOf(deltaX, deltaY);
+                            moveBordersGroup(bordersGroup, deltaX, deltaY);
+                            xEndingPoint = event.getX();
+                            yEndingPoint = event.getY();
+                        } else if (selectedShape.getClass() == Rectangle.class) {
+                            Rectangle rectangle = (Rectangle) selectedShape;
+                            rectangle.moveOf(deltaX, deltaY);
+                            moveBordersGroup(bordersGroup, deltaX, deltaY);
+                            xEndingPoint = event.getX();
+                            yEndingPoint = event.getY();
+                        } else if (selectedShape.getClass() == Ellipse.class) {
+                            Ellipse ellipse = (Ellipse) selectedShape;
+                            ellipse.moveOf(deltaX, deltaY);
+                            moveBordersGroup(bordersGroup, deltaX, deltaY);
+                            xEndingPoint = event.getX();
+                            yEndingPoint = event.getY();
+                        }
+
+                        totalDeltaX = xEndingPoint - xStartPoint;
+                        totalDeltaY = yEndingPoint - yStartPoint;
+                    }
+
+                    event.consume();
+                }
+            }
+            );
+
+            border.setOnMouseReleased(event -> {
+                if (isMoving) {
+                    isMoving = false;
+                    if (selectedShape.getClass() == Line.class) {
+                        Line line = (Line) selectedShape;
+                        line.moveOf(-totalDeltaX, -totalDeltaY);
+                    } else if (selectedShape.getClass() == Rectangle.class) {
+                        Rectangle rectangle = (Rectangle) selectedShape;
+                        rectangle.moveOf(-totalDeltaX, -totalDeltaY);
+                    } else if (selectedShape.getClass() == Ellipse.class) {
+                        Ellipse ellipse = (Ellipse) selectedShape;
+                        ellipse.moveOf(-totalDeltaX, -totalDeltaY);
+                    }
+
+                    MoveShapeCommand moveShapeCommand = new MoveShapeCommand(selectedShape, totalDeltaX, totalDeltaY);
+                    try {
+                        invoker.execute(moveShapeCommand);
+                    } catch (Exception ex) {
+                    }
+                }
+            });
+
+            // creating four corners of the border 
+            topLeftBorder = new Border(selectedShape.getLayoutBounds().getMinX() - 5, selectedShape.getLayoutBounds().getMinY() - 5, 10, 10);
+            topRightBorder = new Border(selectedShape.getLayoutBounds().getMinX() + selectedShape.getLayoutBounds().getWidth() - 5, selectedShape.getLayoutBounds().getMinY() - 5, 10, 10);
+            bottomLeftBorder = new Border(selectedShape.getLayoutBounds().getMinX() - 5, selectedShape.getLayoutBounds().getMinY() + selectedShape.getLayoutBounds().getHeight() - 5, 10, 10);
+            bottomRightBorder = new Border(selectedShape.getLayoutBounds().getMinX() + selectedShape.getLayoutBounds().getWidth() - 5, selectedShape.getLayoutBounds().getMinY() + selectedShape.getLayoutBounds().getHeight() - 5, 10, 10);
+            topLeftBorder.setCursor(Cursor.NW_RESIZE);
+            topRightBorder.setCursor(Cursor.NE_RESIZE);
+            bottomLeftBorder.setCursor(Cursor.SW_RESIZE);
+            bottomRightBorder.setCursor(Cursor.SE_RESIZE);
+
+            topLeftBorder.setOutlineColor(Color.DARKCYAN);
+            topRightBorder.setOutlineColor(Color.DARKCYAN);
+            bottomLeftBorder.setOutlineColor(Color.DARKCYAN);
+            bottomRightBorder.setOutlineColor(Color.DARKCYAN);
+            topLeftBorder.setFillColor(Color.DARKCYAN);
+            topRightBorder.setFillColor(Color.DARKCYAN);
+            bottomLeftBorder.setFillColor(Color.DARKCYAN);
+            bottomRightBorder.setFillColor(Color.DARKCYAN);
+
+            topLeftBorder.setStrokeType(StrokeType.OUTSIDE);
+            topRightBorder.setStrokeType(StrokeType.OUTSIDE);
+            bottomLeftBorder.setStrokeType(StrokeType.OUTSIDE);
+            bottomRightBorder.setStrokeType(StrokeType.OUTSIDE);
+
+            // topleft corner event handlers
+            topLeftBorder.setOnMousePressed(event -> {
+                event.consume();
+            });
+
+            topLeftBorder.setOnDragDetected(event -> {
+                if (selectShapeToggleButton.isSelected()) {
+                    isResizing = true;
+                    xStartPoint = event.getX();
+                    yStartPoint = event.getY();
+                }
+            });
+
+            topLeftBorder.setOnMouseDragged(event -> {
+                if (selectShapeToggleButton.isSelected() && isResizing) {
+                    if (selectedShape.getClass() == Line.class) {
+
+                    } else if (selectedShape.getClass() == Rectangle.class) {
+                        Rectangle rectangle = (Rectangle) selectedShape;
+                        rectangle.setRectangleWidth(rectangle.getRectangleWidth() - (xStartPoint - event.getX()));
+                        rectangle.setRectangleHeight(rectangle.getRectangleHeight() - (yStartPoint - event.getY()));
+                    } else if (selectedShape.getClass() == Ellipse.class) {
+
+                    }
+                }
+            });
+
+            topLeftBorder.setOnMouseReleased(event -> {
+                isResizing = false;
+            });
+
+            bordersGroup = new Group(border, topLeftBorder, topRightBorder, bottomLeftBorder, bottomRightBorder);
 
             // this part is to create the border animation
             double maxOffset
@@ -481,9 +610,25 @@ public class DrawingPane extends Pane {
             timeLine.setCycleCount(Timeline.INDEFINITE);
             timeLine.play();
 
-            this.getChildren().add(border);
+            this.getChildren().add(bordersGroup);
 
             isShapeSelected.set(true);
+        }
+    }
+
+    /**
+     * Moves all the components of the group passed as argument.
+     *
+     * @param group The group to move.
+     * @param x The delta x to add to the position of each component of the
+     * group.
+     * @param y The delta y to add to the position of each component of the
+     * group.
+     */
+    private void moveBordersGroup(Group group, double x, double y) {
+        for (Node node : group.getChildren()) {
+            Border border = (Border) node;
+            border.moveOf(x, y);
         }
     }
 
@@ -493,7 +638,7 @@ public class DrawingPane extends Pane {
     public void deselectShape() {
         if (selectedShape != null) {
             selectedShape = null;
-            this.getChildren().remove(border);
+            this.getChildren().remove(bordersGroup);
             border = null;
             isShapeSelected.set(false);
         }
@@ -544,6 +689,7 @@ public class DrawingPane extends Pane {
 
     /**
      * Returns the copied shape.
+     *
      * @return The copied shape.
      */
     public Shape getCopiedShape() {
@@ -552,27 +698,30 @@ public class DrawingPane extends Pane {
 
     /**
      * Sets the copied shape attribute to the one passed as argument.
+     *
      * @param copiedShape The new copied shape.
      */
     public void setCopiedShape(Shape copiedShape) {
         this.copiedShape = copiedShape;
     }
-    
+
     public void updateGrid(Slider gridSlider, CheckBox gridCheckBox) {
         double size = gridSlider.getValue();
-        if (!gridCheckBox.isSelected() || size < 4) size = 0;
+        if (!gridCheckBox.isSelected() || size < 4) {
+            size = 0;
+        }
         if (gridSize != size) {
-          if (size <= 0) {
-            this.setBackground(new Background(backgroundFill1));
-          } else {
-            Paint bg2 = patternTransparent(size);
-            BackgroundFill backgroundFill2 = new BackgroundFill(bg2, null, null);
-            this.setBackground(new Background(backgroundFill1, backgroundFill2));
-          }
-          gridSize = size;
+            if (size <= 0) {
+                this.setBackground(new Background(backgroundFill1));
+            } else {
+                Paint bg2 = patternTransparent(size);
+                BackgroundFill backgroundFill2 = new BackgroundFill(bg2, null, null);
+                this.setBackground(new Background(backgroundFill1, backgroundFill2));
+            }
+            gridSize = size;
         }
     }
-    
+
     private ImagePattern patternTransparent(double size) {
         canvas.setHeight(size);
         canvas.setWidth(size);

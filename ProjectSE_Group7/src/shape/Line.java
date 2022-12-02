@@ -136,6 +136,19 @@ public class Line extends javafx.scene.shape.Line {
     }
 
     /**
+     * Updates the line coordinates by adding x and y.
+     *
+     * @param x The value to add to line x coordinates.
+     * @param y The value to add to line y coordinates.
+     */
+    public void moveOf(double x, double y) {
+        this.setLineStartingX(this.getLineStartingX() + x);
+        this.setLineStartingY(this.getLineStartingY() + y);
+        this.setLineEndingX(this.getLineEndingX() + x);
+        this.setLineEndingY(this.getLineEndingY() + y);
+    }
+
+    /**
      * method that returns a String representation of a line segment.
      *
      * @return the String representation of this line segment.
@@ -147,23 +160,25 @@ public class Line extends javafx.scene.shape.Line {
         representation += this.getLineStartingY() + ";";
         representation += this.getLineEndingX() + ";";
         representation += this.getLineEndingY() + ";";
-        
-        representation += toHexString((Color)this.getLineColor());
+
+        representation += toHexString((Color) this.getLineColor());
 
         return representation;
     }
-    
-    /**
-     * method that takes a Color and returns a string with the corresponding Hex representation.
-     * @param color the color to get the hex representation for.
-     * @return 
-     */
-     private static String toHexString(Color color) {
-        int r = ((int) Math.round(color.getRed()     * 255));
-        int g = ((int) Math.round(color.getGreen()   * 255));
-        int b = ((int) Math.round(color.getBlue()    * 255));
 
-        return String.format("#%02x%02x%02x", r, g, b).toLowerCase(); 
+    /**
+     * method that takes a Color and returns a string with the corresponding Hex
+     * representation.
+     *
+     * @param color the color to get the hex representation for.
+     * @return
+     */
+    private static String toHexString(Color color) {
+        int r = ((int) Math.round(color.getRed() * 255));
+        int g = ((int) Math.round(color.getGreen() * 255));
+        int b = ((int) Math.round(color.getBlue() * 255));
+
+        return String.format("#%02x%02x%02x", r, g, b).toLowerCase();
     }
 
 }

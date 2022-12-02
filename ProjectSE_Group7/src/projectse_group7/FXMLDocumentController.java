@@ -146,10 +146,6 @@ public class FXMLDocumentController implements Initializable {
         gridSlider.setPadding(new Insets(6));
         gridSlider.setTooltip(new Tooltip("Grid size"));
         
-        gridCheckBox.setPadding(new Insets(6));
-        gridCheckBox.setTooltip(new Tooltip("Show grid"));
-        
-        gridCheckBox.setSelected(true);
         // setting up the drawing pane
         drawingPane = new DrawingPane(invoker, lineToggleButton, rectangleToggleButton, ellipseToggleButton, selectShapeToggleButton, outlineColorImage, fillColorImage, gridSlider, gridCheckBox);
         gridCheckBox.selectedProperty().addListener((v, o, n) -> {
@@ -278,6 +274,7 @@ public class FXMLDocumentController implements Initializable {
 
             // creating a list containing all the shapes of the drawing
             ArrayList<Shape> shapeList = new ArrayList<>();
+            drawingPane.deselectShape();
             for (Object shape : drawingPane.getChildren().toArray()) {
                 shapeList.add((Shape) shape);
             }
@@ -316,6 +313,7 @@ public class FXMLDocumentController implements Initializable {
         if (selectedFile != null) {
             LoadCommand loadCommand = new LoadCommand(selectedFile, drawingPane);
             try {
+                drawingPane.deselectShape();
                 loadCommand.execute();
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("File loaded successfully");
@@ -352,6 +350,7 @@ public class FXMLDocumentController implements Initializable {
     private void undo(ActionEvent event) {
         try {
             invoker.undo();
+            drawingPane.deselectShape();
         } catch (Exception ex) {}
     }
     
