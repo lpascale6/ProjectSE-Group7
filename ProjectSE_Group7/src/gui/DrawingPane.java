@@ -85,6 +85,7 @@ public class DrawingPane extends Pane {
     public DrawingPane() {
         super();
         invoker = Invoker.getInstance();
+        isShapeCopied = new SimpleBooleanProperty(false);
     }
 
     /**
@@ -947,6 +948,10 @@ public class DrawingPane extends Pane {
      */
     public void setCopiedShape(Shape copiedShape) {
         this.copiedShape = copiedShape;
+    }
+    
+    public boolean getIsShapeCopied() {
+        return isShapeCopied.get();
     }
     
     public void setIsShapeCopied(boolean bool) {

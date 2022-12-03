@@ -136,6 +136,7 @@ public class CutShapeCommandTest {
         //line with distX > 0 and distY > 0
         Line line1 = new Line(1.0, 1.0, 2.0, 2.0, Color.BLACK);
         drawingPane.getChildren().add(line1);
+        drawingPane.setIsShapeCopied(false);
         size = drawingPane.getChildren().size();
         index = drawingPane.getChildren().indexOf(line1);
         cutShapeCommand = new CutShapeCommand(line1, drawingPane);
@@ -148,7 +149,7 @@ public class CutShapeCommandTest {
         assertFalse(drawingPane.getChildren().contains(line1));
         assertEquals(size - 1, drawingPane.getChildren().size());
         cutShapeCommand.undo();
-        assertEquals(null, drawingPane.getCopiedShape());
+        assertFalse(drawingPane.getIsShapeCopied());
         assertTrue(drawingPane.getChildren().contains(line1));
         assertEquals(size, drawingPane.getChildren().size());
         assertEquals(index, drawingPane.getChildren().indexOf(line1));
@@ -168,7 +169,7 @@ public class CutShapeCommandTest {
         assertFalse(drawingPane.getChildren().contains(line2));
         assertEquals(size - 1, drawingPane.getChildren().size());
         cutShapeCommand.undo();
-        assertEquals(null, drawingPane.getCopiedShape());
+        assertFalse(drawingPane.getIsShapeCopied());
         assertTrue(drawingPane.getChildren().contains(line2));
         assertEquals(size, drawingPane.getChildren().size());
         assertEquals(index, drawingPane.getChildren().indexOf(line2));
@@ -188,7 +189,7 @@ public class CutShapeCommandTest {
         assertFalse(drawingPane.getChildren().contains(line3));
         assertEquals(size - 1, drawingPane.getChildren().size());
         cutShapeCommand.undo();
-        assertEquals(null, drawingPane.getCopiedShape());
+        assertFalse(drawingPane.getIsShapeCopied());
         assertTrue(drawingPane.getChildren().contains(line3));
         assertEquals(size, drawingPane.getChildren().size());
         assertEquals(index, drawingPane.getChildren().indexOf(line3));
@@ -208,7 +209,7 @@ public class CutShapeCommandTest {
         assertFalse(drawingPane.getChildren().contains(line4));
         assertEquals(size - 1, drawingPane.getChildren().size());
         cutShapeCommand.undo();
-        assertEquals(null, drawingPane.getCopiedShape());
+        assertFalse(drawingPane.getIsShapeCopied());
         assertTrue(drawingPane.getChildren().contains(line4));
         assertEquals(size, drawingPane.getChildren().size());
         assertEquals(index, drawingPane.getChildren().indexOf(line4));
@@ -226,7 +227,7 @@ public class CutShapeCommandTest {
         assertFalse(drawingPane.getChildren().contains(rectangle));
         assertEquals(size - 1, drawingPane.getChildren().size());
         cutShapeCommand.undo();
-        assertEquals(null, drawingPane.getCopiedShape());
+        assertFalse(drawingPane.getIsShapeCopied());
         assertTrue(drawingPane.getChildren().contains(rectangle));
         assertEquals(size, drawingPane.getChildren().size());
         assertEquals(index, drawingPane.getChildren().indexOf(rectangle));
@@ -244,7 +245,7 @@ public class CutShapeCommandTest {
         assertFalse(drawingPane.getChildren().contains(ellipse));
         assertEquals(size - 1, drawingPane.getChildren().size());
         cutShapeCommand.undo();
-        assertEquals(null, drawingPane.getCopiedShape());
+        assertFalse(drawingPane.getIsShapeCopied());
         assertTrue(drawingPane.getChildren().contains(ellipse));
         assertEquals(size, drawingPane.getChildren().size());
         assertEquals(index, drawingPane.getChildren().indexOf(ellipse));
