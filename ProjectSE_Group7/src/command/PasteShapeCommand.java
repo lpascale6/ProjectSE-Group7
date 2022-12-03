@@ -11,7 +11,6 @@ import shape.Rectangle;
  *
  * @author group7
  */
-
 public class PasteShapeCommand implements Command {
 
     DrawingPane drawingPane;
@@ -42,7 +41,7 @@ public class PasteShapeCommand implements Command {
             pastedLine.setStrokeWidth(3);
 
             pastedLine.setOnMouseClicked(e -> {  //make the pasted shape selectable
-                this.drawingPane.selectShape(e);
+                this.drawingPane.selectShape((Shape) e.getSource());
             });
 
             this.drawingPane.getChildren().add(pastedLine);  //add copy to drawingPane
@@ -61,7 +60,7 @@ public class PasteShapeCommand implements Command {
             pastedRect.setStrokeWidth(3);
 
             pastedRect.setOnMouseClicked(e -> {  //make the pasted shape selectable
-                this.drawingPane.selectShape(e);
+                this.drawingPane.selectShape((Shape) e.getSource());
             });
 
             this.drawingPane.getChildren().add(pastedRect); //add the copy to the drawingPane
@@ -80,7 +79,7 @@ public class PasteShapeCommand implements Command {
             pastedEll.setStrokeWidth(3);
 
             pastedEll.setOnMouseClicked(e -> {  //make the pasted shape selectable
-                this.drawingPane.selectShape(e);
+                this.drawingPane.selectShape((Shape) e.getSource());
             });
 
             this.drawingPane.getChildren().add(pastedEll);  //add the copy to the drawingPane

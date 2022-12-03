@@ -33,8 +33,10 @@ public class LoadCommand implements Command {
     }
 
     /**
-     * Method that takes a list of shapes from a file and adds them to the drawing pane.
-     * @throws Exception 
+     * Method that takes a list of shapes from a file and adds them to the
+     * drawing pane.
+     *
+     * @throws Exception
      */
     @Override
     public void execute() throws Exception {
@@ -60,7 +62,7 @@ public class LoadCommand implements Command {
                 Line lineShape = new Line(startX, startY, endX, endY, color);
                 lineShape.setStrokeWidth(3);
                 lineShape.setOnMouseClicked(e -> {
-                    drawingPane.selectShape(e);
+                    drawingPane.selectShape((Shape) e.getSource());
                 });
                 shapeList.add(lineShape);  //add reconstructed line segment to shape list.
 
@@ -75,7 +77,7 @@ public class LoadCommand implements Command {
                 Rectangle rectangleShape = new Rectangle(x, y, width, height, fill, outer);
                 rectangleShape.setStrokeWidth(3);
                 rectangleShape.setOnMouseClicked(e -> {
-                    drawingPane.selectShape(e);
+                    drawingPane.selectShape((Shape) e.getSource());
                 });
                 shapeList.add(rectangleShape); //add reconstructed rectangle to shape list.
 
@@ -89,10 +91,10 @@ public class LoadCommand implements Command {
 
                 Ellipse ellipseShape = new Ellipse(hPosition, vPosition, width, height, outlineColor, fillColor);
                 ellipseShape.setOnMouseClicked(e -> {
-                    drawingPane.selectShape(e);
+                    drawingPane.selectShape((Shape) e.getSource());
                 });
                 ellipseShape.setStrokeWidth(3);
-                
+
                 shapeList.add(ellipseShape); //add reconstructed ellipse to shape list.
 
             } else if ("border".equals(shapeType) && data.length == 7) { //if shape type is border, reconstruct nothing.
@@ -111,11 +113,12 @@ public class LoadCommand implements Command {
 
     /**
      * Load command cannot be undone.
-     * @throws Exception 
+     *
+     * @throws Exception
      */
     @Override
     public void undo() throws Exception {
-       return;
+        return;
     }
 
 }

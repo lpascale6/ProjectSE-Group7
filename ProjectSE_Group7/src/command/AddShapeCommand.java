@@ -33,7 +33,7 @@ public class AddShapeCommand implements Command {
     @Override
     public void execute() throws Exception {
         this.creatingShape.setOnMouseClicked(e -> {
-            this.drawingPane.selectShape(e);
+            this.drawingPane.selectShape((Shape) e.getSource());
         });
         this.drawingPane.getChildren().add(this.creatingShape);
     }

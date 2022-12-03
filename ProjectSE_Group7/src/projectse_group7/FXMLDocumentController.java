@@ -16,6 +16,7 @@ import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -338,7 +339,14 @@ public class FXMLDocumentController implements Initializable {
      */
     @FXML
     private void newDrawing(ActionEvent event) {
-        drawingPane.clearDrawing();
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Clear Drawing");
+        alert.setHeaderText("Are you sure?");
+        alert.setContentText("After clearing the drawing you will never be able to go back.");
+        if(alert.showAndWait().get() == ButtonType.OK) {
+             drawingPane.clearDrawing();
+        }
+       
     }
 
     /**
