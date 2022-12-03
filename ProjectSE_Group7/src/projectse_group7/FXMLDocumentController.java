@@ -79,8 +79,6 @@ public class FXMLDocumentController implements Initializable {
     private CheckBox gridCheckBox;
     @FXML
     private Slider gridSlider;
-    
-    
 
     /**
      * Sets up all the toggle buttons in the "Shape selection" section by
@@ -140,24 +138,23 @@ public class FXMLDocumentController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         invoker = Invoker.getInstance();
-        
-        
+
         gridSlider.setMinWidth(150);
         gridSlider.setMaxWidth(150);
         gridSlider.setPadding(new Insets(6));
         gridSlider.setTooltip(new Tooltip("Grid size"));
-        
+
         // setting up the drawing pane
         drawingPane = new DrawingPane(invoker, lineToggleButton, rectangleToggleButton, ellipseToggleButton, selectShapeToggleButton, outlineColorImage, fillColorImage, gridSlider, gridCheckBox);
         gridCheckBox.selectedProperty().addListener((v, o, n) -> {
-          gridSlider.setDisable(!n.booleanValue());
-          drawingPane.updateGrid(gridSlider, gridCheckBox);
+            gridSlider.setDisable(!n.booleanValue());
+            drawingPane.updateGrid(gridSlider, gridCheckBox);
         });
         gridSlider.valueProperty().addListener((v, o, n) -> {
-          drawingPane.updateGrid(gridSlider, gridCheckBox);
+            drawingPane.updateGrid(gridSlider, gridCheckBox);
         });
         pane.getChildren().add(drawingPane);
-        
+
         // to abilitate the user to use ctrl+z shortcut
         undoMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.Z, KeyCombination.CONTROL_DOWN));
 
@@ -343,25 +340,35 @@ public class FXMLDocumentController implements Initializable {
         alert.setTitle("Clear Drawing");
         alert.setHeaderText("Are you sure?");
         alert.setContentText("After clearing the drawing you will never be able to go back.");
-        if(alert.showAndWait().get() == ButtonType.OK) {
-             drawingPane.clearDrawing();
+        if (alert.showAndWait().get() == ButtonType.OK) {
+            drawingPane.clearDrawing();
         }
-       
+
     }
 
     /**
      * Undoes the last performed operation on the drawing.
-     * @param event The event created when the undo menu item is
-     * clicked or when CTRL+Z is pressed.
+     *
+     * @param event The event created when the undo menu item is clicked or when
+     * CTRL+Z is pressed.
      */
     @FXML
     private void undo(ActionEvent event) {
-        try {
-            invoker.undo();
-            drawingPane.deselectShape();
-        } catch (Exception ex) {}
+
+        if (!invoker.getStack().isEmpty()) {
+            try {
+                invoker.undo();
+                drawingPane.deselectShape();
+            } catch (Exception ex) {
+            }
+        } else {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("No operations to undo");
+            alert.setHeaderText("There are no operations to undo.");
+            alert.setContentText("");
+            alert.showAndWait();
+            
+        }
     }
-    
-    
 
 }

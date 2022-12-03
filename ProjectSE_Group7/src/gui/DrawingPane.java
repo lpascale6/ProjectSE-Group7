@@ -1,6 +1,8 @@
 package gui;
 
 import command.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.animation.*;
 import javafx.scene.paint.*;
 import javafx.scene.*;
@@ -53,6 +55,7 @@ public class DrawingPane extends Pane {
     SimpleBooleanProperty isShapeSelected;
     private Shape selectedShape;
 
+    SimpleBooleanProperty isShapeCopied;
     private Shape copiedShape = null;
 
     // move and resize 
@@ -121,6 +124,7 @@ public class DrawingPane extends Pane {
         ellipseToggleButton.setOnAction(event -> deselectShape());
 
         isShapeSelected = new SimpleBooleanProperty(false);
+        isShapeCopied = new SimpleBooleanProperty(false);
         ContextMenu manageShape = new ContextMenu();
 
         // setting up delete menu item and its operations
@@ -165,9 +169,11 @@ public class DrawingPane extends Pane {
         copyMenuItem.setOnAction(event -> {
             CopyShapeCommand copyShapeCommand = new CopyShapeCommand(this.selectedShape, this);
             try {
-                invoker.execute(copyShapeCommand);
+                copyShapeCommand.execute();
             } catch (Exception ex) {
             }
+            isShapeCopied.set(true);
+
         });
 
         // setting up cut menu item and its operations
@@ -177,12 +183,14 @@ public class DrawingPane extends Pane {
             CutShapeCommand cutShapeCommand = new CutShapeCommand(this.selectedShape, this);
             try {
                 invoker.execute(cutShapeCommand);
+                isShapeCopied.set(true);
             } catch (Exception ex) {
             }
         });
 
         // setting up paste menu item and its operations
         MenuItem pasteMenuItem = new MenuItem("Paste");
+        pasteMenuItem.disableProperty().bind(isShapeCopied.not());
         pasteMenuItem.setOnAction(event -> {
             PasteShapeCommand pasteShapeCommand = new PasteShapeCommand(this);
             try {
@@ -768,7 +776,7 @@ public class DrawingPane extends Pane {
         });
 
         bottomLeftBorder.setOnMouseReleased(event -> {
-            
+
             resizeSelectedShape();
         });
     }
@@ -821,7 +829,7 @@ public class DrawingPane extends Pane {
 
                         border.setRectangleWidth(startingWidth + (x - xPosition));
                         border.setRectangleHeight(startingHeight + (y - yPosition));
-                        
+
                         // moving borders
                         bottomRightBorder.setRectangleX(x - 5);
                         bottomRightBorder.setRectangleY(y - 5);
@@ -837,73 +845,19 @@ public class DrawingPane extends Pane {
         });
     }
 
+    /**
+     * Resizes the selected shape and deselects it.
+     */
     private void resizeSelectedShape() {
         isResizing = false;
-        
-        if (selectedShape.getClass() == Line.class) {
-            Line line = (Line) selectedShape;
 
-            double aX = line.getLineStartingX();
-            double aY = line.getLineStartingY();
-            double bX = line.getLineEndingX();
-            double bY = line.getLineEndingY();
-
-            double borderX = border.getRectangleX();
-            double borderY = border.getRectangleY();
-            double borderWidth = border.getRectangleWidth();
-            double borderHeight = border.getRectangleHeight();
-
-            if (aX < bX && aY < bY) {
-                // starting coordinate is the topleft corner of the border
-                line.setLineStartingX(borderX);
-                line.setLineStartingY(borderY);
-                line.setLineEndingX(borderX + borderWidth);
-                line.setLineEndingY(borderY + borderHeight);
-            } else if (aX < bX && aY > bY) {
-                // starting coordinate is the bottomleft corner of the border
-                line.setLineStartingX(borderX);
-                line.setLineStartingY(borderY + borderHeight);
-                line.setLineEndingX(borderX + borderWidth);
-                line.setLineEndingY(borderY);
-            } else if (aX > bX && aY < bY) {
-                // starting coordinate is the topright corner of the border
-                line.setLineStartingX(borderX + borderWidth);
-                line.setLineStartingY(borderY);
-                line.setLineEndingX(borderX);
-                line.setLineEndingY(borderY + borderHeight);
-            } else if (aX > bX && aY > bY) {
-                // starting coordinate is the bottomright corner of the border
-                line.setLineStartingX(borderX + borderWidth);
-                line.setLineStartingY(borderY + borderHeight);
-                line.setLineEndingX(borderX);
-                line.setLineEndingY(borderY);
-            }
-
-            deselectShape();
-        } else if (selectedShape.getClass() == Rectangle.class) {
-            Rectangle rectangle = (Rectangle) selectedShape;
-
-            rectangle.setRectangleX(border.getRectangleX());
-            rectangle.setRectangleY(border.getRectangleY());
-            // Resize command
-            rectangle.setRectangleWidth(border.getRectangleWidth());
-            rectangle.setRectangleHeight(border.getRectangleHeight());
-
-            deselectShape();
-
-        } else if (selectedShape.getClass() == Ellipse.class) {
-            Ellipse ellipse = (Ellipse) selectedShape;
-
-            ellipse.setEllipseCenterX(border.getRectangleX() + border.getRectangleWidth() / 2);
-            ellipse.setEllipseCenterY(border.getRectangleY() + border.getRectangleHeight() / 2);
-
-            // Resize command
-            ellipse.setEllipseRadiusX(border.getRectangleWidth() / 2);
-            ellipse.setEllipseRadiusY(border.getRectangleHeight() / 2);
-
-            deselectShape();
-
+        ResizeShapeCommand resizeShapeCommand = new ResizeShapeCommand(selectedShape, border);
+        try {
+            invoker.execute(resizeShapeCommand);
+        } catch (Exception ex) {
         }
+
+        selectShape(selectedShape);
     }
 
     /**
@@ -993,6 +947,10 @@ public class DrawingPane extends Pane {
      */
     public void setCopiedShape(Shape copiedShape) {
         this.copiedShape = copiedShape;
+    }
+    
+    public void setIsShapeCopied(boolean bool) {
+        isShapeCopied.set(bool);
     }
 
     public void updateGrid(Slider gridSlider, CheckBox gridCheckBox) {
