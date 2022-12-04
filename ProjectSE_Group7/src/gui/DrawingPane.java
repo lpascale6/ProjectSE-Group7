@@ -1,8 +1,6 @@
 package gui;
 
 import command.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.animation.*;
 import javafx.scene.paint.*;
 import javafx.scene.*;
@@ -12,7 +10,6 @@ import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.WritableImage;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Pane;
@@ -60,8 +57,6 @@ public class DrawingPane extends Pane {
 
     // move and resize 
     private boolean isMoving = false;
-    private double deltaX = 0;
-    private double deltaY = 0;
     double totalDeltaX = 0;
     double totalDeltaY = 0;
     private boolean isResizing = false;
@@ -273,21 +268,6 @@ public class DrawingPane extends Pane {
         });
 
         // setting up the event called on the drawingPane when the mouse 
-        // click has been released
-        this.setOnMouseReleased(event -> {
-            if (event.isPrimaryButtonDown()) {
-                if (lineToggleButton.isSelected() || rectangleToggleButton.isSelected() || ellipseToggleButton.isSelected()) {
-                    isDrawing = false;
-                    // if the starting coordinate of the shape corresponds to the ending coordinate,
-                    // the shape is removed from the drawingPane
-                    if (event.getX() == xStartPoint && event.getY() == yStartPoint) {
-                        this.getChildren().remove(this.getChildren().size() - 1);
-                    }
-                }
-            }
-        });
-
-        // setting up the event called on the drawingPane when the mouse 
         // is dragged over the drawingPane
         this.setOnMouseDragged(event -> {
             if (event.isPrimaryButtonDown()) {
@@ -314,6 +294,23 @@ public class DrawingPane extends Pane {
 
                 }
             }
+        });
+
+        // setting up the event called on the drawingPane when the mouse 
+        // click has been released
+        this.setOnMouseReleased(event -> {
+            if (lineToggleButton.isSelected() || rectangleToggleButton.isSelected() || ellipseToggleButton.isSelected()) {
+                isDrawing = false;
+                // if the starting coordinate of the shape corresponds to the ending coordinate,
+                // the shape is removed from the drawingPane
+                if (event.getX() == xStartPoint && event.getY() == yStartPoint) {
+                    try {
+                        invoker.undo();
+                    } catch (Exception ex) {
+                    }
+                }
+            }
+
         });
     }
 
@@ -610,12 +607,6 @@ public class DrawingPane extends Pane {
         topLeftBorder.setOnDragDetected(event -> {
             if (selectShapeToggleButton.isSelected()) {
                 isResizing = true;
-                xStartPoint = event.getX();
-                yStartPoint = event.getY();
-                xEndingPoint = event.getX();
-                yEndingPoint = event.getY();
-                deltaX = xStartPoint;
-                deltaY = yStartPoint;
             }
         });
 
@@ -623,8 +614,6 @@ public class DrawingPane extends Pane {
             if (selectShapeToggleButton.isSelected() && isResizing) {
                 double x = event.getX();
                 double y = event.getY();
-                deltaX = x - deltaX;
-                deltaY = y - deltaY;
 
                 if (x > (strokeWidth / 2)
                         && y > (strokeWidth / 2)
@@ -633,15 +622,21 @@ public class DrawingPane extends Pane {
                     // to check if the resized shape is too small
                     if (border.getRectangleWidth() > 10 && border.getRectangleHeight() > 10) {
 
-                        border.setRectangleX(x);
-                        border.setRectangleY(y);
-                        border.setRectangleWidth(startingWidth - (x - xPosition));
-                        border.setRectangleHeight(startingHeight - (y - yPosition));
+                        if (startingWidth - (x - xPosition) > 10) {
+                            border.setRectangleX(x);
+                            topLeftBorder.setRectangleX(x - 5);
+                            bottomLeftBorder.setRectangleX(x - 5);
+                            border.setRectangleWidth(startingWidth - (x - xPosition));
+                        }
+
+                        if (startingHeight - (y - yPosition) > 10) {
+                            border.setRectangleY(y);
+                            topLeftBorder.setRectangleY(y - 5);
+                            topRightBorder.setRectangleY(y - 5);
+                            border.setRectangleHeight(startingHeight - (y - yPosition));
+                        }
                         // moving borders
-                        topLeftBorder.setRectangleX(x - 5);
-                        topLeftBorder.setRectangleY(y - 5);
-                        topRightBorder.setRectangleY(y - 5);
-                        bottomLeftBorder.setRectangleX(x - 5);
+
                     }
                 }
             }
@@ -674,12 +669,6 @@ public class DrawingPane extends Pane {
         topRightBorder.setOnDragDetected(event -> {
             if (selectShapeToggleButton.isSelected()) {
                 isResizing = true;
-                xStartPoint = event.getX();
-                yStartPoint = event.getY();
-                xEndingPoint = event.getX();
-                yEndingPoint = event.getY();
-                deltaX = xStartPoint;
-                deltaY = yStartPoint;
             }
         });
 
@@ -687,8 +676,6 @@ public class DrawingPane extends Pane {
             if (selectShapeToggleButton.isSelected() && isResizing) {
                 double x = event.getX();
                 double y = event.getY();
-                deltaX = x - deltaX;
-                deltaY = y - deltaY;
 
                 if (x > (strokeWidth / 2)
                         && y > (strokeWidth / 2)
@@ -697,15 +684,18 @@ public class DrawingPane extends Pane {
                     // to check if the resized shape is too small
                     if (border.getRectangleWidth() > 10 && border.getRectangleHeight() > 10) {
 
-                        border.setRectangleY(y);
-                        border.setRectangleWidth(startingWidth + (x - xPosition));
-                        border.setRectangleHeight(startingHeight - (y - yPosition));
+                        if (startingWidth + (x - xPosition) > 10) {
+                            border.setRectangleWidth(startingWidth + (x - xPosition));
+                            topRightBorder.setRectangleX(x - 5);
+                            bottomRightBorder.setRectangleX(x - 5);
+                        }
+                        if (startingHeight - (y - yPosition) > 10) {
+                            border.setRectangleY(y);
+                            topRightBorder.setRectangleY(y - 5);
+                            topLeftBorder.setRectangleY(y - 5);
+                            border.setRectangleHeight(startingHeight - (y - yPosition));
+                        }
 
-                        // moving borders topright topleft bottomright
-                        topRightBorder.setRectangleX(x - 5);
-                        topRightBorder.setRectangleY(y - 5);
-                        topLeftBorder.setRectangleY(y - 5);
-                        bottomRightBorder.setRectangleX(x - 5);
                     }
                 }
             }
@@ -739,12 +729,6 @@ public class DrawingPane extends Pane {
         bottomLeftBorder.setOnDragDetected(event -> {
             if (selectShapeToggleButton.isSelected()) {
                 isResizing = true;
-                xStartPoint = event.getX();
-                yStartPoint = event.getY();
-                xEndingPoint = event.getX();
-                yEndingPoint = event.getY();
-                deltaX = xStartPoint;
-                deltaY = yStartPoint;
             }
         });
 
@@ -752,8 +736,6 @@ public class DrawingPane extends Pane {
             if (selectShapeToggleButton.isSelected() && isResizing) {
                 double x = event.getX();
                 double y = event.getY();
-                deltaX = x - deltaX;
-                deltaY = y - deltaY;
 
                 if (x > (strokeWidth / 2)
                         && y > (strokeWidth / 2)
@@ -762,15 +744,18 @@ public class DrawingPane extends Pane {
                     // to check if the resized shape is too small
                     if (border.getRectangleWidth() > 10 && border.getRectangleHeight() > 10) {
 
-                        border.setRectangleX(x);
-                        border.setRectangleWidth(startingWidth - (x - xPosition));
-                        border.setRectangleHeight(startingHeight + (y - yPosition));
+                        if (startingWidth - (x - xPosition) > 10) {
+                            border.setRectangleX(x);
+                            border.setRectangleWidth(startingWidth - (x - xPosition));
+                            bottomLeftBorder.setRectangleX(x - 5);
+                            topLeftBorder.setRectangleX(x - 5);
+                        }
+                        if (startingHeight + (y - yPosition) > 10) {
+                            border.setRectangleHeight(startingHeight + (y - yPosition));
+                            bottomLeftBorder.setRectangleY(y - 5);
+                            bottomRightBorder.setRectangleY(y - 5);
+                        }
 
-                        // moving borders topright topleft bottomright
-                        bottomLeftBorder.setRectangleX(x - 5);
-                        bottomLeftBorder.setRectangleY(y - 5);
-                        topLeftBorder.setRectangleX(x - 5);
-                        bottomRightBorder.setRectangleY(y - 5);
                     }
                 }
             }
@@ -805,12 +790,6 @@ public class DrawingPane extends Pane {
         bottomRightBorder.setOnDragDetected(event -> {
             if (selectShapeToggleButton.isSelected()) {
                 isResizing = true;
-                xStartPoint = event.getX();
-                yStartPoint = event.getY();
-                xEndingPoint = event.getX();
-                yEndingPoint = event.getY();
-                deltaX = xStartPoint;
-                deltaY = yStartPoint;
             }
         });
 
@@ -818,8 +797,6 @@ public class DrawingPane extends Pane {
             if (selectShapeToggleButton.isSelected() && isResizing) {
                 double x = event.getX();
                 double y = event.getY();
-                deltaX = x - deltaX;
-                deltaY = y - deltaY;
 
                 if (x > (strokeWidth / 2)
                         && y > (strokeWidth / 2)
@@ -828,14 +805,17 @@ public class DrawingPane extends Pane {
                     // to check if the resized shape is too small
                     if (border.getRectangleWidth() > 10 && border.getRectangleHeight() > 10) {
 
-                        border.setRectangleWidth(startingWidth + (x - xPosition));
-                        border.setRectangleHeight(startingHeight + (y - yPosition));
+                        if (startingWidth + (x - xPosition) > 10) {
+                            border.setRectangleWidth(startingWidth + (x - xPosition));
+                            bottomRightBorder.setRectangleX(x - 5);
+                            topRightBorder.setRectangleX(x - 5);
+                        }
+                        if (startingHeight + (y - yPosition) > 10) {
+                            border.setRectangleHeight(startingHeight + (y - yPosition));
+                            bottomRightBorder.setRectangleY(y - 5);
+                            bottomLeftBorder.setRectangleY(y - 5);
+                        }
 
-                        // moving borders
-                        bottomRightBorder.setRectangleX(x - 5);
-                        bottomRightBorder.setRectangleY(y - 5);
-                        topRightBorder.setRectangleX(x - 5);
-                        bottomLeftBorder.setRectangleY(y - 5);
                     }
                 }
             }
@@ -949,11 +929,11 @@ public class DrawingPane extends Pane {
     public void setCopiedShape(Shape copiedShape) {
         this.copiedShape = copiedShape;
     }
-    
+
     public boolean getIsShapeCopied() {
         return isShapeCopied.get();
     }
-    
+
     public void setIsShapeCopied(boolean bool) {
         isShapeCopied.set(bool);
     }
