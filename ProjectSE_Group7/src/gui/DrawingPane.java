@@ -195,9 +195,31 @@ public class DrawingPane extends Pane {
             } catch (Exception ex) {
             }
         });
+        
+        // setting up horizontal mirrorring menu item and its operations
+        MenuItem hMirrorMenuItem = new MenuItem("Mirror horizontally");
+        hMirrorMenuItem.disableProperty().bind(isShapeSelected.not());
+        hMirrorMenuItem.setOnAction(event -> {
+            HorizontalMirrorShapeCommand hMirrorShapeCommand = new HorizontalMirrorShapeCommand(this.selectedShape);
+            try {
+                invoker.execute(hMirrorShapeCommand);
+            } catch (Exception ex) {
+            }
+        });
+        
+        // setting up vertical mirrorring menu item and its operations
+        MenuItem vMirrorMenuItem = new MenuItem("Mirror vertically");
+        vMirrorMenuItem.disableProperty().bind(isShapeSelected.not());
+        vMirrorMenuItem.setOnAction(event -> {
+            VerticalMirrorShapeCommand vMirrorShapeCommand = new VerticalMirrorShapeCommand(this.selectedShape);
+            try {
+                invoker.execute(vMirrorShapeCommand);
+            } catch (Exception ex) {
+            }
+        });
 
         // adding all the menu items in the manage shape ContextMenu
-        manageShape.getItems().addAll(deleteMenuItem, toFrontMenuItem, toBackMenuItem, copyMenuItem, cutMenuItem, pasteMenuItem);
+        manageShape.getItems().addAll(deleteMenuItem, toFrontMenuItem, toBackMenuItem, copyMenuItem, cutMenuItem, pasteMenuItem, hMirrorMenuItem, vMirrorMenuItem);
         this.setOnContextMenuRequested(event -> {
             if (selectShapeToggleButton.isSelected()) {
                 manageShape.show(this.getScene().getWindow(), event.getScreenX(), event.getScreenY());
