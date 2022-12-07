@@ -4,6 +4,7 @@ import command.Invoker;
 import command.LoadCommand;
 import command.SaveCommand;
 import gui.DrawingPane;
+import gui.GridManager;
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
@@ -148,10 +149,10 @@ public class FXMLDocumentController implements Initializable {
         drawingPane = new DrawingPane(invoker, lineToggleButton, rectangleToggleButton, ellipseToggleButton, selectShapeToggleButton, outlineColorImage, fillColorImage, gridSlider, gridCheckBox);
         gridCheckBox.selectedProperty().addListener((v, o, n) -> {
             gridSlider.setDisable(!n.booleanValue());
-            drawingPane.updateGrid(gridSlider, gridCheckBox);
+            GridManager.updateGrid(drawingPane, gridSlider, gridCheckBox);
         });
         gridSlider.valueProperty().addListener((v, o, n) -> {
-            drawingPane.updateGrid(gridSlider, gridCheckBox);
+            GridManager.updateGrid(drawingPane, gridSlider, gridCheckBox);;
         });
         pane.getChildren().add(drawingPane);
 

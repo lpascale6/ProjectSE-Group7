@@ -1,26 +1,17 @@
 package gui;
 
 import command.*;
-import javafx.animation.*;
 import javafx.scene.paint.*;
 import javafx.scene.*;
 import javafx.scene.control.*;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.scene.SnapshotParameters;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.WritableImage;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Shape;
-import javafx.scene.shape.StrokeType;
-import javafx.util.Duration;
 import shape.Border;
-import shape.Ellipse;
-import shape.Line;
-import shape.Rectangle;
+import state.*;
 
 /**
  *
@@ -30,13 +21,11 @@ public class DrawingPane extends Pane {
 
     Invoker invoker;
 
-    Shape creatingShape;
+    DrawState drawState = new DrawLineState(this);
     private boolean isDrawing = false;
     private double xStartPoint;
     private double yStartPoint;
-    private double xEndingPoint;
-    private double yEndingPoint;
-    private final double strokeWidth = 3;
+    public final static double strokeWidth = 3;
 
     private Color selectedOutlineColor = Color.BLACK;
     private Color selectedFillColor = Color.WHITE;
@@ -56,10 +45,6 @@ public class DrawingPane extends Pane {
     private Shape copiedShape = null;
 
     // move and resize 
-    private boolean isMoving = false;
-    double totalDeltaX = 0;
-    double totalDeltaY = 0;
-    private boolean isResizing = false;
     private Group bordersGroup;
     private Border border;
     private Border topLeftBorder;
@@ -71,8 +56,6 @@ public class DrawingPane extends Pane {
     double gridSize = -1;
     Paint bg1 = Paint.valueOf("linear-gradient(from 0.0% 0.0% to 0.0% 100.0%, 0xffffff 0.0%, 0xffffff 100.0%)");
     BackgroundFill backgroundFill1 = new BackgroundFill(bg1, null, null);
-    Canvas canvas = new Canvas();
-    SnapshotParameters sp = new SnapshotParameters();
 
     /**
      * Empty constructor of the DrawingPane class for test.
@@ -104,20 +87,38 @@ public class DrawingPane extends Pane {
     public DrawingPane(Invoker invoker, ToggleButton lineToggleButton, ToggleButton rectangleToggleButton, ToggleButton ellipseToggleButton, ToggleButton selectShapeToggleButton, Circle outlineColorImage, Circle fillColorImage, Slider gridSlider, CheckBox gridCheckBox) {
         super();
         this.invoker = invoker;
+
+        // setting up line toggle button
         this.lineToggleButton = lineToggleButton;
+        this.lineToggleButton.setOnAction(event -> {
+            drawState = new DrawLineState(this);
+            deselectShape();
+        });
+
+        // setting up rectangle toggle button
         this.rectangleToggleButton = rectangleToggleButton;
+        this.rectangleToggleButton.setOnAction(event -> {
+            drawState = new DrawRectangleState(this);
+            deselectShape();
+        });
+
+        // setting up ellipse toggle button
         this.ellipseToggleButton = ellipseToggleButton;
+        this.ellipseToggleButton.setOnAction(event -> {
+            drawState = new DrawEllipseState(this);
+            deselectShape();
+        });
+
         this.selectShapeToggleButton = selectShapeToggleButton;
         this.outlineColorImage = outlineColorImage;
         this.fillColorImage = fillColorImage;
+        // setting up drawing pane style
         this.setPrefSize(1240, 718);
         this.setBackground(new Background(backgroundFill1));
         this.setStyle("-fx-border-color:grey;"
                 + "-fx-border-radius:5;");
+
         setup();
-        lineToggleButton.setOnAction(event -> deselectShape());
-        rectangleToggleButton.setOnAction(event -> deselectShape());
-        ellipseToggleButton.setOnAction(event -> deselectShape());
 
         isShapeSelected = new SimpleBooleanProperty(false);
         isShapeCopied = new SimpleBooleanProperty(false);
@@ -205,24 +206,6 @@ public class DrawingPane extends Pane {
     }
 
     /**
-     * Sets the selectedOutlineColor to the new color passed as argument.
-     *
-     * @param color The new outline color
-     */
-    public void setOutlineColor(Color color) {
-        this.selectedOutlineColor = color;
-    }
-
-    /**
-     * Sets the selectedFillColor to the new color passed as argument.
-     *
-     * @param color The new fill color
-     */
-    public void setFillColor(Color color) {
-        this.selectedFillColor = color;
-    }
-
-    /**
      * Sets up all the mouse event useful for drawing on this pane.
      */
     private void setup() {
@@ -244,24 +227,11 @@ public class DrawingPane extends Pane {
                     xStartPoint = event.getX();
                     yStartPoint = event.getY();
 
-                    // sets up the new shape by creating a new shape and 
-                    // adding it to the drawingPane
-                    if (lineToggleButton.isSelected()) {
-                        startDrawingLine(xStartPoint, yStartPoint);
-                    } else if (rectangleToggleButton.isSelected()) {
-                        startDrawingRectangle(xStartPoint, yStartPoint);
-                    } else if (ellipseToggleButton.isSelected()) {
-                        startDrawingEllipse(xStartPoint, yStartPoint);
-                    }
+                    drawState.startDrawing(xStartPoint, yStartPoint, selectedOutlineColor, selectedFillColor);
                 }
                 if (selectShapeToggleButton.isSelected()) {
                     // if there was already a selected shape, we reset it to its previous settings
-                    if (selectedShape != null) {
-                        this.getChildren().remove(bordersGroup);
-                    }
-                    selectedShape = null;
-
-                    isShapeSelected.set(false);
+                    deselectShape();
                 }
             }
 
@@ -283,15 +253,8 @@ public class DrawingPane extends Pane {
                             && y > (strokeWidth / 2)
                             && x < (this.getWidth() - (strokeWidth / 2))
                             && y < (this.getHeight() - (strokeWidth / 2))) {
-                        if (lineToggleButton.isSelected()) {
-                            drawLine(x, y);
-                        } else if (rectangleToggleButton.isSelected()) {
-                            drawRectangle(x, y);
-                        } else if (ellipseToggleButton.isSelected()) {
-                            drawEllipse(x, y);
-                        }
+                        drawState.draw(x, y);
                     }
-
                 }
             }
         });
@@ -315,545 +278,14 @@ public class DrawingPane extends Pane {
     }
 
     /**
-     * Starts setting up a possible Line shape and insert the shape in the
-     * drawing.
-     *
-     * @param x The starting x coordinate of the Line.
-     * @param y The starting y coordinate of the Line.
-     */
-    private void startDrawingLine(double x, double y) {
-        creatingShape = new Line(x, y, x, y);
-        creatingShape.setStroke(this.selectedOutlineColor);
-        creatingShape.setStrokeWidth(this.strokeWidth);
-        //DrawLineCommand 
-        AddShapeCommand addShapeCommand = new AddShapeCommand(this, creatingShape);
-        try {
-            invoker.execute(addShapeCommand);
-        } catch (Exception ex) {
-        }
-    }
-
-    /**
-     * Starts setting up a possible Rectangle shape and insert the shape in the
-     * drawing.
-     *
-     * @param x The starting x coordinate of the Rectangle.
-     * @param y The starting y coordinate of the Rectangle.
-     */
-    private void startDrawingRectangle(double x, double y) {
-        creatingShape = new Rectangle(x, y, 0, 0);
-        creatingShape.setStroke(selectedOutlineColor);
-        creatingShape.setFill(selectedFillColor);
-        creatingShape.setStrokeWidth(strokeWidth);
-        AddShapeCommand addShapeCommand = new AddShapeCommand(this, creatingShape);
-        try {
-            invoker.execute(addShapeCommand);
-        } catch (Exception ex) {
-        }
-    }
-
-    /**
-     * Starts setting up a possible Ellipse shape and insert the shape in the
-     * drawing.
-     *
-     * @param x The starting x coordinate of the Ellipse.
-     * @param y The starting y coordinate of the Ellipse.
-     */
-    private void startDrawingEllipse(double x, double y) {
-        creatingShape = new Ellipse(x, y, 0, 0);
-        creatingShape.setStroke(selectedOutlineColor);
-        creatingShape.setFill(selectedFillColor);
-        creatingShape.setStrokeWidth(strokeWidth);
-        AddShapeCommand addShapeCommand = new AddShapeCommand(this, creatingShape);
-        try {
-            invoker.execute(addShapeCommand);
-        } catch (Exception ex) {
-        }
-    }
-
-    /**
-     * Draws the Line in the drawing.
-     *
-     * @param x The ending x coordinate of the Line.
-     * @param y The ending y coordinate of the Line.
-     */
-    private void drawLine(double x, double y) {
-        Line line = (Line) creatingShape;
-        line.setLineEndingX(x);
-        line.setLineEndingY(y);
-    }
-
-    /**
-     * Draws the Rectangle in the drawing.
-     *
-     * @param x The ending x coordinate of the Rectangle.
-     * @param y The ending y coordinate of the Rectangle.
-     */
-    private void drawRectangle(double x, double y) {
-        Rectangle rectangle = (Rectangle) creatingShape;
-        // if the x coordinate is before the x vertex coordinate, 
-        // it becomes the new x coordinate for the vertex
-        if (x < xStartPoint) {
-            rectangle.setRectangleX(x);
-        } else {
-            rectangle.setRectangleX(xStartPoint);
-        }
-
-        // if the y coordinate is before the y vertex coordinate, 
-        // it becomes the new y coordinate for the vertex
-        if (y < yStartPoint) {
-            rectangle.setRectangleY(y);
-        } else {
-            rectangle.setRectangleY(yStartPoint);
-        }
-
-        rectangle.setRectangleWidth(Math.abs(xStartPoint - x));
-        rectangle.setRectangleHeight(Math.abs(yStartPoint - y));
-    }
-
-    /**
-     * Draws the Ellipse in the drawing.
-     *
-     * @param x The ending x coordinate of the imaginary rectangle bounding the
-     * Ellipse.
-     * @param y The ending y coordinate of the imaginary rectangle bounding the
-     * Ellipse.
-     */
-    private void drawEllipse(double x, double y) {
-        Ellipse ellipse = (Ellipse) creatingShape;
-
-        // if the x coordinate is before the x vertex coordinate, 
-        // it becomes the new x coordinate for the vertex
-        if (x < xStartPoint) {
-            ellipse.setEllipseCenterX((x + xStartPoint) / 2);
-        } else {
-            ellipse.setEllipseCenterX((x + xStartPoint) / 2);
-        }
-
-        // if the y coordinate is before the y vertex coordinate, 
-        // it becomes the new y coordinate for the vertex
-        if (y < yStartPoint) {
-            ellipse.setEllipseCenterY((y + yStartPoint) / 2);
-        } else {
-            ellipse.setEllipseCenterY((y + yStartPoint) / 2);
-        }
-
-        ellipse.setEllipseRadiusX(Math.abs(xStartPoint - x) / 2);
-        ellipse.setEllipseRadiusY(Math.abs(yStartPoint - y) / 2);
-    }
-
-    /**
      * Selects a shape and creates a border around it.
      *
-     * @param e The mouse event that generated the call to selectShape.
+     * @param shape The Shape to select.
      */
     public void selectShape(Shape shape) {
         if (selectShapeToggleButton.isSelected()) {
 
-            // if there was already a selected shape, we reset it to its previous settings
-            if (selectedShape != null) {
-                this.getChildren().remove(bordersGroup);
-            }
-
-            selectedShape = shape;
-
-            outlineColorImage.setFill(selectedShape.getStroke());
-            setOutlineColor((Color) selectedShape.getStroke());
-
-            if (selectedShape.getClass() != Line.class) {
-                fillColorImage.setFill(selectedShape.getFill());
-                setFillColor((Color) selectedShape.getFill());
-            }
-
-            setupBorders();
-
-            isShapeSelected.set(true);
-        }
-    }
-
-    private void setupBorders() {
-        border = new Border(selectedShape.getLayoutBounds().getMinX(), selectedShape.getLayoutBounds().getMinY(), selectedShape.getLayoutBounds().getWidth(), selectedShape.getLayoutBounds().getHeight());
-        border.setStrokeType(StrokeType.OUTSIDE);
-        border.setFillColor(Color.TRANSPARENT);
-        border.setStroke(Color.DARKCYAN);
-        border.setStrokeWidth(strokeWidth);
-        border.setCursor(Cursor.MOVE);
-        border.getStrokeDashArray().addAll(15d, 10d);
-
-        // this part is to create the border animation
-        double maxOffset
-                = border.getStrokeDashArray().stream().reduce(0d, (a, b) -> a + b);
-        Timeline timeLine = new Timeline(
-                new KeyFrame(Duration.ZERO, new KeyValue(border.strokeDashOffsetProperty(), 0, Interpolator.LINEAR)),
-                new KeyFrame(Duration.seconds(2), new KeyValue(border.strokeDashOffsetProperty(), maxOffset, Interpolator.LINEAR))
-        );
-        timeLine.setCycleCount(Timeline.INDEFINITE);
-        timeLine.play();
-
-        border.setOnMousePressed(event -> {
-            event.consume();
-        });
-
-        border.setOnDragDetected(event -> {
-            if (selectShapeToggleButton.isSelected()) {
-                isMoving = true;
-                xStartPoint = event.getX();
-                yStartPoint = event.getY();
-                xEndingPoint = event.getX();
-                yEndingPoint = event.getY();
-                totalDeltaX = 0;
-                totalDeltaY = 0;
-            }
-
-        });
-
-        border.setOnMouseDragged(event -> {
-            if (selectShapeToggleButton.isSelected() && isMoving) {
-                double x = event.getX();
-                double y = event.getY();
-                double deltaX = event.getX() - xEndingPoint;
-                double deltaY = event.getY() - yEndingPoint;
-
-                // this controll is for checking if the coordinate 
-                // is out of the borders of the drawingPane
-                if (border.getRectangleX() + deltaX > 0
-                        && border.getRectangleY() + deltaY > 0
-                        && border.getRectangleX() + deltaX + border.getRectangleWidth() < (this.getWidth())
-                        && border.getRectangleY() + deltaY + border.getRectangleHeight() < (this.getHeight())) {
-
-                    if (selectedShape.getClass() == Line.class) {
-                        Line line = (Line) selectedShape;
-                        line.moveOf(deltaX, deltaY);
-                        moveBordersGroup(bordersGroup, deltaX, deltaY);
-                        xEndingPoint = event.getX();
-                        yEndingPoint = event.getY();
-                    } else if (selectedShape.getClass() == Rectangle.class) {
-                        Rectangle rectangle = (Rectangle) selectedShape;
-                        rectangle.moveOf(deltaX, deltaY);
-                        moveBordersGroup(bordersGroup, deltaX, deltaY);
-                        xEndingPoint = event.getX();
-                        yEndingPoint = event.getY();
-                    } else if (selectedShape.getClass() == Ellipse.class) {
-                        Ellipse ellipse = (Ellipse) selectedShape;
-                        ellipse.moveOf(deltaX, deltaY);
-                        moveBordersGroup(bordersGroup, deltaX, deltaY);
-                        xEndingPoint = event.getX();
-                        yEndingPoint = event.getY();
-                    }
-
-                    totalDeltaX = xEndingPoint - xStartPoint;
-                    totalDeltaY = yEndingPoint - yStartPoint;
-                }
-
-                event.consume();
-            }
-        }
-        );
-
-        border.setOnMouseReleased(event -> {
-            if (isMoving) {
-                isMoving = false;
-                if (selectedShape.getClass() == Line.class) {
-                    Line line = (Line) selectedShape;
-                    line.moveOf(-totalDeltaX, -totalDeltaY);
-                } else if (selectedShape.getClass() == Rectangle.class) {
-                    Rectangle rectangle = (Rectangle) selectedShape;
-                    rectangle.moveOf(-totalDeltaX, -totalDeltaY);
-                } else if (selectedShape.getClass() == Ellipse.class) {
-                    Ellipse ellipse = (Ellipse) selectedShape;
-                    ellipse.moveOf(-totalDeltaX, -totalDeltaY);
-                }
-
-                MoveShapeCommand moveShapeCommand = new MoveShapeCommand(selectedShape, totalDeltaX, totalDeltaY);
-                try {
-                    invoker.execute(moveShapeCommand);
-                    selectShape(selectedShape);
-                } catch (Exception ex) {
-                }
-            }
-        });
-
-        // setting up corner borders
-        setupTopLeftBorder();
-        setupTopRightBorder();
-        setupBottomLeftBorder();
-        setupBottomRightBorder();
-
-        bordersGroup = new Group(border, topLeftBorder, topRightBorder, bottomLeftBorder, bottomRightBorder);
-
-        this.getChildren().add(bordersGroup);
-
-    }
-
-    private void setupTopLeftBorder() {
-        topLeftBorder = new Border(selectedShape.getLayoutBounds().getMinX() - 5,
-                selectedShape.getLayoutBounds().getMinY() - 5, 10, 10);
-
-        topLeftBorder.setOutlineColor(Color.DARKCYAN);
-        topLeftBorder.setFillColor(Color.DARKCYAN);
-        topLeftBorder.setStrokeType(StrokeType.OUTSIDE);
-        topLeftBorder.setCursor(Cursor.NW_RESIZE);
-
-        double xPosition = border.getRectangleX();
-        double yPosition = border.getRectangleY();
-        double startingWidth = border.getRectangleWidth();
-        double startingHeight = border.getRectangleHeight();
-
-        // topleft corner event handlers
-        topLeftBorder.setOnMousePressed(event -> {
-            event.consume();
-        });
-
-        topLeftBorder.setOnDragDetected(event -> {
-            if (selectShapeToggleButton.isSelected()) {
-                isResizing = true;
-            }
-        });
-
-        topLeftBorder.setOnMouseDragged(event -> {
-            if (selectShapeToggleButton.isSelected() && isResizing) {
-                double x = event.getX();
-                double y = event.getY();
-
-                if (x > (strokeWidth / 2)
-                        && y > (strokeWidth / 2)
-                        && x < (this.getWidth() - (strokeWidth / 2))
-                        && y < (this.getHeight() - (strokeWidth / 2))) {
-                    // to check if the resized shape is too small
-                    if (border.getRectangleWidth() > 10 && border.getRectangleHeight() > 10) {
-
-                        if (startingWidth - (x - xPosition) > 10) {
-                            border.setRectangleX(x);
-                            topLeftBorder.setRectangleX(x - 5);
-                            bottomLeftBorder.setRectangleX(x - 5);
-                            border.setRectangleWidth(startingWidth - (x - xPosition));
-                        }
-
-                        if (startingHeight - (y - yPosition) > 10) {
-                            border.setRectangleY(y);
-                            topLeftBorder.setRectangleY(y - 5);
-                            topRightBorder.setRectangleY(y - 5);
-                            border.setRectangleHeight(startingHeight - (y - yPosition));
-                        }
-                        // moving borders
-
-                    }
-                }
-            }
-        });
-
-        topLeftBorder.setOnMouseReleased(event -> {
-            resizeSelectedShape();
-        });
-    }
-
-    private void setupTopRightBorder() {
-        topRightBorder = new Border(selectedShape.getLayoutBounds().getMinX() + selectedShape.getLayoutBounds().getWidth() - 5,
-                selectedShape.getLayoutBounds().getMinY() - 5, 10, 10);
-
-        topRightBorder.setCursor(Cursor.NE_RESIZE);
-        topRightBorder.setOutlineColor(Color.DARKCYAN);
-        topRightBorder.setFillColor(Color.DARKCYAN);
-        topRightBorder.setStrokeType(StrokeType.OUTSIDE);
-
-        double xPosition = border.getRectangleX() + border.getRectangleWidth();
-        double yPosition = border.getRectangleY();
-        double startingWidth = border.getRectangleWidth();
-        double startingHeight = border.getRectangleHeight();
-
-        // topleft corner event handlers
-        topRightBorder.setOnMousePressed(event -> {
-            event.consume();
-        });
-
-        topRightBorder.setOnDragDetected(event -> {
-            if (selectShapeToggleButton.isSelected()) {
-                isResizing = true;
-            }
-        });
-
-        topRightBorder.setOnMouseDragged(event -> {
-            if (selectShapeToggleButton.isSelected() && isResizing) {
-                double x = event.getX();
-                double y = event.getY();
-
-                if (x > (strokeWidth / 2)
-                        && y > (strokeWidth / 2)
-                        && x < (this.getWidth() - (strokeWidth / 2))
-                        && y < (this.getHeight() - (strokeWidth / 2))) {
-                    // to check if the resized shape is too small
-                    if (border.getRectangleWidth() > 10 && border.getRectangleHeight() > 10) {
-
-                        if (startingWidth + (x - xPosition) > 10) {
-                            border.setRectangleWidth(startingWidth + (x - xPosition));
-                            topRightBorder.setRectangleX(x - 5);
-                            bottomRightBorder.setRectangleX(x - 5);
-                        }
-                        if (startingHeight - (y - yPosition) > 10) {
-                            border.setRectangleY(y);
-                            topRightBorder.setRectangleY(y - 5);
-                            topLeftBorder.setRectangleY(y - 5);
-                            border.setRectangleHeight(startingHeight - (y - yPosition));
-                        }
-
-                    }
-                }
-            }
-        });
-
-        topRightBorder.setOnMouseReleased(event -> {
-            resizeSelectedShape();
-        });
-
-    }
-
-    private void setupBottomLeftBorder() {
-        bottomLeftBorder = new Border(selectedShape.getLayoutBounds().getMinX() - 5,
-                selectedShape.getLayoutBounds().getMinY() + selectedShape.getLayoutBounds().getHeight() - 5, 10, 10);
-
-        bottomLeftBorder.setCursor(Cursor.SW_RESIZE);
-        bottomLeftBorder.setOutlineColor(Color.DARKCYAN);
-        bottomLeftBorder.setFillColor(Color.DARKCYAN);
-        bottomLeftBorder.setStrokeType(StrokeType.OUTSIDE);
-
-        double xPosition = border.getRectangleX();
-        double yPosition = border.getRectangleY() + border.getRectangleHeight();
-        double startingWidth = border.getRectangleWidth();
-        double startingHeight = border.getRectangleHeight();
-
-        // topleft corner event handlers
-        bottomLeftBorder.setOnMousePressed(event -> {
-            event.consume();
-        });
-
-        bottomLeftBorder.setOnDragDetected(event -> {
-            if (selectShapeToggleButton.isSelected()) {
-                isResizing = true;
-            }
-        });
-
-        bottomLeftBorder.setOnMouseDragged(event -> {
-            if (selectShapeToggleButton.isSelected() && isResizing) {
-                double x = event.getX();
-                double y = event.getY();
-
-                if (x > (strokeWidth / 2)
-                        && y > (strokeWidth / 2)
-                        && x < (this.getWidth() - (strokeWidth / 2))
-                        && y < (this.getHeight() - (strokeWidth / 2))) {
-                    // to check if the resized shape is too small
-                    if (border.getRectangleWidth() > 10 && border.getRectangleHeight() > 10) {
-
-                        if (startingWidth - (x - xPosition) > 10) {
-                            border.setRectangleX(x);
-                            border.setRectangleWidth(startingWidth - (x - xPosition));
-                            bottomLeftBorder.setRectangleX(x - 5);
-                            topLeftBorder.setRectangleX(x - 5);
-                        }
-                        if (startingHeight + (y - yPosition) > 10) {
-                            border.setRectangleHeight(startingHeight + (y - yPosition));
-                            bottomLeftBorder.setRectangleY(y - 5);
-                            bottomRightBorder.setRectangleY(y - 5);
-                        }
-
-                    }
-                }
-            }
-        });
-
-        bottomLeftBorder.setOnMouseReleased(event -> {
-
-            resizeSelectedShape();
-        });
-    }
-
-    private void setupBottomRightBorder() {
-
-        bottomRightBorder = new Border(selectedShape.getLayoutBounds().getMinX() + selectedShape.getLayoutBounds().getWidth() - 5,
-                selectedShape.getLayoutBounds().getMinY() + selectedShape.getLayoutBounds().getHeight() - 5, 10, 10);
-
-        bottomRightBorder.setCursor(Cursor.SE_RESIZE);
-        bottomRightBorder.setOutlineColor(Color.DARKCYAN);
-        bottomRightBorder.setFillColor(Color.DARKCYAN);
-        bottomRightBorder.setStrokeType(StrokeType.OUTSIDE);
-
-        double xPosition = border.getRectangleX() + border.getRectangleWidth();
-        double yPosition = border.getRectangleY() + border.getRectangleHeight();
-        double startingWidth = border.getRectangleWidth();
-        double startingHeight = border.getRectangleHeight();
-
-        // topleft corner event handlers
-        bottomRightBorder.setOnMousePressed(event -> {
-            event.consume();
-        });
-
-        bottomRightBorder.setOnDragDetected(event -> {
-            if (selectShapeToggleButton.isSelected()) {
-                isResizing = true;
-            }
-        });
-
-        bottomRightBorder.setOnMouseDragged(event -> {
-            if (selectShapeToggleButton.isSelected() && isResizing) {
-                double x = event.getX();
-                double y = event.getY();
-
-                if (x > (strokeWidth / 2)
-                        && y > (strokeWidth / 2)
-                        && x < (this.getWidth() - (strokeWidth / 2))
-                        && y < (this.getHeight() - (strokeWidth / 2))) {
-                    // to check if the resized shape is too small
-                    if (border.getRectangleWidth() > 10 && border.getRectangleHeight() > 10) {
-
-                        if (startingWidth + (x - xPosition) > 10) {
-                            border.setRectangleWidth(startingWidth + (x - xPosition));
-                            bottomRightBorder.setRectangleX(x - 5);
-                            topRightBorder.setRectangleX(x - 5);
-                        }
-                        if (startingHeight + (y - yPosition) > 10) {
-                            border.setRectangleHeight(startingHeight + (y - yPosition));
-                            bottomRightBorder.setRectangleY(y - 5);
-                            bottomLeftBorder.setRectangleY(y - 5);
-                        }
-
-                    }
-                }
-            }
-        });
-
-        bottomRightBorder.setOnMouseReleased(event -> {
-            resizeSelectedShape();
-        });
-    }
-
-    /**
-     * Resizes the selected shape and deselects it.
-     */
-    private void resizeSelectedShape() {
-        isResizing = false;
-
-        ResizeShapeCommand resizeShapeCommand = new ResizeShapeCommand(selectedShape, border);
-        try {
-            invoker.execute(resizeShapeCommand);
-        } catch (Exception ex) {
-        }
-
-        selectShape(selectedShape);
-    }
-
-    /**
-     * Moves all the components of the group passed as argument.
-     *
-     * @param group The group to move.
-     * @param x The delta x to add to the position of each component of the
-     * group.
-     * @param y The delta y to add to the position of each component of the
-     * group.
-     */
-    private void moveBordersGroup(Group group, double x, double y) {
-        for (Node node : group.getChildren()) {
-            Border border = (Border) node;
-            border.moveOf(x, y);
+            SelectionManager.selectShape(this, shape);
         }
     }
 
@@ -861,12 +293,7 @@ public class DrawingPane extends Pane {
      * Deselects the selected shape, if there is one.
      */
     public void deselectShape() {
-        if (selectedShape != null) {
-            selectedShape = null;
-            this.getChildren().remove(bordersGroup);
-            border = null;
-            isShapeSelected.set(false);
-        }
+        SelectionManager.deselectShape(this, selectedShape);
     }
 
     /**
@@ -912,6 +339,94 @@ public class DrawingPane extends Pane {
         }
     }
 
+    // ----- getters and setters -----
+    /**
+     * Sets the selectedOutlineColor to the new color passed as argument.
+     *
+     * @param color The new outline color
+     */
+    public void setOutlineColor(Color color) {
+        this.selectedOutlineColor = color;
+    }
+
+    public void setOutlineColorImage(Color color) {
+        outlineColorImage.setFill(color);
+    }
+
+    /**
+     * Sets the selectedFillColor to the new color passed as argument.
+     *
+     * @param color The new fill color
+     */
+    public void setFillColor(Color color) {
+        this.selectedFillColor = color;
+    }
+
+    public void setFillColorImage(Color color) {
+        fillColorImage.setFill(color);
+    }
+
+    public Group getBordersGroup() {
+        return this.bordersGroup;
+    }
+
+    public void setBordersGroup(Group bordersGroup) {
+        this.bordersGroup = bordersGroup;
+    }
+
+    public Border getShapeBorder() {
+        return border;
+    }
+
+    public void setShapeBorder(Border border) {
+        this.border = border;
+    }
+
+    public Border getTopLeftBorder() {
+        return topLeftBorder;
+    }
+
+    public void setTopLeftBorder(Border topLeftBorder) {
+        this.topLeftBorder = topLeftBorder;
+    }
+
+    public Border getTopRightBorder() {
+        return topRightBorder;
+    }
+
+    public void setTopRightBorder(Border topRightBorder) {
+        this.topRightBorder = topRightBorder;
+    }
+
+    public Border getBottomLeftBorder() {
+        return bottomLeftBorder;
+    }
+
+    public void setBottomLeftBorder(Border bottomLeftBorder) {
+        this.bottomLeftBorder = bottomLeftBorder;
+    }
+
+    public Border getBottomRightBorder() {
+        return bottomRightBorder;
+    }
+
+    public void setBottomRightBorder(Border bottomRightBorder) {
+        this.bottomRightBorder = bottomRightBorder;
+    }
+
+    public Shape getSelectedShape() {
+        return this.selectedShape;
+    }
+
+    public void setSelectedShape(Shape shape) {
+        selectedShape = shape;
+    }
+
+    public void setIsShapeSelected(boolean value) {
+        this.isShapeSelected.set(value);
+    }
+
+    // ----- copiedShape getter and setter -----
     /**
      * Returns the copied shape.
      *
@@ -930,42 +445,39 @@ public class DrawingPane extends Pane {
         this.copiedShape = copiedShape;
     }
 
+    // ----- isShapeCopied getter and setter -----
+    /**
+     * Returns the value of isShapeCopied.
+     *
+     * @return The value of isShapeCopied.
+     */
     public boolean getIsShapeCopied() {
         return isShapeCopied.get();
     }
 
+    /**
+     * Sets the value of isShapedCopied to the value passed as argument.
+     *
+     * @param bool The value to set.
+     */
     public void setIsShapeCopied(boolean bool) {
         isShapeCopied.set(bool);
     }
 
-    public void updateGrid(Slider gridSlider, CheckBox gridCheckBox) {
-        double size = gridSlider.getValue();
-        if (!gridCheckBox.isSelected() || size < 4) {
-            size = 0;
-        }
-        if (gridSize != size) {
-            if (size <= 0) {
-                this.setBackground(new Background(backgroundFill1));
-            } else {
-                Paint bg2 = patternTransparent(size);
-                BackgroundFill backgroundFill2 = new BackgroundFill(bg2, null, null);
-                this.setBackground(new Background(backgroundFill1, backgroundFill2));
-            }
-            gridSize = size;
-        }
+    public ToggleButton getSelectShapeToggleButton() {
+        return selectShapeToggleButton;
     }
 
-    private ImagePattern patternTransparent(double size) {
-        canvas.setHeight(size);
-        canvas.setWidth(size);
-        GraphicsContext gc = canvas.getGraphicsContext2D();
-        gc.clearRect(0, 0, size, size);
-        gc.setFill(Color.BLACK);
-        //gc.setLineWidth(2);
-        gc.strokeLine(0, 0, 0, size);
-        gc.strokeLine(1, 0, size, 0);
-        sp.setFill(Color.TRANSPARENT);
-        WritableImage image = canvas.snapshot(sp, null);
-        return new ImagePattern(image, 0, 0, size, size, false);
+    public BackgroundFill getBackgroundFill1() {
+        return backgroundFill1;
     }
+
+    public double getGridSize() {
+        return gridSize;
+    }
+
+    public void setGridSize(double gridSize) {
+        this.gridSize = gridSize;
+    }
+
 }
