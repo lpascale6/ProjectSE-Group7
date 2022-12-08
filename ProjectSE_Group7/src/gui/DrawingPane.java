@@ -58,6 +58,10 @@ public class DrawingPane extends Pane {
     // move and resize 
     private Group bordersGroup;
     private Border border;
+    private Border topBorder;
+    private Border bottomBorder;
+    private Border rightBorder;
+    private Border leftBorder;
     private Border topLeftBorder;
     private Border topRightBorder;
     private Border bottomLeftBorder;
@@ -547,6 +551,74 @@ public class DrawingPane extends Pane {
         return topLeftBorder;
     }
 
+    /**
+     * Sets the topBorder to the value passed as argument.
+     *
+     * @param topBorder The value to set.
+     */
+    public void setTopBorder(Border topBorder) {
+        this.topBorder = topBorder;
+    }
+    
+    /**
+     * Returns the value of topBorder.
+     * @return 
+     */
+    public Border getTopBorder() {
+        return this.topBorder;
+    }
+    
+    /**
+     * Sets the bottomBorder to the value passed as argument.
+     *
+     * @param bottomBorder The value to set.
+     */
+    public void setBottomBorder(Border bottomBorder) {
+        this.bottomBorder = bottomBorder;
+    }
+    
+    /**
+     * Returns the value of bottomBorder.
+     * @return 
+     */
+    public Border getBottomBorder() {
+        return this.bottomBorder;
+    }
+    
+    /**
+     * Sets the rightBorder to the value passed as argument.
+     *
+     * @param rightBorder The value to set.
+     */
+    public void setRightBorder(Border rightBorder) {
+        this.rightBorder = rightBorder;
+    }
+    
+    /**
+     * Returns the value of rightBorder.
+     * @return 
+     */
+    public Border getRightBorder() {
+        return this.rightBorder;
+    }
+    
+    /**
+     * Sets the leftBorder to the value passed as argument.
+     *
+     * @param leftBorder The value to set.
+     */
+    public void setLeftBorder(Border leftBorder) {
+        this.leftBorder = leftBorder;
+    }
+    
+    /**
+     * Returns the value of leftBorder.
+     * @return 
+     */
+    public Border getLeftBorder() {
+        return this.leftBorder;
+    }
+    
     /**
      * Sets the topLeftBorder to the value passed as argument.
      *

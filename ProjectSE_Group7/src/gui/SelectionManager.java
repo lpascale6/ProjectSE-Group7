@@ -193,14 +193,285 @@ public class SelectionManager {
         Border topRightBorder = setupTopRightBorder(drawingPane, border);
         Border bottomLeftBorder = setupBottomLeftBorder(drawingPane, border);
         Border bottomRightBorder = setupBottomRightBorder(drawingPane, border);
-
-        bordersGroup = new Group(border, topLeftBorder, topRightBorder, bottomLeftBorder, bottomRightBorder);
+        
+        // setting up edge borders
+        Border topBorder = setupTopBorder(drawingPane, border);
+        Border rightBorder = setupRightBorder(drawingPane, border);
+        Border leftBorder = setupLeftBorder(drawingPane, border);
+        Border bottomBorder = setupBottomBorder(drawingPane, border);
+        
+        bordersGroup = new Group(border, topLeftBorder, topRightBorder, bottomLeftBorder, bottomRightBorder, topBorder, bottomBorder, rightBorder, leftBorder);
         bordersGroup.setRotate(selectedShape.getRotate());
         drawingPane.setBordersGroup(bordersGroup);
         drawingPane.getChildren().add(bordersGroup);
 
     }
 
+    /**
+     * Method to setup the top edge of the border (to help stretching).
+     * @param drawingPane the drawing pane which the selected shape belongs
+     * @param border the border of the selected shape
+     * @return 
+     */
+    private static Border setupTopBorder(DrawingPane drawingPane, Border border) {
+        Border topBorder = new Border(selectedShape.getLayoutBounds().getMinX() + selectedShape.getLayoutBounds().getWidth()/2 - 5,
+                selectedShape.getLayoutBounds().getMinY() - 5, 10, 10);
+
+        topBorder.setOutlineColor(Color.DARKCYAN);
+        topBorder.setFillColor(Color.DARKCYAN);
+        topBorder.setStrokeType(StrokeType.OUTSIDE);
+        topBorder.setCursor(Cursor.N_RESIZE);
+
+        drawingPane.setTopBorder(topBorder);
+
+        double xPosition = border.getRectangleX();
+        double yPosition = border.getRectangleY();
+        double startingHeight = border.getRectangleHeight();
+
+        // topleft corner event handlers
+        topBorder.setOnMousePressed(event -> {
+            event.consume();
+        });
+
+        topBorder.setOnDragDetected(event -> {
+            if (selectShapeToggleButton.isSelected()) {
+                isResizing = true;
+            }
+        });
+
+        topBorder.setOnMouseDragged(event -> {
+            if (selectShapeToggleButton.isSelected() && isResizing) {
+                double x = event.getX();
+                double y = event.getY();
+
+                if (x > (strokeWidth / 2)
+                        && y > (strokeWidth / 2)
+                        && x < (drawingPane.getWidth() - (strokeWidth / 2))
+                        && y < (drawingPane.getHeight() - (strokeWidth / 2))) {
+                    // to check if the resized shape is too small
+                    if (border.getRectangleWidth() > 10 && border.getRectangleHeight() > 10) {
+
+                        if (startingHeight - (y - yPosition) > 10) {
+                            border.setRectangleY(y);
+                            topBorder.setRectangleY(y - 5);
+                            drawingPane.getTopRightBorder().setRectangleY(y - 5);
+                            drawingPane.getTopLeftBorder().setRectangleY(y - 5);
+                            drawingPane.getRightBorder().setRectangleY(y + border.getRectangleHeight()/2 - 5);
+                            drawingPane.getLeftBorder().setRectangleY(y + border.getRectangleHeight()/2 - 5);
+                            border.setRectangleHeight(startingHeight - (y - yPosition));
+                        }
+                        
+                    }
+                }
+            }
+        });
+
+        topBorder.setOnMouseReleased(event -> {
+            resizeSelectedShape(drawingPane, selectedShape, border);
+        });
+
+        return topBorder;
+    }
+    
+    /**
+     * Method to setup the bottom edge of the border (to help stretching).
+     * @param drawingPane the drawing pane which the selected shape belongs
+     * @param border the border of the selected shape
+     * @return 
+     */
+    private static Border setupBottomBorder(DrawingPane drawingPane, Border border) {
+
+        Border bottomBorder = new Border(selectedShape.getLayoutBounds().getMinX() + selectedShape.getLayoutBounds().getWidth()/2 - 5,
+                selectedShape.getLayoutBounds().getMinY() + selectedShape.getLayoutBounds().getHeight() - 5, 10, 10);
+
+        bottomBorder.setCursor(Cursor.S_RESIZE);
+        bottomBorder.setOutlineColor(Color.DARKCYAN);
+        bottomBorder.setFillColor(Color.DARKCYAN);
+        bottomBorder.setStrokeType(StrokeType.OUTSIDE);
+
+        drawingPane.setBottomBorder(bottomBorder);
+
+        double xPosition = border.getRectangleX() + border.getRectangleWidth();
+        double yPosition = border.getRectangleY() + border.getRectangleHeight();
+        double startingWidth = border.getRectangleWidth();
+        double startingHeight = border.getRectangleHeight();
+
+        // topleft corner event handlers
+        bottomBorder.setOnMousePressed(event -> {
+            event.consume();
+        });
+
+        bottomBorder.setOnDragDetected(event -> {
+            if (selectShapeToggleButton.isSelected()) {
+                isResizing = true;
+            }
+        });
+
+        bottomBorder.setOnMouseDragged(event -> {
+            if (selectShapeToggleButton.isSelected() && isResizing) {
+                double x = event.getX();
+                double y = event.getY();
+
+                if (x > (strokeWidth / 2)
+                        && y > (strokeWidth / 2)
+                        && x < (drawingPane.getWidth() - (strokeWidth / 2))
+                        && y < (drawingPane.getHeight() - (strokeWidth / 2))) {
+                    // to check if the resized shape is too small
+                    if (border.getRectangleWidth() > 10 && border.getRectangleHeight() > 10) {
+                        if (startingHeight + (y - yPosition) > 10) {
+                            border.setRectangleHeight(startingHeight + (y - yPosition));
+                            bottomBorder.setRectangleY(y - 5);
+                            drawingPane.getBottomLeftBorder().setRectangleY(y - 5);
+                            drawingPane.getBottomRightBorder().setRectangleY(y - 5);
+                            drawingPane.getRightBorder().setRectangleY(y - border.getRectangleHeight()/2 - 5);
+                            drawingPane.getLeftBorder().setRectangleY(y - border.getRectangleHeight()/2 - 5);
+                        }
+
+                    }
+                }
+            }
+        });
+
+        bottomBorder.setOnMouseReleased(event -> {
+            resizeSelectedShape(drawingPane, selectedShape, border);
+        });
+
+        return bottomBorder;
+    }
+    
+    /**
+     * Method to setup the right edge of the border (to help stretching).
+     * @param drawingPane the drawing pane which the selected shape belongs
+     * @param border the border of the selected shape
+     * @return 
+     */
+    private static Border setupRightBorder(DrawingPane drawingPane, Border border) {
+
+        Border rightBorder = new Border(selectedShape.getLayoutBounds().getMinX() + selectedShape.getLayoutBounds().getWidth() - 5,
+                selectedShape.getLayoutBounds().getMinY() + selectedShape.getLayoutBounds().getHeight()/2 - 5, 10, 10);
+
+        rightBorder.setCursor(Cursor.E_RESIZE);
+        rightBorder.setOutlineColor(Color.DARKCYAN);
+        rightBorder.setFillColor(Color.DARKCYAN);
+        rightBorder.setStrokeType(StrokeType.OUTSIDE);
+
+        drawingPane.setRightBorder(rightBorder);
+
+        double xPosition = border.getRectangleX() + border.getRectangleWidth();
+        double yPosition = border.getRectangleY() + border.getRectangleHeight();
+        double startingWidth = border.getRectangleWidth();
+
+        // topleft corner event handlers
+        rightBorder.setOnMousePressed(event -> {
+            event.consume();
+        });
+
+        rightBorder.setOnDragDetected(event -> {
+            if (selectShapeToggleButton.isSelected()) {
+                isResizing = true;
+            }
+        });
+
+        rightBorder.setOnMouseDragged(event -> {
+            if (selectShapeToggleButton.isSelected() && isResizing) {
+                double x = event.getX();
+                double y = event.getY();
+
+                if (x > (strokeWidth / 2)
+                        && y > (strokeWidth / 2)
+                        && x < (drawingPane.getWidth() - (strokeWidth / 2))
+                        && y < (drawingPane.getHeight() - (strokeWidth / 2))) {
+                    // to check if the resized shape is too small
+                    if (border.getRectangleWidth() > 10 && border.getRectangleHeight() > 10) {
+
+                        if (startingWidth + (x - xPosition) > 10) {
+                            border.setRectangleWidth(startingWidth + (x - xPosition));
+                            rightBorder.setRectangleX(x - 5);
+                            drawingPane.getTopBorder().setRectangleX(x - border.getRectangleWidth()/2 - 5);
+                            drawingPane.getBottomBorder().setRectangleX(x - border.getRectangleWidth()/2 - 5);
+                            drawingPane.getTopRightBorder().setRectangleX(x - 5);
+                            drawingPane.getBottomRightBorder().setRectangleX(x - 5);
+                        }
+
+                    }
+                }
+            }
+        });
+
+        rightBorder.setOnMouseReleased(event -> {
+            resizeSelectedShape(drawingPane, selectedShape, border);
+        });
+
+        return rightBorder;
+    }
+    
+    /**
+     * Method to setup the left edge of the border (to help stretching).
+     * @param drawingPane the drawing pane which the selected shape belongs
+     * @param border the border of the selected shape
+     * @return 
+     */
+    private static Border setupLeftBorder(DrawingPane drawingPane, Border border) {
+        Border leftBorder = new Border(selectedShape.getLayoutBounds().getMinX() - 5,
+                selectedShape.getLayoutBounds().getMinY() + selectedShape.getLayoutBounds().getHeight()/2 - 5, 10, 10);
+
+        leftBorder.setCursor(Cursor.W_RESIZE);
+        leftBorder.setOutlineColor(Color.DARKCYAN);
+        leftBorder.setFillColor(Color.DARKCYAN);
+        leftBorder.setStrokeType(StrokeType.OUTSIDE);
+
+        drawingPane.setLeftBorder(leftBorder);
+
+        double xPosition = border.getRectangleX();
+        double yPosition = border.getRectangleY() + border.getRectangleHeight();
+        double startingWidth = border.getRectangleWidth();
+
+        // topleft corner event handlers
+        leftBorder.setOnMousePressed(event -> {
+            event.consume();
+        });
+
+        leftBorder.setOnDragDetected(event -> {
+            if (selectShapeToggleButton.isSelected()) {
+                isResizing = true;
+            }
+        });
+
+        leftBorder.setOnMouseDragged(event -> {
+            if (selectShapeToggleButton.isSelected() && isResizing) {
+                double x = event.getX();
+                double y = event.getY();
+
+                if (x > (strokeWidth / 2)
+                        && y > (strokeWidth / 2)
+                        && x < (drawingPane.getWidth() - (strokeWidth / 2))
+                        && y < (drawingPane.getHeight() - (strokeWidth / 2))) {
+                    // to check if the resized shape is too small
+                    if (border.getRectangleWidth() > 10 && border.getRectangleHeight() > 10) {
+
+                        if (startingWidth - (x - xPosition) > 10) {
+                            border.setRectangleX(x);
+                            border.setRectangleWidth(startingWidth - (x - xPosition));
+                            leftBorder.setRectangleX(x - 5);
+                            drawingPane.getTopBorder().setRectangleX(x + border.getRectangleWidth()/2 - 5);
+                            drawingPane.getBottomBorder().setRectangleX(x + border.getRectangleWidth()/2 - 5);
+                            drawingPane.getTopLeftBorder().setRectangleX(x - 5);
+                            drawingPane.getBottomLeftBorder().setRectangleX(x - 5);
+                        }
+
+                    }
+                }
+            }
+        });
+
+        leftBorder.setOnMouseReleased(event -> {
+
+            resizeSelectedShape(drawingPane, selectedShape, border);
+        });
+
+        return leftBorder;
+    }
+    
     /**
      * Method to setup the top left corner of the border (to help resizing).
      * @param drawingPane the drawing pane which the selected shape belongs
@@ -250,13 +521,19 @@ public class SelectionManager {
                             border.setRectangleX(x);
                             topLeftBorder.setRectangleX(x - 5);
                             drawingPane.getBottomLeftBorder().setRectangleX(x - 5);
+                            drawingPane.getLeftBorder().setRectangleX(x - 5);
                             border.setRectangleWidth(startingWidth - (x - xPosition));
+                            drawingPane.getTopBorder().setRectangleX(x + border.getRectangleWidth()/2 - 5);
+                            drawingPane.getBottomBorder().setRectangleX(x + border.getRectangleWidth()/2 - 5);
                         }
 
                         if (startingHeight - (y - yPosition) > 10) {
                             border.setRectangleY(y);
                             topLeftBorder.setRectangleY(y - 5);
                             drawingPane.getTopRightBorder().setRectangleY(y - 5);
+                            drawingPane.getTopBorder().setRectangleY(y - 5);
+                            drawingPane.getRightBorder().setRectangleY(y + border.getRectangleHeight()/2 - 5);
+                            drawingPane.getLeftBorder().setRectangleY(y + border.getRectangleHeight()/2 - 5);
                             border.setRectangleHeight(startingHeight - (y - yPosition));
                         }
                         
@@ -321,11 +598,17 @@ public class SelectionManager {
                             border.setRectangleWidth(startingWidth + (x - xPosition));
                             topRightBorder.setRectangleX(x - 5);
                             drawingPane.getBottomRightBorder().setRectangleX(x - 5);
+                            drawingPane.getRightBorder().setRectangleX(x - 5);
+                            drawingPane.getTopBorder().setRectangleX(x - border.getRectangleWidth()/2 - 5);
+                            drawingPane.getBottomBorder().setRectangleX(x - border.getRectangleWidth()/2 - 5);
                         }
                         if (startingHeight - (y - yPosition) > 10) {
                             border.setRectangleY(y);
                             topRightBorder.setRectangleY(y - 5);
                             drawingPane.getTopLeftBorder().setRectangleY(y - 5);
+                            drawingPane.getTopBorder().setRectangleY(y - 5);
+                            drawingPane.getRightBorder().setRectangleY(y + border.getRectangleHeight()/2 - 5);
+                            drawingPane.getLeftBorder().setRectangleY(y + border.getRectangleHeight()/2 - 5);
                             border.setRectangleHeight(startingHeight - (y - yPosition));
                         }
 
@@ -390,12 +673,18 @@ public class SelectionManager {
                             border.setRectangleX(x);
                             border.setRectangleWidth(startingWidth - (x - xPosition));
                             bottomLeftBorder.setRectangleX(x - 5);
+                            drawingPane.getTopBorder().setRectangleX(x + border.getRectangleWidth()/2 - 5);
+                            drawingPane.getBottomBorder().setRectangleX(x + border.getRectangleWidth()/2 - 5);
                             drawingPane.getTopLeftBorder().setRectangleX(x - 5);
+                            drawingPane.getLeftBorder().setRectangleX(x - 5);
                         }
                         if (startingHeight + (y - yPosition) > 10) {
                             border.setRectangleHeight(startingHeight + (y - yPosition));
                             bottomLeftBorder.setRectangleY(y - 5);
                             drawingPane.getBottomRightBorder().setRectangleY(y - 5);
+                            drawingPane.getBottomBorder().setRectangleY(y - 5);
+                            drawingPane.getRightBorder().setRectangleY(y - border.getRectangleHeight()/2 - 5);
+                            drawingPane.getLeftBorder().setRectangleY(y - border.getRectangleHeight()/2 - 5);
                         }
 
                     }
@@ -460,12 +749,18 @@ public class SelectionManager {
                         if (startingWidth + (x - xPosition) > 10) {
                             border.setRectangleWidth(startingWidth + (x - xPosition));
                             bottomRightBorder.setRectangleX(x - 5);
+                            drawingPane.getTopBorder().setRectangleX(x - border.getRectangleWidth()/2 - 5);
+                            drawingPane.getBottomBorder().setRectangleX(x - border.getRectangleWidth()/2 - 5);
                             drawingPane.getTopRightBorder().setRectangleX(x - 5);
+                            drawingPane.getRightBorder().setRectangleX(x - 5);
                         }
                         if (startingHeight + (y - yPosition) > 10) {
                             border.setRectangleHeight(startingHeight + (y - yPosition));
                             bottomRightBorder.setRectangleY(y - 5);
                             drawingPane.getBottomLeftBorder().setRectangleY(y - 5);
+                            drawingPane.getBottomBorder().setRectangleY(y - 5);
+                            drawingPane.getRightBorder().setRectangleY(y - border.getRectangleHeight()/2 - 5);
+                            drawingPane.getLeftBorder().setRectangleY(y - border.getRectangleHeight()/2 - 5);
                         }
 
                     }
