@@ -140,22 +140,22 @@
                            </HBox.margin>
                         </TitledPane>
                         <Separator orientation="VERTICAL" />
-                        <TitledPane animated="false" collapsible="false" maxHeight="-Infinity" prefHeight="130.0" prefWidth="300.0" text="Colors">
+                        <TitledPane animated="false" collapsible="false" prefHeight="130.0" prefWidth="350.0" text="Colors">
                           <content>
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                  <children>
-                                    <HBox maxWidth="1.7976931348623157E308" prefHeight="100.0" spacing="5.0">
+                                    <HBox maxWidth="1.7976931348623157E308" prefHeight="100.0" spacing="4.0">
                                        <children>
                                           <VBox prefHeight="200.0" prefWidth="100.0" spacing="2.0">
                                              <children>
                                                 <Label text="Outline Color" />
-                                                <ToggleButton fx:id="outlineColorToggleButton" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" selected="true">
+                                                <ToggleButton fx:id="outlineColorToggleButton" mnemonicParsing="false" prefHeight="30.0" prefWidth="50.0" selected="true">
                                                    <graphic>
                                                       <Circle fx:id="outlineColorImage" radius="10.0" stroke="BLACK" strokeType="INSIDE" />
                                                    </graphic>
                                                 </ToggleButton>
                                                 <Label text="Fill Color" />
-                                                <ToggleButton fx:id="fillColorToggleButton" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0">
+                                                <ToggleButton fx:id="fillColorToggleButton" mnemonicParsing="false" prefHeight="30.0" prefWidth="50.0">
                                                    <graphic>
                                                       <Circle fx:id="fillColorImage" fill="WHITE" radius="10.0" stroke="BLACK" strokeType="INSIDE" />
                                                    </graphic>
@@ -173,7 +173,7 @@
                                                    <children>
                                                       <HBox layoutX="14.0" layoutY="14.0" spacing="10.0">
                                                          <children>
-                                                            <Button layoutX="114.0" layoutY="61.0" mnemonicParsing="false" onAction="#setBlackColor" prefHeight="30.0" prefWidth="30.0">
+                                                            <Button layoutX="114.0" layoutY="61.0" mnemonicParsing="false" onAction="#setBlackColor" prefHeight="30.0" prefWidth="50.0">
                                                                <graphic>
                                                                   <Circle radius="10.0" stroke="BLACK" strokeType="INSIDE" />
                                                                </graphic>
@@ -181,7 +181,7 @@
                                                                   <Tooltip text="Black" />
                                                                </tooltip>
                                                             </Button>
-                                                            <Button mnemonicParsing="false" onAction="#setGreyColor" prefHeight="30.0" prefWidth="30.0">
+                                                            <Button mnemonicParsing="false" onAction="#setGreyColor" prefHeight="30.0" prefWidth="50.0">
                                                                <graphic>
                                                                   <Circle fill="GREY" radius="10.0" stroke="BLACK" strokeType="INSIDE" />
                                                                </graphic>
@@ -189,7 +189,7 @@
                                                                   <Tooltip text="Grey" />
                                                                </tooltip>
                                                             </Button>
-                                                            <Button mnemonicParsing="false" onAction="#setWhiteColor" prefHeight="30.0" prefWidth="30.0">
+                                                            <Button mnemonicParsing="false" onAction="#setWhiteColor" prefHeight="30.0" prefWidth="50.0">
                                                                <graphic>
                                                                   <Circle fill="WHITE" radius="10.0" stroke="BLACK" strokeType="INSIDE" />
                                                                </graphic>
@@ -197,7 +197,7 @@
                                                                   <Tooltip text="White" />
                                                                </tooltip>
                                                             </Button>
-                                                            <Button mnemonicParsing="false" onAction="#setBlueColor" prefHeight="30.0" prefWidth="30.0">
+                                                            <Button mnemonicParsing="false" onAction="#setBlueColor" prefHeight="30.0" prefWidth="50.0">
                                                                <graphic>
                                                                   <Circle fill="BLUE" radius="10.0" stroke="BLACK" strokeType="INSIDE" />
                                                                </graphic>
@@ -209,7 +209,7 @@
                                                       </HBox>
                                                       <HBox layoutX="14.0" layoutY="14.0" spacing="10.0">
                                                          <children>
-                                                            <Button mnemonicParsing="false" onAction="#setRedColor" prefHeight="30.0" prefWidth="30.0">
+                                                            <Button mnemonicParsing="false" onAction="#setRedColor" prefHeight="30.0" prefWidth="50.0">
                                                                <graphic>
                                                                   <Circle fill="RED" radius="10.0" stroke="BLACK" strokeType="INSIDE" />
                                                                </graphic>
@@ -217,7 +217,7 @@
                                                                   <Tooltip text="Red" />
                                                                </tooltip>
                                                             </Button>
-                                                            <Button mnemonicParsing="false" onAction="#setOrangeColor" prefHeight="30.0" prefWidth="30.0">
+                                                            <Button mnemonicParsing="false" onAction="#setOrangeColor" prefHeight="30.0" prefWidth="50.0">
                                                                <graphic>
                                                                   <Circle fill="ORANGE" radius="10.0" stroke="BLACK" strokeType="INSIDE" />
                                                                </graphic>
@@ -225,7 +225,7 @@
                                                                   <Tooltip text="Orange" />
                                                                </tooltip>
                                                             </Button>
-                                                            <Button layoutX="114.0" layoutY="14.0" mnemonicParsing="false" onAction="#setYellowColor" prefHeight="30.0" prefWidth="30.0">
+                                                            <Button layoutX="114.0" layoutY="14.0" mnemonicParsing="false" onAction="#setYellowColor" prefHeight="30.0" prefWidth="50.0">
                                                                <graphic>
                                                                   <Circle fill="YELLOW" radius="10.0" stroke="BLACK" strokeType="INSIDE" />
                                                                </graphic>
@@ -233,7 +233,7 @@
                                                                   <Tooltip text="Yellow" />
                                                                </tooltip>
                                                             </Button>
-                                                            <Button mnemonicParsing="false" onAction="#setGreenColor" prefHeight="30.0" prefWidth="30.0">
+                                                            <Button mnemonicParsing="false" onAction="#setGreenColor" prefHeight="30.0" prefWidth="50.0">
                                                                <graphic>
                                                                   <Circle fill="GREEN" radius="10.0" stroke="BLACK" strokeType="INSIDE" />
                                                                </graphic>
@@ -258,7 +258,7 @@
                           <content>
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                  <children>
-                                    <HBox layoutX="19.6" layoutY="19.6" prefHeight="90.0" prefWidth="280.0" AnchorPane.bottomAnchor="4.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0">
+                                    <HBox layoutX="19.6" layoutY="19.6" prefHeight="90.0" prefWidth="280.0" spacing="20.0" AnchorPane.topAnchor="0.4000000000000057">
                                        <children>
                                           <VBox alignment="CENTER_LEFT" spacing="10.0">
                                              <children>
@@ -277,11 +277,30 @@
                                                 </Slider>
                                              </children>
                                           </VBox>
-                                          <VBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="10.0" prefHeight="91.0" prefWidth="47.0" spacing="10.0" />
-                                          <VBox alignment="CENTER_LEFT" layoutX="150.0" layoutY="10.0" spacing="10.0">
+                                          <VBox alignment="CENTER_LEFT" layoutX="150.0" layoutY="10.0" spacing="20.0">
                                              <children>
-                                                <Button fx:id="zoomIn" mnemonicParsing="false" onAction="#zoomIn" text="Zoom +" />
-                                                <Button fx:id="zoomOut" mnemonicParsing="false" onAction="#zoomOut" prefHeight="25.0" prefWidth="59.0" text="Zoom -" />
+                                                <Button fx:id="zoomIn" mnemonicParsing="false" onAction="#zoomIn" prefHeight="30.0" prefWidth="50.0">
+                                                   <graphic>
+                                                      <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                                         <image>
+                                                            <Image url="@../images/zoomInImage.png" />
+                                                         </image>
+                                                      </ImageView>
+                                                   </graphic>
+                                                   <tooltip>
+                                                      <Tooltip text="Zoom in" />
+                                                   </tooltip></Button>
+                                                <Button fx:id="zoomOut" mnemonicParsing="false" onAction="#zoomOut" prefHeight="30.0" prefWidth="50.0">
+                                                   <graphic>
+                                                      <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                                         <image>
+                                                            <Image url="@../images/zoomOutImage.png" />
+                                                         </image>
+                                                      </ImageView>
+                                                   </graphic>
+                                                   <tooltip>
+                                                      <Tooltip text="Zoom out" />
+                                                   </tooltip></Button>
                                              </children>
                                           </VBox>
                                        </children>

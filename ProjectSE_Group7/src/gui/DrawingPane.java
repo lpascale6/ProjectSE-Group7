@@ -2,6 +2,7 @@ package gui;
 
 import command.*;
 import java.util.HashSet;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.Set;
 import javafx.beans.property.DoubleProperty;
@@ -200,6 +201,52 @@ public class DrawingPane extends Pane {
             }
         });
 
+        // setting up horizontal mirrorring menu item and its operations
+        MenuItem hMirrorMenuItem = new MenuItem("Mirror horizontally");
+        hMirrorMenuItem.disableProperty().bind(isShapeSelected.not());
+        hMirrorMenuItem.setOnAction(event -> {
+            HorizontalMirrorShapeCommand hMirrorShapeCommand = new HorizontalMirrorShapeCommand(this.selectedShape);
+            try {
+                invoker.execute(hMirrorShapeCommand);
+            } catch (Exception ex) {
+            }
+        });
+
+        // setting up vertical mirrorring menu item and its operations
+        MenuItem vMirrorMenuItem = new MenuItem("Mirror vertically");
+        vMirrorMenuItem.disableProperty().bind(isShapeSelected.not());
+        vMirrorMenuItem.setOnAction(event -> {
+            VerticalMirrorShapeCommand vMirrorShapeCommand = new VerticalMirrorShapeCommand(this.selectedShape);
+            try {
+                invoker.execute(vMirrorShapeCommand);
+            } catch (Exception ex) {
+            }
+        });
+
+        // setting up rotation menu item and its operations
+        MenuItem rotateMenuItem = new MenuItem("Rotate");
+        rotateMenuItem.disableProperty().bind(isShapeSelected.not());
+        rotateMenuItem.setOnAction(event -> {
+            TextInputDialog td = new TextInputDialog();
+            td.setTitle("Choose rotation angle");
+            td.setHeaderText("Enter the rotation angle of the shape (degree)");
+            Optional<String> result = td.showAndWait();
+
+            try {
+                double angle = Double.parseDouble(result.get());
+                RotateShapeCommand rotateShapeCommand = new RotateShapeCommand(this.selectedShape, angle);
+                invoker.execute(rotateShapeCommand);
+                SelectionManager.selectShape(this, selectedShape);
+            } catch (NoSuchElementException noSuchElementException) {
+            } catch (Exception exception) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Invalid input");
+                alert.setHeaderText("Rotation angle inserted is not valid");
+                alert.setContentText("Rotation angle must contain only numeric values");
+                alert.showAndWait();
+            }
+        });
+
         // setting up copy menu item and its operations
         MenuItem copyMenuItem = new MenuItem("Copy");
         copyMenuItem.disableProperty().bind(isShapeSelected.not());
@@ -236,53 +283,8 @@ public class DrawingPane extends Pane {
             }
         });
 
-        // setting up horizontal mirrorring menu item and its operations
-        MenuItem hMirrorMenuItem = new MenuItem("Mirror horizontally");
-        hMirrorMenuItem.disableProperty().bind(isShapeSelected.not());
-        hMirrorMenuItem.setOnAction(event -> {
-            HorizontalMirrorShapeCommand hMirrorShapeCommand = new HorizontalMirrorShapeCommand(this.selectedShape);
-            try {
-                invoker.execute(hMirrorShapeCommand);
-            } catch (Exception ex) {
-            }
-        });
-
-        // setting up vertical mirrorring menu item and its operations
-        MenuItem vMirrorMenuItem = new MenuItem("Mirror vertically");
-        vMirrorMenuItem.disableProperty().bind(isShapeSelected.not());
-        vMirrorMenuItem.setOnAction(event -> {
-            VerticalMirrorShapeCommand vMirrorShapeCommand = new VerticalMirrorShapeCommand(this.selectedShape);
-            try {
-                invoker.execute(vMirrorShapeCommand);
-            } catch (Exception ex) {
-            }
-        });
-
-        // setting up vertical mirrorring menu item and its operations
-        MenuItem rotateMenuItem = new MenuItem("Rotate");
-        rotateMenuItem.disableProperty().bind(isShapeSelected.not());
-        rotateMenuItem.setOnAction(event -> {
-            TextInputDialog td = new TextInputDialog();
-            td.setTitle("Choose angle");
-            td.setHeaderText("Enter angle to rotate");
-            Optional<String> result = td.showAndWait();
-
-            try {
-                double angle = Double.parseDouble(result.get());
-                RotateShapeCommand rotateShapeCommand = new RotateShapeCommand(this.selectedShape, angle);
-                invoker.execute(rotateShapeCommand);
-                SelectionManager.selectShape(this, selectedShape);
-            } catch (Exception ex) {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Error");
-                alert.setHeaderText("Invalid Input");
-                alert.setContentText("");
-                alert.showAndWait();
-            }
-        });
-
         // adding all the menu items in the manage shape ContextMenu
-        manageShape.getItems().addAll(deleteMenuItem, toFrontMenuItem, toBackMenuItem, copyMenuItem, cutMenuItem, pasteMenuItem, hMirrorMenuItem, vMirrorMenuItem, rotateMenuItem);
+        manageShape.getItems().addAll(deleteMenuItem, toFrontMenuItem, toBackMenuItem, hMirrorMenuItem, vMirrorMenuItem, rotateMenuItem, copyMenuItem, cutMenuItem, pasteMenuItem);
         this.setOnContextMenuRequested(event -> {
             if (selectShapeToggleButton.isSelected()) {
                 manageShape.show(this.getScene().getWindow(), event.getScreenX(), event.getScreenY());
@@ -559,15 +561,16 @@ public class DrawingPane extends Pane {
     public void setTopBorder(Border topBorder) {
         this.topBorder = topBorder;
     }
-    
+
     /**
      * Returns the value of topBorder.
-     * @return 
+     *
+     * @return
      */
     public Border getTopBorder() {
         return this.topBorder;
     }
-    
+
     /**
      * Sets the bottomBorder to the value passed as argument.
      *
@@ -576,15 +579,16 @@ public class DrawingPane extends Pane {
     public void setBottomBorder(Border bottomBorder) {
         this.bottomBorder = bottomBorder;
     }
-    
+
     /**
      * Returns the value of bottomBorder.
-     * @return 
+     *
+     * @return
      */
     public Border getBottomBorder() {
         return this.bottomBorder;
     }
-    
+
     /**
      * Sets the rightBorder to the value passed as argument.
      *
@@ -593,15 +597,16 @@ public class DrawingPane extends Pane {
     public void setRightBorder(Border rightBorder) {
         this.rightBorder = rightBorder;
     }
-    
+
     /**
      * Returns the value of rightBorder.
-     * @return 
+     *
+     * @return
      */
     public Border getRightBorder() {
         return this.rightBorder;
     }
-    
+
     /**
      * Sets the leftBorder to the value passed as argument.
      *
@@ -610,15 +615,16 @@ public class DrawingPane extends Pane {
     public void setLeftBorder(Border leftBorder) {
         this.leftBorder = leftBorder;
     }
-    
+
     /**
      * Returns the value of leftBorder.
-     * @return 
+     *
+     * @return
      */
     public Border getLeftBorder() {
         return this.leftBorder;
     }
-    
+
     /**
      * Sets the topLeftBorder to the value passed as argument.
      *
