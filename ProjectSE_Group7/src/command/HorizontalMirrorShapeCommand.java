@@ -11,7 +11,11 @@ public class HorizontalMirrorShapeCommand implements Command{
 
     private Shape selectedShape;
 
-    
+    /**
+    * Constructor method of class HorizontalMirrorShapeCommand.
+    *
+     * @param selectedShape the shape to horizontally mirror
+    */
     public HorizontalMirrorShapeCommand(Shape selectedShape){
         this.selectedShape = selectedShape;
 

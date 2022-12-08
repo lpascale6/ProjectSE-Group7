@@ -18,6 +18,13 @@ import javafx.scene.paint.Paint;
  */
 public class GridManager {
 
+    /**
+     * Method to update the dimension of the grid when the slider value changes.
+     * 
+     * @param drawingPane the drawing pane of the grid
+     * @param gridSlider the slider for resizing the grid
+     * @param gridCheckBox the check box to turn the grid on and off
+     */
     public static void updateGrid(DrawingPane drawingPane, Slider gridSlider, CheckBox gridCheckBox) {
         
         double size = gridSlider.getValue();
@@ -37,6 +44,12 @@ public class GridManager {
         }
     }
 
+    /**
+     * Method to create the image pattern of the grid.
+     * 
+     * @param size the size of the grid
+     * @return 
+     */
     private static ImagePattern patternTransparent(double size) {
         Canvas canvas = new Canvas();
         canvas.setHeight(size);

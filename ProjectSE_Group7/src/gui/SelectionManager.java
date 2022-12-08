@@ -40,6 +40,11 @@ public class SelectionManager {
     private static double totalDeltaY = 0;
     private static ToggleButton selectShapeToggleButton;
 
+    /**
+     * Method to select a shape.
+     * @param drawingPane the drawing pane which the shape to select belongs
+     * @param shapeToSelect the shape to select
+     */
     public static void selectShape(DrawingPane drawingPane, Shape shapeToSelect) {
         // if there was already a selected shape, we reset it to its previous settings
         selectedShape = drawingPane.getSelectedShape();
@@ -66,6 +71,11 @@ public class SelectionManager {
         drawingPane.setIsShapeSelected(true);
     }
 
+    /**
+     * Method to setup the animated borders of the shape.
+     * @param drawingPane the drawing pane which the selected shape belongs
+     * @param selectedShape the selected shape
+     */
     private static void setupBorders(DrawingPane drawingPane, Shape selectedShape) {
         Border border = new Border(selectedShape.getLayoutBounds().getMinX(), selectedShape.getLayoutBounds().getMinY(), selectedShape.getLayoutBounds().getWidth(), selectedShape.getLayoutBounds().getHeight());
         border.setStrokeType(StrokeType.OUTSIDE);
@@ -191,6 +201,12 @@ public class SelectionManager {
 
     }
 
+    /**
+     * Method to setup the top left corner of the border (to help resizing).
+     * @param drawingPane the drawing pane which the selected shape belongs
+     * @param border the border of the selected shape
+     * @return 
+     */
     private static Border setupTopLeftBorder(DrawingPane drawingPane, Border border) {
         Border topLeftBorder = new Border(selectedShape.getLayoutBounds().getMinX() - 5,
                 selectedShape.getLayoutBounds().getMinY() - 5, 10, 10);
@@ -256,6 +272,12 @@ public class SelectionManager {
         return topLeftBorder;
     }
 
+    /**
+     * Method to setup the top right corner of the border (to help resizing).
+     * @param drawingPane the drawing pane which the selected shape belongs
+     * @param border the border of the selected shape
+     * @return 
+     */
     private static Border setupTopRightBorder(DrawingPane drawingPane, Border border) {
         Border topRightBorder = new Border(selectedShape.getLayoutBounds().getMinX() + selectedShape.getLayoutBounds().getWidth() - 5,
                 selectedShape.getLayoutBounds().getMinY() - 5, 10, 10);
@@ -319,6 +341,12 @@ public class SelectionManager {
         return topRightBorder;
     }
 
+    /**
+     * Method to setup the bottom left corner of the border (to help resizing).
+     * @param drawingPane the drawing pane which the selected shape belongs
+     * @param border the border of the selected shape
+     * @return 
+     */
     private static Border setupBottomLeftBorder(DrawingPane drawingPane, Border border) {
         Border bottomLeftBorder = new Border(selectedShape.getLayoutBounds().getMinX() - 5,
                 selectedShape.getLayoutBounds().getMinY() + selectedShape.getLayoutBounds().getHeight() - 5, 10, 10);
@@ -383,6 +411,12 @@ public class SelectionManager {
         return bottomLeftBorder;
     }
 
+    /**
+     * Method to setup the bottom right corner of the border (to help resizing).
+     * @param drawingPane the drawing pane which the selected shape belongs
+     * @param border the border of the selected shape
+     * @return 
+     */
     private static Border setupBottomRightBorder(DrawingPane drawingPane, Border border) {
 
         Border bottomRightBorder = new Border(selectedShape.getLayoutBounds().getMinX() + selectedShape.getLayoutBounds().getWidth() - 5,
@@ -478,6 +512,11 @@ public class SelectionManager {
         selectShape(drawingPane, selectedShape);
     }
 
+    /**
+     * Method to deselect the selected shape.
+     * @param drawingPane the drawing pane which the selected shape belongs 
+     * @param selectedShape the selected shape
+     */
     public static void deselectShape(DrawingPane drawingPane, Shape selectedShape) {
         if (drawingPane.getSelectedShape() != null) {
             drawingPane.setSelectedShape(null);

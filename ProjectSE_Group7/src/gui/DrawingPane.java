@@ -380,6 +380,9 @@ public class DrawingPane extends Pane {
         });
     }
 
+    /**
+     * Method to check if the created arbitraty polygon is valid.
+     */
     public void checkPolygonCreation() {
         deselectShape();
         if (isDrawing && isDrawingAPolygon) {
@@ -467,6 +470,11 @@ public class DrawingPane extends Pane {
         this.selectedOutlineColor = color;
     }
 
+    /**
+     * Sets the selectedOutlineColor Image to the new color passed as argument.
+     *
+     * @param color The new outline color
+     */
     public void setOutlineColorImage(Color color) {
         outlineColorImage.setFill(color);
     }
@@ -480,66 +488,146 @@ public class DrawingPane extends Pane {
         this.selectedFillColor = color;
     }
 
+    /**
+     * Sets the selectedFillColor Image to the new color passed as argument.
+     *
+     * @param color The new outline color
+     */
     public void setFillColorImage(Color color) {
         fillColorImage.setFill(color);
     }
 
+    /**
+     * Returns the value of bordersGroup.
+     *
+     * @return The value of bordersGroup.
+     */
     public Group getBordersGroup() {
         return this.bordersGroup;
     }
 
+    /**
+     * Sets the bordersGroup to the value passed as argument.
+     *
+     * @param bordersGroup The value to set.
+     */ 
     public void setBordersGroup(Group bordersGroup) {
         this.bordersGroup = bordersGroup;
     }
 
+    /**
+     * Returns the value of border.
+     *
+     * @return The value of border.
+     */
     public Border getShapeBorder() {
         return border;
     }
 
+    /**
+     * Sets the border to the value passed as argument.
+     *
+     * @param border The value to set.
+     */ 
     public void setShapeBorder(Border border) {
         this.border = border;
     }
 
+    /**
+     * Returns the value of topLeftBorder.
+     *
+     * @return The value of topLeftBorder.
+     */
     public Border getTopLeftBorder() {
         return topLeftBorder;
     }
 
+    /**
+     * Sets the topLeftBorder to the value passed as argument.
+     *
+     * @param topLeftBorder The value to set.
+     */  
     public void setTopLeftBorder(Border topLeftBorder) {
         this.topLeftBorder = topLeftBorder;
     }
 
+    /**
+     * Returns the value of topRightBorder.
+     *
+     * @return The value of topRightBorder.
+     */
     public Border getTopRightBorder() {
         return topRightBorder;
     }
 
+    /**
+     * Sets the topRightBorder to the value passed as argument.
+     *
+     * @param topRightBorder The value to set.
+     */  
     public void setTopRightBorder(Border topRightBorder) {
         this.topRightBorder = topRightBorder;
     }
 
+    /**
+     * Returns the value of bottomLeftBorder.
+     *
+     * @return The value of bottomLeftBorder.
+     */
     public Border getBottomLeftBorder() {
         return bottomLeftBorder;
     }
 
+    /**
+     * Sets the bottomLeftBorder to the value passed as argument.
+     *
+     * @param bottomLeftBorder The value to set.
+     */    
     public void setBottomLeftBorder(Border bottomLeftBorder) {
         this.bottomLeftBorder = bottomLeftBorder;
     }
 
+    /**
+     * Returns the value of bottomRightBorder.
+     *
+     * @return The value of bottomRightBorder.
+     */
     public Border getBottomRightBorder() {
         return bottomRightBorder;
     }
 
+    /**
+     * Sets the bottomRightBorder to the value passed as argument.
+     *
+     * @param bottomRightBorder The value to set.
+     */    
     public void setBottomRightBorder(Border bottomRightBorder) {
         this.bottomRightBorder = bottomRightBorder;
     }
 
+    /**
+     * Returns the value of selectedShape.
+     *
+     * @return The value of selectedShape.
+     */
     public Shape getSelectedShape() {
         return this.selectedShape;
     }
 
+    /**
+     * Sets the copied shape attribute to the one passed as argument.
+     *
+     * @param shape The new selected shape.
+     */
     public void setSelectedShape(Shape shape) {
         selectedShape = shape;
     }
 
+    /**
+     * Sets the value of isShapeSelected to the value passed as argument.
+     *
+     * @param bool The value to set.
+     */
     public void setIsShapeSelected(boolean value) {
         this.isShapeSelected.set(value);
     }
@@ -582,18 +670,38 @@ public class DrawingPane extends Pane {
         isShapeCopied.set(bool);
     }
 
+    /**
+     * Returns the value of selectShapeToggleButton.
+     *
+     * @return The value of selectShapeToggleButton.
+     */
     public ToggleButton getSelectShapeToggleButton() {
         return selectShapeToggleButton;
     }
 
+    /**
+     * Returns the value of backgroundFill1.
+     *
+     * @return The value of backgroundFill1.
+     */
     public BackgroundFill getBackgroundFill1() {
         return backgroundFill1;
     }
 
+    /**
+     * Returns the value of gridSize.
+     *
+     * @return The value of gridSize.
+     */
     public double getGridSize() {
         return gridSize;
     }
 
+    /**
+     * Sets the value of gridSize to the value passed as argument.
+     *
+     * @param double The value to set.
+     */
     public void setGridSize(double gridSize) {
         this.gridSize = gridSize;
     }

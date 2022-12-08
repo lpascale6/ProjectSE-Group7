@@ -10,12 +10,20 @@ public class VerticalMirrorShapeCommand implements Command{
     
     private Shape selectedShape;
 
-    
+    /**
+    * Constructor method of class VerticalMirrorShapeCommand.
+    *
+     * @param selectedShape the shape to vertically mirror
+    */
     public VerticalMirrorShapeCommand(Shape selectedShape){
         this.selectedShape = selectedShape;
 
     }
     
+    /**
+     * Method that does the vertical mirroring of a shape
+     * @throws Exception 
+     */
     @Override
     public void execute() throws Exception {
         
@@ -27,6 +35,10 @@ public class VerticalMirrorShapeCommand implements Command{
         
     }
 
+    /**
+     * Method that undoes the vertical mirroring of a shape
+     * @throws Exception 
+     */
     @Override
     public void undo() throws Exception {
         

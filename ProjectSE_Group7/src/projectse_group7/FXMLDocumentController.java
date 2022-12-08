@@ -385,11 +385,19 @@ public class FXMLDocumentController implements Initializable {
         }
     }
 
+    /**
+     * Method to increase the zoom.
+     * @param event 
+     */
     @FXML
     private void zoomIn(ActionEvent event) {
         ZoomManager.zoomIn(drawingPane);
     }
 
+    /**
+     * Method to reduce the zoom.
+     * @param event 
+     */
     @FXML
     private void zoomOut(ActionEvent event) {
         ZoomManager.zoomOut(drawingPane);
