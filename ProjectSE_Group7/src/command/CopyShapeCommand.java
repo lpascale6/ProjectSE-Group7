@@ -1,9 +1,12 @@
 package command;
 
 import gui.DrawingPane;
+import java.util.ArrayList;
+import javafx.collections.ObservableList;
 import javafx.scene.shape.Shape;
 import shape.Ellipse;
 import shape.Line;
+import shape.Polygon;
 import shape.Rectangle;
 
 /**
@@ -92,6 +95,33 @@ public class CopyShapeCommand implements Command {
             shapeToCopy.setRotate(ellipse.getRotate());
             this.drawingPane.setCopiedShape(shapeToCopy);
 
+        } else if (this.selectedShape.getClass() == Polygon.class) {
+            Polygon polygon = (Polygon) this.selectedShape;
+            Polygon shapeToCopy = new Polygon();
+
+            ObservableList<Double> pointsList = polygon.getPolygonPoints();
+            ArrayList<Double> points = new ArrayList<>();
+
+            // copying all the points of the copied polygon
+            for (Double point : pointsList) {
+                points.add(point);
+            }
+
+            shapeToCopy.setPolygonPoints(points);
+
+            shapeToCopy.setStrokeWidth(3);
+            shapeToCopy.setOutlineColor(polygon.getOutlineColor());
+            shapeToCopy.setFillColor(polygon.getFillColor());
+            shapeToCopy.setScaleX(polygon.getScaleX());
+            shapeToCopy.setScaleY(polygon.getScaleY());
+            shapeToCopy.setRotate(polygon.getRotate());
+
+            // to make the polygon selectable
+            shapeToCopy.setOnMouseClicked(e -> {
+                this.drawingPane.selectShape((Shape) e.getSource());
+            });
+
+            this.drawingPane.setCopiedShape(shapeToCopy);
         }
     }
 

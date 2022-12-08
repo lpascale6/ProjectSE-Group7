@@ -1,10 +1,13 @@
 package command;
 
 import gui.DrawingPane;
+import java.util.ArrayList;
+import javafx.collections.ObservableList;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Shape;
 import shape.Ellipse;
 import shape.Line;
+import shape.Polygon;
 import shape.Rectangle;
 
 /**
@@ -42,7 +45,7 @@ public class PasteShapeCommand implements Command {
             pastedLine.setScaleX(copiedLine.getScaleX());
             pastedLine.setScaleY(copiedLine.getScaleY());
             pastedLine.setRotate(copiedLine.getRotate());
-            
+
             pastedLine.setOnMouseClicked(e -> {  //make the pasted shape selectable
                 this.drawingPane.selectShape((Shape) e.getSource());
             });
@@ -92,6 +95,42 @@ public class PasteShapeCommand implements Command {
 
             this.drawingPane.getChildren().add(pastedEll);  //add the copy to the drawingPane
             this.pastedShape = pastedEll; //save the pastedShape to use it in undo operation
+        } else if (copiedShape instanceof Polygon) {
+            Polygon copiedPolygon = (Polygon) copiedShape;
+            
+            ObservableList<Double> pointsList = copiedPolygon.getPolygonPoints();
+            ArrayList<Double> pastedPoligonPoints = new ArrayList<>();
+            
+            // copying all the points of the copied polygon
+            for(Double point: pointsList) {
+                pastedPoligonPoints.add(point);
+            }
+            
+            // creating a new polygon and setting up all its properties
+            Polygon pastedPolygon = new Polygon();
+            
+            double x = copiedPolygon.getLayoutBounds().getMinX();
+            double y = copiedPolygon.getLayoutBounds().getMinY();
+            
+            pastedPolygon.setPolygonPoints(pastedPoligonPoints);
+            pastedPolygon.setStrokeWidth(3);
+            pastedPolygon.setOutlineColor(copiedPolygon.getOutlineColor());
+            pastedPolygon.setFillColor(copiedPolygon.getFillColor());
+            pastedPolygon.setScaleX(copiedPolygon.getScaleX());
+            pastedPolygon.setScaleY(copiedPolygon.getScaleY());
+            pastedPolygon.setRotate(copiedPolygon.getRotate());
+            
+            pastedPolygon.moveOf(-x, -y);
+            
+            // to make the polygon selectable
+            pastedPolygon.setOnMouseClicked(e -> {  
+                this.drawingPane.selectShape((Shape) e.getSource());
+            });
+            
+            // insert the copied polygon to the drawing pane and memorize it 
+            // if needed in the undo operation
+            this.drawingPane.getChildren().add(pastedPolygon);
+            this.pastedShape = pastedPolygon;
         }
 
     }

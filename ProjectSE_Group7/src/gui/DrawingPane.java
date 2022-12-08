@@ -126,12 +126,17 @@ public class DrawingPane extends Pane {
         });
 
         this.selectShapeToggleButton = selectShapeToggleButton;
+        this.selectShapeToggleButton.setOnAction(event -> {
+            checkPolygonCreation();
+        });
+
         this.polygonToggleButton = polygonToggleButton;
         this.polygonToggleButton.setOnAction(event -> {
             drawState = new DrawPolygonState(this);
             checkPolygonCreation();
             deselectShape();
         });
+
         this.textToggleButton = textToggleButton;
         this.textToggleButton.setOnAction(event -> {
             checkPolygonCreation();
@@ -140,7 +145,7 @@ public class DrawingPane extends Pane {
 
         this.outlineColorImage = outlineColorImage;
         this.fillColorImage = fillColorImage;
-        // setting up drawing pane style
+
         // setting up drawing pane style
         this.setPrefSize(2048, 1024);
         this.scaleXProperty().bind(scale);
@@ -149,7 +154,7 @@ public class DrawingPane extends Pane {
         this.setStyle("-fx-border-color:grey;"
                 + "-fx-border-radius:5;");
 
-        setup();
+        setupEventsHandlers();
 
         isShapeSelected = new SimpleBooleanProperty(false);
         isShapeCopied = new SimpleBooleanProperty(false);
@@ -248,30 +253,30 @@ public class DrawingPane extends Pane {
             } catch (Exception ex) {
             }
         });
-        
+
         // setting up vertical mirrorring menu item and its operations
         MenuItem rotateMenuItem = new MenuItem("Rotate");
         rotateMenuItem.disableProperty().bind(isShapeSelected.not());
         rotateMenuItem.setOnAction(event -> {
-        TextInputDialog td = new TextInputDialog();
-        td.setTitle("Choose angle");
-        td.setHeaderText("Enter angle to rotate");
-        Optional<String> result = td.showAndWait();
-        
-        try{
-            double angle = Double.parseDouble(result.get());
-            RotateShapeCommand rotateShapeCommand = new RotateShapeCommand(this.selectedShape, angle);
-            invoker.execute(rotateShapeCommand);
-            SelectionManager.selectShape(this, selectedShape);
-        } catch (Exception ex) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error");
-            alert.setHeaderText("Invalid Input");
-            alert.setContentText("");
-            alert.showAndWait();
-        }
+            TextInputDialog td = new TextInputDialog();
+            td.setTitle("Choose angle");
+            td.setHeaderText("Enter angle to rotate");
+            Optional<String> result = td.showAndWait();
+
+            try {
+                double angle = Double.parseDouble(result.get());
+                RotateShapeCommand rotateShapeCommand = new RotateShapeCommand(this.selectedShape, angle);
+                invoker.execute(rotateShapeCommand);
+                SelectionManager.selectShape(this, selectedShape);
+            } catch (Exception ex) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText("Invalid Input");
+                alert.setContentText("");
+                alert.showAndWait();
+            }
         });
-        
+
         // adding all the menu items in the manage shape ContextMenu
         manageShape.getItems().addAll(deleteMenuItem, toFrontMenuItem, toBackMenuItem, copyMenuItem, cutMenuItem, pasteMenuItem, hMirrorMenuItem, vMirrorMenuItem, rotateMenuItem);
         this.setOnContextMenuRequested(event -> {
@@ -284,7 +289,7 @@ public class DrawingPane extends Pane {
     /**
      * Sets up all the mouse event useful for drawing on this pane.
      */
-    private void setup() {
+    private void setupEventsHandlers() {
         // setting up the event called on the drawingPane when the 
         // mouse button has been pressed
         this.setOnMousePressed(event -> {
@@ -510,7 +515,7 @@ public class DrawingPane extends Pane {
      * Sets the bordersGroup to the value passed as argument.
      *
      * @param bordersGroup The value to set.
-     */ 
+     */
     public void setBordersGroup(Group bordersGroup) {
         this.bordersGroup = bordersGroup;
     }
@@ -528,7 +533,7 @@ public class DrawingPane extends Pane {
      * Sets the border to the value passed as argument.
      *
      * @param border The value to set.
-     */ 
+     */
     public void setShapeBorder(Border border) {
         this.border = border;
     }
@@ -546,7 +551,7 @@ public class DrawingPane extends Pane {
      * Sets the topLeftBorder to the value passed as argument.
      *
      * @param topLeftBorder The value to set.
-     */  
+     */
     public void setTopLeftBorder(Border topLeftBorder) {
         this.topLeftBorder = topLeftBorder;
     }
@@ -564,7 +569,7 @@ public class DrawingPane extends Pane {
      * Sets the topRightBorder to the value passed as argument.
      *
      * @param topRightBorder The value to set.
-     */  
+     */
     public void setTopRightBorder(Border topRightBorder) {
         this.topRightBorder = topRightBorder;
     }
@@ -582,7 +587,7 @@ public class DrawingPane extends Pane {
      * Sets the bottomLeftBorder to the value passed as argument.
      *
      * @param bottomLeftBorder The value to set.
-     */    
+     */
     public void setBottomLeftBorder(Border bottomLeftBorder) {
         this.bottomLeftBorder = bottomLeftBorder;
     }
@@ -600,7 +605,7 @@ public class DrawingPane extends Pane {
      * Sets the bottomRightBorder to the value passed as argument.
      *
      * @param bottomRightBorder The value to set.
-     */    
+     */
     public void setBottomRightBorder(Border bottomRightBorder) {
         this.bottomRightBorder = bottomRightBorder;
     }

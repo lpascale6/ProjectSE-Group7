@@ -1,5 +1,6 @@
 package shape;
 
+import java.util.ArrayList;
 import javafx.collections.ObservableList;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
@@ -30,9 +31,9 @@ public class Polygon extends javafx.scene.shape.Polygon {
 
         for (double point : points) {
             if (i % 2 == 0) {
-                points.set(i, points.get(i) + x);
+                points.set(i, point + x);
             } else {
-                points.set(i, points.get(i) + y);
+                points.set(i, point + y);
             }
             i++;
         }
@@ -46,13 +47,17 @@ public class Polygon extends javafx.scene.shape.Polygon {
     public ObservableList<Double> getPolygonPoints() {
         return this.getPoints();
     }
+    
+    public void setPolygonPoints(ArrayList<Double> points) {
+        this.getPoints().setAll(points);
+    }
 
     /**
      * Adds the points passed as argument to the polygon points array.
      *
      * @param points The points to add to the polygon.
      */
-    public void addPoints(double[] points) {
+    public void addPoints(double... points) {
         for (double point : points) {
             this.getPoints().add(point);
         }
