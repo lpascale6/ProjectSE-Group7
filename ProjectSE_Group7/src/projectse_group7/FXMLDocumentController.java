@@ -5,6 +5,7 @@ import command.LoadCommand;
 import command.SaveCommand;
 import gui.DrawingPane;
 import gui.GridManager;
+import gui.ZoomManager;
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
@@ -17,6 +18,7 @@ import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.MenuBar;
@@ -36,6 +38,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Shape;
+import javafx.scene.transform.Scale;
 import javafx.stage.FileChooser;
 
 /**
@@ -86,6 +89,12 @@ public class FXMLDocumentController implements Initializable {
     private CheckBox gridCheckBox;
     @FXML
     private Slider gridSlider;
+    @FXML
+    private BorderPane borderPane;
+    @FXML
+    private Button zoomIn;
+    @FXML
+    private Button zoomOut;
 
     /**
      * Sets up all the toggle buttons in the "Shape selection" section by
@@ -157,6 +166,7 @@ public class FXMLDocumentController implements Initializable {
         gridSlider.valueProperty().addListener((v, o, n) -> {
             GridManager.updateGrid(drawingPane, gridSlider, gridCheckBox);
         });
+        drawingPane.getTransforms().add(new Scale(0.25, 0.25, 0, 0));
         scrollPane.setContent(drawingPane);
 
         // to abilitate the user to use ctrl+z shortcut
@@ -373,6 +383,16 @@ public class FXMLDocumentController implements Initializable {
             alert.showAndWait();
 
         }
+    }
+
+    @FXML
+    private void zoomIn(ActionEvent event) {
+        ZoomManager.zoomIn(drawingPane);
+    }
+
+    @FXML
+    private void zoomOut(ActionEvent event) {
+        ZoomManager.zoomOut(drawingPane);
     }
 
 }
