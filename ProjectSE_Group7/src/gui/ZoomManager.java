@@ -1,5 +1,6 @@
 package gui;
 
+import javafx.scene.control.Alert;
 import javafx.scene.transform.Scale;
 
 /**
@@ -9,13 +10,30 @@ import javafx.scene.transform.Scale;
 public class ZoomManager {
 
     public static void zoomIn(DrawingPane drawingPane){
-        drawingPane.getTransforms().add(new Scale(2, 2, 0, 0));
+        if(drawingPane.getTransforms().size() > 0){
+            drawingPane.getTransforms().remove(drawingPane.getTransforms().size() - 1);
+        }
+        else{
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("INFORMATION");
+            alert.setHeaderText("You cannot zoom in more than this.");
+            alert.setContentText("");
+            alert.showAndWait();
+        }
     }
     
     public static void zoomOut(DrawingPane drawingPane){
-        if(drawingPane.getTransforms().size() > 1){
-            drawingPane.getTransforms().remove(drawingPane.getTransforms().size() - 1);
+        if(drawingPane.getTransforms().size() <= 9){
+            drawingPane.getTransforms().add(new Scale(1/1.13, 1/1.13, 0, 0));
         }
+        else{
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("INFORMATION");
+            alert.setHeaderText("You cannot zoom out more than this.");
+            alert.setContentText("");
+            alert.showAndWait();
+        }
+        
     }
     
 }

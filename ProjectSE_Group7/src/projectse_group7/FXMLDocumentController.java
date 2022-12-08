@@ -166,7 +166,6 @@ public class FXMLDocumentController implements Initializable {
         gridSlider.valueProperty().addListener((v, o, n) -> {
             GridManager.updateGrid(drawingPane, gridSlider, gridCheckBox);
         });
-        //drawingPane.getTransforms().add(new Scale(0.25, 0.25, 0, 0));
         scrollPane.setContent(drawingPane);
 
         // to abilitate the user to use ctrl+z shortcut
