@@ -6,15 +6,24 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
 /**
+ * Class Polygon that represents a polygon shape.
  *
  * @author group7
  */
 public class Polygon extends javafx.scene.shape.Polygon {
 
+    /**
+     * Empty constructor of Polygon class.
+     */
     public Polygon() {
         super();
     }
 
+    /**
+     * Constructor method of Polygon class.
+     * @param xStartPoint Coordinate x of the first vertex of the polygon.
+     * @param yStartPoint Coordinate y of the first vertex of the polygon.
+     */
     public Polygon(double xStartPoint, double yStartPoint) {
         super(xStartPoint, yStartPoint);
     }
@@ -47,7 +56,11 @@ public class Polygon extends javafx.scene.shape.Polygon {
     public ObservableList<Double> getPolygonPoints() {
         return this.getPoints();
     }
-    
+
+    /**
+     * Sets all the points of the polygon to the ones passed as argument.
+     * @param points The new points of the polygon.
+     */
     public void setPolygonPoints(ArrayList<Double> points) {
         this.getPoints().setAll(points);
     }
