@@ -161,7 +161,11 @@ public class Line extends javafx.scene.shape.Line {
         representation += this.getLineEndingX() + ";";
         representation += this.getLineEndingY() + ";";
 
-        representation += toHexString((Color) this.getLineColor());
+        representation += toHexString((Color) this.getLineColor()) + ";";
+        
+        representation += this.getScaleX() + ";";
+        representation += this.getScaleY() + ";";
+        representation += this.getRotate();
 
         return representation;
     }

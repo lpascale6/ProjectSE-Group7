@@ -39,8 +39,19 @@ public class SaveCommandTest {
         ArrayList<Shape> shapeList = new ArrayList();
         
         Line line = new Line(1.2, 3.4, 5.0, 7.3, Color.BLUE);
+        line.setScaleX(-1.0);
+        line.setScaleY(1.0);
+        line.setRotate(22.0);
+        
         Rectangle rectangle = new Rectangle(3.6, 2.5, 11.2, 9.7, Color.GREEN, Color.YELLOW);
+        rectangle.setScaleX(1.0);
+        rectangle.setScaleY(-1.0);
+        rectangle.setRotate(-22.0);
+        
         Ellipse ellipse = new Ellipse(2.4, 7.5, 4.2,5.0, Color.BLACK, Color.WHITE);
+        ellipse.setScaleX(-1.0);
+        ellipse.setScaleY(-1.0);
+        ellipse.setRotate(0.0);
         
         //Insert some figures in the Array list
         shapeList.add(line);
@@ -62,7 +73,7 @@ public class SaveCommandTest {
         String result = "";
         BufferedReader reader = new BufferedReader(new FileReader("test.txt"));
         
-        //Reading di fileb test.txt
+        //Reading di file test.txt
         String line = reader.readLine();
         while(line != null){
             result += line + "\n";
@@ -70,9 +81,9 @@ public class SaveCommandTest {
         }
         
         
-        String expRes = "line;1.2;3.4;5.0;7.3;#0000ff\n"
-                + "rectangle;3.6;2.5;11.2;9.7;#ffff00;#008000\n"
-                + "ellipse;2.4;7.5;4.2;5.0;#000000;#ffffff\n";
+        String expRes = "line;1.2;3.4;5.0;7.3;#0000ff;-1.0;1.0;22.0\n"
+                + "rectangle;3.6;2.5;11.2;9.7;#ffff00;#008000;1.0;-1.0;-22.0\n"
+                + "ellipse;2.4;7.5;4.2;5.0;#000000;#ffffff;-1.0;-1.0;0.0\n";
         
         assertEquals(expRes, result);
         

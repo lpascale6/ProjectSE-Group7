@@ -39,7 +39,10 @@ public class PasteShapeCommand implements Command {
             //create a copy of the copied shape
             Line pastedLine = new Line(copiedStartX, copiedStartY, copiedEndX, copiedEndY, copiedColor);
             pastedLine.setStrokeWidth(3);
-
+            pastedLine.setScaleX(copiedLine.getScaleX());
+            pastedLine.setScaleY(copiedLine.getScaleY());
+            pastedLine.setRotate(copiedLine.getRotate());
+            
             pastedLine.setOnMouseClicked(e -> {  //make the pasted shape selectable
                 this.drawingPane.selectShape((Shape) e.getSource());
             });
@@ -58,7 +61,9 @@ public class PasteShapeCommand implements Command {
             //create a copu of the rectangle
             Rectangle pastedRect = new Rectangle(copiedX, copiedY, copiedWidth, copiedHeight, copiedFill, copiedOutline);
             pastedRect.setStrokeWidth(3);
-
+            pastedRect.setScaleX(copiedRect.getScaleX());
+            pastedRect.setScaleY(copiedRect.getScaleY());
+            pastedRect.setRotate(copiedRect.getRotate());
             pastedRect.setOnMouseClicked(e -> {  //make the pasted shape selectable
                 this.drawingPane.selectShape((Shape) e.getSource());
             });
@@ -77,6 +82,9 @@ public class PasteShapeCommand implements Command {
             //create a copy of the ellipse
             Ellipse pastedEll = new Ellipse(copiedCenterX, copiedCenterY, copiedRadiusX, copiedRadiusY, copiedOutline, copiedFill);
             pastedEll.setStrokeWidth(3);
+            pastedEll.setScaleX(copiedEll.getScaleX());
+            pastedEll.setScaleY(copiedEll.getScaleY());
+            pastedEll.setRotate(copiedEll.getRotate());
 
             pastedEll.setOnMouseClicked(e -> {  //make the pasted shape selectable
                 this.drawingPane.selectShape((Shape) e.getSource());

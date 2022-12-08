@@ -202,7 +202,8 @@ public class Ellipse extends javafx.scene.shape.Ellipse {
         Color outlineColor = (Color) this.getOutlineColor();
         Color fillColor = (Color) this.getFillColor();
         return "ellipse;" + this.getEllipseCenterX() + ";" + this.getEllipseCenterY() + ";"
-                + this.getEllipseRadiusX() + ";" + this.getEllipseRadiusY() + ";" + toHexString(outlineColor) + ";" + toHexString(fillColor);
+                + this.getEllipseRadiusX() + ";" + this.getEllipseRadiusY() + ";" + toHexString(outlineColor) + ";" + toHexString(fillColor) + ";"
+                + this.getScaleX() + ";" +this.getScaleY() + ";" + this.getRotate();
     }
 
     private static String toHexString(Color color) {
