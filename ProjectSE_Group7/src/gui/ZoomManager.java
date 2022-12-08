@@ -9,8 +9,7 @@ import javafx.scene.transform.Scale;
 public class ZoomManager {
 
     public static void zoomIn(DrawingPane drawingPane){
-        Scale newScale = new Scale(2, 2, 0, 0);
-        drawingPane.getTransforms().add(newScale);
+        drawingPane.getTransforms().add(new Scale(2, 2, 0, 0));
     }
     
     public static void zoomOut(DrawingPane drawingPane){
