@@ -19,6 +19,7 @@ import javafx.util.Duration;
 import shape.Border;
 import shape.Ellipse;
 import shape.Line;
+import shape.Polygon;
 import shape.Rectangle;
 
 /**
@@ -47,7 +48,7 @@ public class SelectionManager {
 
         deselectShape(drawingPane, selectedShape);
         drawingPane.setSelectedShape(shapeToSelect);
-        
+
         selectedShape = drawingPane.getSelectedShape();
 
         drawingPane.setOutlineColorImage((Color) selectedShape.getStroke());
@@ -133,7 +134,13 @@ public class SelectionManager {
                         moveBordersGroup(bordersGroup, deltaX, deltaY);
                         xEndingPoint = event.getX();
                         yEndingPoint = event.getY();
-                    }
+                    } else if (selectedShape.getClass() == Polygon.class) {
+                        Polygon polygon = (Polygon) selectedShape;
+                        polygon.moveOf(deltaX, deltaY);
+                        moveBordersGroup(bordersGroup, deltaX, deltaY);
+                        xEndingPoint = event.getX();
+                        yEndingPoint = event.getY();
+                    } 
 
                     totalDeltaX = xEndingPoint - xStartPoint;
                     totalDeltaY = yEndingPoint - yStartPoint;
@@ -156,6 +163,9 @@ public class SelectionManager {
                 } else if (selectedShape.getClass() == Ellipse.class) {
                     Ellipse ellipse = (Ellipse) selectedShape;
                     ellipse.moveOf(-totalDeltaX, -totalDeltaY);
+                } else if (selectedShape.getClass() == Polygon.class) {
+                    Polygon polygon = (Polygon) selectedShape;
+                    polygon.moveOf(-totalDeltaX, -totalDeltaY);
                 }
 
                 MoveShapeCommand moveShapeCommand = new MoveShapeCommand(selectedShape, totalDeltaX, totalDeltaY);
@@ -189,7 +199,7 @@ public class SelectionManager {
         topLeftBorder.setFillColor(Color.DARKCYAN);
         topLeftBorder.setStrokeType(StrokeType.OUTSIDE);
         topLeftBorder.setCursor(Cursor.NW_RESIZE);
-        
+
         drawingPane.setTopLeftBorder(topLeftBorder);
 
         double xPosition = border.getRectangleX();
@@ -233,8 +243,7 @@ public class SelectionManager {
                             drawingPane.getTopRightBorder().setRectangleY(y - 5);
                             border.setRectangleHeight(startingHeight - (y - yPosition));
                         }
-                        // moving borders
-
+                        
                     }
                 }
             }
@@ -243,7 +252,7 @@ public class SelectionManager {
         topLeftBorder.setOnMouseReleased(event -> {
             resizeSelectedShape(drawingPane, selectedShape, border);
         });
-        
+
         return topLeftBorder;
     }
 
@@ -255,7 +264,7 @@ public class SelectionManager {
         topRightBorder.setOutlineColor(Color.DARKCYAN);
         topRightBorder.setFillColor(Color.DARKCYAN);
         topRightBorder.setStrokeType(StrokeType.OUTSIDE);
-        
+
         drawingPane.setTopRightBorder(topRightBorder);
 
         double xPosition = border.getRectangleX() + border.getRectangleWidth();
@@ -320,7 +329,7 @@ public class SelectionManager {
         bottomLeftBorder.setStrokeType(StrokeType.OUTSIDE);
 
         drawingPane.setBottomLeftBorder(bottomLeftBorder);
-        
+
         double xPosition = border.getRectangleX();
         double yPosition = border.getRectangleY() + border.getRectangleHeight();
         double startingWidth = border.getRectangleWidth();
@@ -370,7 +379,7 @@ public class SelectionManager {
 
             resizeSelectedShape(drawingPane, selectedShape, border);
         });
-        
+
         return bottomLeftBorder;
     }
 
@@ -383,7 +392,7 @@ public class SelectionManager {
         bottomRightBorder.setOutlineColor(Color.DARKCYAN);
         bottomRightBorder.setFillColor(Color.DARKCYAN);
         bottomRightBorder.setStrokeType(StrokeType.OUTSIDE);
-        
+
         drawingPane.setBottomRightBorder(bottomRightBorder);
 
         double xPosition = border.getRectangleX() + border.getRectangleWidth();
@@ -433,7 +442,7 @@ public class SelectionManager {
         bottomRightBorder.setOnMouseReleased(event -> {
             resizeSelectedShape(drawingPane, selectedShape, border);
         });
-        
+
         return bottomRightBorder;
     }
 
@@ -468,7 +477,7 @@ public class SelectionManager {
 
         selectShape(drawingPane, selectedShape);
     }
-    
+
     public static void deselectShape(DrawingPane drawingPane, Shape selectedShape) {
         if (drawingPane.getSelectedShape() != null) {
             drawingPane.setSelectedShape(null);

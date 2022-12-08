@@ -358,6 +358,7 @@ public class FXMLDocumentController implements Initializable {
      */
     @FXML
     private void undo(ActionEvent event) {
+        drawingPane.checkPolygonCreation();
 
         if (!invoker.getStack().isEmpty()) {
             try {

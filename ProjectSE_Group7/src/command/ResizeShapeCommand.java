@@ -1,9 +1,13 @@
 package command;
 
+import java.util.ArrayList;
+import javafx.collections.ObservableList;
+import javafx.geometry.Bounds;
 import javafx.scene.shape.Shape;
 import shape.Border;
 import shape.Ellipse;
 import shape.Line;
+import shape.Polygon;
 import shape.Rectangle;
 
 /**
@@ -25,6 +29,8 @@ public class ResizeShapeCommand implements Command {
 
     private double oldX;
     private double oldY;
+
+    private ArrayList<Double> oldPoints;
 
     public ResizeShapeCommand(Shape selectedShape, Border border) {
         this.selectedShape = selectedShape;
@@ -50,6 +56,21 @@ public class ResizeShapeCommand implements Command {
             this.oldHeight = ellipseToResize.getEllipseRadiusY();
             this.oldX = ellipseToResize.getEllipseCenterX();
             this.oldY = ellipseToResize.getEllipseCenterY();
+        } else if (this.selectedShape.getClass() == Polygon.class) {
+            Polygon polygonToResize = (Polygon) this.selectedShape;
+            
+            ObservableList<Double> pointsList = polygonToResize.getPoints();
+            this.oldPoints = new ArrayList<>();
+            
+            for(int i = 0; i < pointsList.size(); i += 2) {
+                this.oldPoints.add(pointsList.get(i));
+                this.oldPoints.add(pointsList.get(i + 1));
+            }
+            
+            this.oldX = polygonToResize.getLayoutBounds().getMinX();
+            this.oldY = polygonToResize.getLayoutBounds().getMinY();
+            this.oldWidth = polygonToResize.getLayoutBounds().getWidth();
+            this.oldHeight = polygonToResize.getLayoutBounds().getHeight();
         }
 
     }
@@ -105,7 +126,7 @@ public class ResizeShapeCommand implements Command {
 
             rectangle.setRectangleX(border.getRectangleX());
             rectangle.setRectangleY(border.getRectangleY());
-            // Resize command
+            
             rectangle.setRectangleWidth(border.getRectangleWidth());
             rectangle.setRectangleHeight(border.getRectangleHeight());
 
@@ -114,10 +135,25 @@ public class ResizeShapeCommand implements Command {
 
             ellipse.setEllipseCenterX(border.getRectangleX() + border.getRectangleWidth() / 2);
             ellipse.setEllipseCenterY(border.getRectangleY() + border.getRectangleHeight() / 2);
-
-            // Resize command
+            
             ellipse.setEllipseRadiusX(border.getRectangleWidth() / 2);
             ellipse.setEllipseRadiusY(border.getRectangleHeight() / 2);
+        } else if (this.selectedShape.getClass() == Polygon.class) {
+            Polygon polygon = (Polygon) this.selectedShape;
+            
+            double widthRatio = border.getRectangleWidth() / this.oldWidth;
+            double heightRatio = border.getRectangleHeight() / this.oldHeight;
+            
+            // finding for each vertex of the polygon its new coordinate, 
+            // mantaining the proportion 
+            for (int i = 0; i < this.oldPoints.size(); i += 2) {
+                
+                double newX = (polygon.getPoints().get(i) - oldX) * widthRatio + border.getRectangleX();
+                double newY = (polygon.getPoints().get(i + 1) - oldY) * heightRatio + border.getRectangleY();
+ 
+                polygon.getPoints().set(i, newX);
+                polygon.getPoints().set(i + 1, newY);
+            }
         }
 
     }
@@ -154,6 +190,11 @@ public class ResizeShapeCommand implements Command {
             ellipseToResize.setEllipseCenterX(this.oldX);
             ellipseToResize.setEllipseCenterY(this.oldY);
 
+        } else if (this.selectedShape.getClass() == Polygon.class) {
+            Polygon polygon = (Polygon) this.selectedShape;
+            // restores all the vertex the polygon had before the resizing
+            polygon.getPoints().clear();
+            polygon.getPoints().addAll(this.oldPoints);
         }
     }
 

@@ -1,5 +1,6 @@
 package shape;
 
+import javafx.collections.ObservableList;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
@@ -16,13 +17,43 @@ public class Polygon extends javafx.scene.shape.Polygon {
     public Polygon(double xStartPoint, double yStartPoint) {
         super(xStartPoint, yStartPoint);
     }
-    
+
+    /**
+     * Updates the polygon coordinates by adding x and y.
+     *
+     * @param x The value to add to polygon x coordinate.
+     * @param y The value to add to polygon y coordinate.
+     */
+    public void moveOf(double x, double y) {
+        int i = 0;
+        ObservableList<Double> points = this.getPoints();
+
+        for (double point : points) {
+            if (i % 2 == 0) {
+                points.set(i, points.get(i) + x);
+            } else {
+                points.set(i, points.get(i) + y);
+            }
+            i++;
+        }
+    }
+
+    /**
+     * Returns the list of points the polygon is composed.
+     *
+     * @return The list of points that compose the polygon.
+     */
+    public ObservableList<Double> getPolygonPoints() {
+        return this.getPoints();
+    }
+
     /**
      * Adds the points passed as argument to the polygon points array.
+     *
      * @param points The points to add to the polygon.
      */
     public void addPoints(double[] points) {
-        for(double point: points) {
+        for (double point : points) {
             this.getPoints().add(point);
         }
     }
@@ -65,6 +96,7 @@ public class Polygon extends javafx.scene.shape.Polygon {
 
     /**
      * Returns a string representing the polygon object.
+     *
      * @return A string representing the polygon object.
      */
     @Override
@@ -80,7 +112,7 @@ public class Polygon extends javafx.scene.shape.Polygon {
         double scaleY = this.getScaleY();
         double rotation = this.getRotate();
 
-        // shape name;[listOfPoints];outlineColor;fillColor;scaleX;scaleY;rotation
+        // polygon;[listOfPoints];outlineColor;fillColor;scaleX;scaleY;rotation
         return "polygon;" + listOfPoints + ";" + outlineColor + ";" + fillColor + ";" + scaleX + ";" + scaleY + ";" + rotation;
     }
 

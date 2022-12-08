@@ -13,6 +13,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Shape;
 import shape.Border;
+import shape.Polygon;
 import state.*;
 
 /**
@@ -25,6 +26,7 @@ public class DrawingPane extends Pane {
 
     DrawState drawState = new DrawLineState(this);
     private boolean isDrawing = false;
+    private boolean isDrawingAPolygon = false;
     private double xStartPoint;
     private double yStartPoint;
     public final static double strokeWidth = 3;
@@ -60,7 +62,7 @@ public class DrawingPane extends Pane {
     double gridSize = -1;
     Paint bg1 = Paint.valueOf("linear-gradient(from 0.0% 0.0% to 0.0% 100.0%, 0xffffff 0.0%, 0xffffff 100.0%)");
     BackgroundFill backgroundFill1 = new BackgroundFill(bg1, null, null);
-    
+
     DoubleProperty scale = new SimpleDoubleProperty(1);
 
     /**
@@ -98,6 +100,7 @@ public class DrawingPane extends Pane {
         this.lineToggleButton = lineToggleButton;
         this.lineToggleButton.setOnAction(event -> {
             drawState = new DrawLineState(this);
+            checkPolygonCreation();
             deselectShape();
         });
 
@@ -105,6 +108,7 @@ public class DrawingPane extends Pane {
         this.rectangleToggleButton = rectangleToggleButton;
         this.rectangleToggleButton.setOnAction(event -> {
             drawState = new DrawRectangleState(this);
+            checkPolygonCreation();
             deselectShape();
         });
 
@@ -112,13 +116,23 @@ public class DrawingPane extends Pane {
         this.ellipseToggleButton = ellipseToggleButton;
         this.ellipseToggleButton.setOnAction(event -> {
             drawState = new DrawEllipseState(this);
+            checkPolygonCreation();
             deselectShape();
         });
 
         this.selectShapeToggleButton = selectShapeToggleButton;
         this.polygonToggleButton = polygonToggleButton;
+        this.polygonToggleButton.setOnAction(event -> {
+            drawState = new DrawPolygonState(this);
+            checkPolygonCreation();
+            deselectShape();
+        });
         this.textToggleButton = textToggleButton;
-        
+        this.textToggleButton.setOnAction(event -> {
+            checkPolygonCreation();
+            deselectShape();
+        });
+
         this.outlineColorImage = outlineColorImage;
         this.fillColorImage = fillColorImage;
         // setting up drawing pane style
@@ -207,7 +221,7 @@ public class DrawingPane extends Pane {
             } catch (Exception ex) {
             }
         });
-        
+
         // setting up horizontal mirrorring menu item and its operations
         MenuItem hMirrorMenuItem = new MenuItem("Mirror horizontally");
         hMirrorMenuItem.disableProperty().bind(isShapeSelected.not());
@@ -218,7 +232,7 @@ public class DrawingPane extends Pane {
             } catch (Exception ex) {
             }
         });
-        
+
         // setting up vertical mirrorring menu item and its operations
         MenuItem vMirrorMenuItem = new MenuItem("Mirror vertically");
         vMirrorMenuItem.disableProperty().bind(isShapeSelected.not());
@@ -262,10 +276,35 @@ public class DrawingPane extends Pane {
                     yStartPoint = event.getY();
 
                     drawState.startDrawing(xStartPoint, yStartPoint, selectedOutlineColor, selectedFillColor);
-                }
-                if (selectShapeToggleButton.isSelected()) {
+                } else if (polygonToggleButton.isSelected()) {
+                    isDrawingAPolygon = true;
+                    double x = event.getX();
+                    double y = event.getY();
+
+                    if (isDrawing) {
+                        drawState.draw(x, y);
+                    } else {
+                        isDrawing = true;
+                        drawState.startDrawing(x, y, selectedOutlineColor, selectedFillColor);
+                    }
+
+                } else if (selectShapeToggleButton.isSelected()) {
                     // if there was already a selected shape, we reset it to its previous settings
                     deselectShape();
+                }
+            } else if (event.isSecondaryButtonDown()) {
+                if (polygonToggleButton.isSelected() && isDrawing) {
+                    isDrawing = false;
+                    isDrawingAPolygon = false;
+
+                    Polygon createdPolygon = (Polygon) this.getChildren().get(this.getChildren().size() - 1);
+                    // if the polygon doesn't have at least three vertex, it gets deleted from the drawing
+                    if (createdPolygon.getPolygonPoints().size() < 6) {
+                        try {
+                            invoker.undo();
+                        } catch (Exception ex) {
+                        }
+                    }
                 }
             }
 
@@ -275,19 +314,21 @@ public class DrawingPane extends Pane {
         // is dragged over the drawingPane
         this.setOnMouseDragged(event -> {
             if (event.isPrimaryButtonDown()) {
-                // if the user is drawing, it keeps updating the shape the user is 
-                // creating and checks if the mouse is out of the border of the drawingPane
-                if (isDrawing) {
-                    double x = event.getX();
-                    double y = event.getY();
+                if (lineToggleButton.isSelected() || rectangleToggleButton.isSelected() || ellipseToggleButton.isSelected()) {
+                    // if the user is drawing, it keeps updating the shape the user is 
+                    // creating and checks if the mouse is out of the border of the drawingPane
+                    if (isDrawing) {
+                        double x = event.getX();
+                        double y = event.getY();
 
-                    // this controll is for checking if the coordinate 
-                    // is out of the borders of the drawingPane
-                    if (x > (strokeWidth / 2)
-                            && y > (strokeWidth / 2)
-                            && x < (this.getWidth() - (strokeWidth / 2))
-                            && y < (this.getHeight() - (strokeWidth / 2))) {
-                        drawState.draw(x, y);
+                        // this controll is for checking if the coordinate 
+                        // is out of the borders of the drawingPane
+                        if (x > (strokeWidth / 2)
+                                && y > (strokeWidth / 2)
+                                && x < (this.getWidth() - (strokeWidth / 2))
+                                && y < (this.getHeight() - (strokeWidth / 2))) {
+                            drawState.draw(x, y);
+                        }
                     }
                 }
             }
@@ -311,6 +352,22 @@ public class DrawingPane extends Pane {
         });
     }
 
+    public void checkPolygonCreation() {
+        deselectShape();
+        if (isDrawing && isDrawingAPolygon) {
+            Polygon createdPolygon = (Polygon) this.getChildren().get(this.getChildren().size() - 1);
+            // if the polygon doesn't have at least three vertex, it gets deleted from the drawing
+            if (createdPolygon.getPolygonPoints().size() < 6) {
+                try {
+                    invoker.undo();
+                } catch (Exception ex) {
+                }
+            }
+        }
+        isDrawing = false;
+        isDrawingAPolygon = false;
+    }
+
     /**
      * Selects a shape and creates a border around it.
      *
@@ -318,7 +375,6 @@ public class DrawingPane extends Pane {
      */
     public void selectShape(Shape shape) {
         if (selectShapeToggleButton.isSelected()) {
-
             SelectionManager.selectShape(this, shape);
         }
     }
