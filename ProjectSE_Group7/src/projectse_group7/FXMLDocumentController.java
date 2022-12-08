@@ -21,6 +21,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Slider;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
@@ -29,6 +30,7 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
@@ -47,7 +49,7 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private MenuBar menuBar;
     @FXML
-    private Pane pane;
+    private ScrollPane scrollPane;
 
     // toggle group variable, useful for selecting only 
     // one toggle button at a time
@@ -58,6 +60,12 @@ public class FXMLDocumentController implements Initializable {
     private ToggleButton rectangleToggleButton;
     @FXML
     private ToggleButton ellipseToggleButton;
+    @FXML
+    private ToggleButton selectShapeToggleButton;
+    @FXML
+    private ToggleButton polygonToggleButton;
+    @FXML
+    private ToggleButton textToggleButton;
 
     // color selection section variables
     ToggleGroup colorToggleGroup;
@@ -72,8 +80,6 @@ public class FXMLDocumentController implements Initializable {
 
     // drawing variables
     private DrawingPane drawingPane;
-    @FXML
-    private ToggleButton selectShapeToggleButton;
     @FXML
     private MenuItem undoMenuItem;
     @FXML
@@ -92,6 +98,8 @@ public class FXMLDocumentController implements Initializable {
         rectangleToggleButton.setToggleGroup(shapeToggleGroup);
         ellipseToggleButton.setToggleGroup(shapeToggleGroup);
         selectShapeToggleButton.setToggleGroup(shapeToggleGroup);
+        polygonToggleButton.setToggleGroup(shapeToggleGroup);
+        textToggleButton.setToggleGroup(shapeToggleGroup);
 
         // to make sure that a toggle button in the group is always selected
         shapeToggleGroup.selectedToggleProperty().addListener((obsValue, oldValue, newValue) -> {
@@ -140,21 +148,16 @@ public class FXMLDocumentController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         invoker = Invoker.getInstance();
 
-        gridSlider.setMinWidth(150);
-        gridSlider.setMaxWidth(150);
-        gridSlider.setPadding(new Insets(6));
-        gridSlider.setTooltip(new Tooltip("Grid size"));
-
         // setting up the drawing pane
-        drawingPane = new DrawingPane(invoker, lineToggleButton, rectangleToggleButton, ellipseToggleButton, selectShapeToggleButton, outlineColorImage, fillColorImage, gridSlider, gridCheckBox);
+        drawingPane = new DrawingPane(invoker, lineToggleButton, rectangleToggleButton, ellipseToggleButton, selectShapeToggleButton, polygonToggleButton, textToggleButton, outlineColorImage, fillColorImage, gridSlider, gridCheckBox);
         gridCheckBox.selectedProperty().addListener((v, o, n) -> {
             gridSlider.setDisable(!n.booleanValue());
             GridManager.updateGrid(drawingPane, gridSlider, gridCheckBox);
         });
         gridSlider.valueProperty().addListener((v, o, n) -> {
-            GridManager.updateGrid(drawingPane, gridSlider, gridCheckBox);;
+            GridManager.updateGrid(drawingPane, gridSlider, gridCheckBox);
         });
-        pane.getChildren().add(drawingPane);
+        scrollPane.setContent(drawingPane);
 
         // to abilitate the user to use ctrl+z shortcut
         undoMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.Z, KeyCombination.CONTROL_DOWN));
@@ -368,7 +371,7 @@ public class FXMLDocumentController implements Initializable {
             alert.setHeaderText("There are no operations to undo.");
             alert.setContentText("");
             alert.showAndWait();
-            
+
         }
     }
 

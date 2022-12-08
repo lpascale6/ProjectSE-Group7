@@ -1,10 +1,12 @@
 package gui;
 
 import command.*;
+import javafx.beans.property.DoubleProperty;
 import javafx.scene.paint.*;
 import javafx.scene.*;
 import javafx.scene.control.*;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Pane;
@@ -34,6 +36,8 @@ public class DrawingPane extends Pane {
     private ToggleButton rectangleToggleButton;
     private ToggleButton ellipseToggleButton;
     private ToggleButton selectShapeToggleButton;
+    private ToggleButton polygonToggleButton;
+    private ToggleButton textToggleButton;
 
     private Circle outlineColorImage;
     private Circle fillColorImage;
@@ -56,6 +60,8 @@ public class DrawingPane extends Pane {
     double gridSize = -1;
     Paint bg1 = Paint.valueOf("linear-gradient(from 0.0% 0.0% to 0.0% 100.0%, 0xffffff 0.0%, 0xffffff 100.0%)");
     BackgroundFill backgroundFill1 = new BackgroundFill(bg1, null, null);
+    
+    DoubleProperty scale = new SimpleDoubleProperty(1);
 
     /**
      * Empty constructor of the DrawingPane class for test.
@@ -84,7 +90,7 @@ public class DrawingPane extends Pane {
      * @param fillColorImage Cirlce image that represents the selected fill
      * color.
      */
-    public DrawingPane(Invoker invoker, ToggleButton lineToggleButton, ToggleButton rectangleToggleButton, ToggleButton ellipseToggleButton, ToggleButton selectShapeToggleButton, Circle outlineColorImage, Circle fillColorImage, Slider gridSlider, CheckBox gridCheckBox) {
+    public DrawingPane(Invoker invoker, ToggleButton lineToggleButton, ToggleButton rectangleToggleButton, ToggleButton ellipseToggleButton, ToggleButton selectShapeToggleButton, ToggleButton polygonToggleButton, ToggleButton textToggleButton, Circle outlineColorImage, Circle fillColorImage, Slider gridSlider, CheckBox gridCheckBox) {
         super();
         this.invoker = invoker;
 
@@ -110,10 +116,16 @@ public class DrawingPane extends Pane {
         });
 
         this.selectShapeToggleButton = selectShapeToggleButton;
+        this.polygonToggleButton = polygonToggleButton;
+        this.textToggleButton = textToggleButton;
+        
         this.outlineColorImage = outlineColorImage;
         this.fillColorImage = fillColorImage;
         // setting up drawing pane style
-        this.setPrefSize(1240, 718);
+        // setting up drawing pane style
+        this.setPrefSize(2048, 1024);
+        this.scaleXProperty().bind(scale);
+        this.scaleYProperty().bind(scale);
         this.setBackground(new Background(backgroundFill1));
         this.setStyle("-fx-border-color:grey;"
                 + "-fx-border-radius:5;");
