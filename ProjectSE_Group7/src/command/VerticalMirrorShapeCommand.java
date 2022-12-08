@@ -20,10 +20,10 @@ public class VerticalMirrorShapeCommand implements Command{
     public void execute() throws Exception {
         
         //if scaleY is 1.0, then I set it to -1.0 and viceversa
-        if(this.selectedShape.getScaleY() == 1)
-            this.selectedShape.setScaleY(-1);
+        if(this.selectedShape.getScaleY() == 1.0)
+            this.selectedShape.setScaleY(-1.0);
         else
-            this.selectedShape.setScaleY(1);
+            this.selectedShape.setScaleY(1.0);
         
     }
 
@@ -31,10 +31,10 @@ public class VerticalMirrorShapeCommand implements Command{
     public void undo() throws Exception {
         
         //if scaleY is 1.0, then I set it to -1.0 and viceversa
-        if(this.selectedShape.getScaleY() == 1)
-            this.selectedShape.setScaleY(-1);
+        if(this.selectedShape.getScaleY() == 1.0)
+            this.selectedShape.setScaleY(-1.0);
         else
-            this.selectedShape.setScaleY(1);
+            this.selectedShape.setScaleY(1.0);
     }
     
 }

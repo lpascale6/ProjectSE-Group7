@@ -44,8 +44,11 @@ public class LoadCommandTest {
         Double expLineEndY = 10.0;
         String expLineColorStr = "#ffffff";
         Paint expLineColor = Paint.valueOf(expLineColorStr);
+        double expLineScaleX = -1.0;
+        double expLineScaleY = 1.0;
+        double expLineRotate = -55.0;
 
-        writer.write("line;" + expLineStartX + ";" + expLineStartY + ";" + expLineEndX + ";" + expLineEndY + ";" + expLineColorStr + "\n");
+        writer.write("line;" + expLineStartX + ";" + expLineStartY + ";" + expLineEndX + ";" + expLineEndY + ";" + expLineColorStr + ";" + expLineScaleX + ";" + expLineScaleY + ";" + expLineRotate + "\n");
 
         
         
@@ -57,8 +60,11 @@ public class LoadCommandTest {
         Paint expRectFill = Paint.valueOf(expRectFillStr);
         String expRectOuterStr = "#0000FF";
         Paint expRectOuter = Paint.valueOf(expRectOuterStr);
-
-        writer.write("rectangle;" + expRectX + ";" + expRectY + ";" + expRectWidth + ";" + expRectHeight + ";" + expRectOuterStr + ";" + expRectFillStr + "\n");
+        double expRectScaleX = 1.0;
+        double expRectScaleY = -1.0;
+        double expRectRotate = 25.0;
+        
+        writer.write("rectangle;" + expRectX + ";" + expRectY + ";" + expRectWidth + ";" + expRectHeight + ";" + expRectOuterStr + ";" + expRectFillStr + ";" + expRectScaleX + ";" + expRectScaleY + ";" + expRectRotate + "\n");
 
         
         
@@ -70,8 +76,11 @@ public class LoadCommandTest {
         Paint expEllFill = Paint.valueOf(expEllFillStr);
         String expEllOutStr = "#FF0000";
         Paint expEllOut = Paint.valueOf(expEllOutStr);
+        double expEllScaleX = -1.0;
+        double expEllScaleY = -1.0;
+        double expEllRotate = 0.0;
 
-        writer.write("ellipse;" + expEllHPos + ";" + expEllVPos + ";" + expEllWidth + ";" + expEllHeight + ";" + expEllOutStr + ";" + expEllFillStr + "\n");
+        writer.write("ellipse;" + expEllHPos + ";" + expEllVPos + ";" + expEllWidth + ";" + expEllHeight + ";" + expEllOutStr + ";" + expEllFillStr + ";" + expEllScaleX + ";" + expEllScaleY + ";" + expEllRotate + "\n");
 
         
         
@@ -93,6 +102,9 @@ public class LoadCommandTest {
         Double resLineEndX = resLine.getLineEndingX();
         Double resLineEndY = resLine.getLineEndingY();
         Paint resLineColor = resLine.getLineColor();
+        double resLineScaleX = resLine.getScaleX();
+        double resLineScaleY = resLine.getScaleY();
+        double resLineRotate = resLine.getRotate();
 
         
         System.out.println("line test");
@@ -102,6 +114,9 @@ public class LoadCommandTest {
         assertEquals(expLineEndX, resLineEndX, 0);
         assertEquals(expLineEndY, resLineEndY, 0);
         assertEquals(expLineColor, resLineColor);
+        assertEquals(expLineScaleX, resLineScaleX, 0);
+        assertEquals(expLineScaleY, resLineScaleY, 0);
+        assertEquals(expLineRotate, resLineRotate, 0);
 
         
         
@@ -113,6 +128,9 @@ public class LoadCommandTest {
         Double resRectHeight = resRect.getRectangleHeight();
         Paint resRectFill = resRect.getFillColor();
         Paint resRectOuter = resRect.getOutlineColor();
+        double resRectScaleX = resRect.getScaleX();
+        double resRectScaleY = resRect.getScaleY();
+        double resRectRotate = resRect.getRotate();
 
         
         System.out.println("rectangle test");
@@ -123,6 +141,9 @@ public class LoadCommandTest {
         assertEquals(expRectHeight, resRectHeight, 0);
         assertEquals(expRectFill, resRectFill);
         assertEquals(expRectOuter, resRectOuter);
+        assertEquals(expRectScaleX, resRectScaleX, 0);
+        assertEquals(expRectScaleY, resRectScaleY, 0);
+        assertEquals(expRectRotate, resRectRotate, 0);
 
         
         
@@ -134,6 +155,9 @@ public class LoadCommandTest {
         Double resEllHeight = resEll.getEllipseRadiusY();
         Paint resEllFill = resEll.getFillColor();
         Paint resEllOut = resEll.getOutlineColor();
+        double resEllScaleX = resEll.getScaleX();
+        double resEllScaleY = resEll.getScaleY();
+        double resEllRotate = resEll.getRotate();
 
         
         System.out.println("ellipse test");
@@ -144,6 +168,9 @@ public class LoadCommandTest {
         assertEquals(expEllHeight, resEllHeight, 0);
         assertEquals(expEllFill, resEllFill);
         assertEquals(expEllOut, resEllOut);
+        assertEquals(expEllScaleX, resEllScaleX, 0);
+        assertEquals(expEllScaleY, resEllScaleY, 0);
+        assertEquals(expEllRotate, resEllRotate, 0);
 
     }
 

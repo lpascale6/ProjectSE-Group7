@@ -245,7 +245,10 @@ public class EllipseTest {
         ellipse.setEllipseRadiusY(3.3);
         ellipse.setOutlineColor(Color.BLUE);
         ellipse.setFillColor(Color.GREEN);
-        String expRes = "ellipse;2.0;4.2;4.7;3.3;#0000ff;#008000";
+        ellipse.setScaleX(-1.0);
+        ellipse.setScaleY(1.0);
+        ellipse.setRotate(-67.0);
+        String expRes = "ellipse;2.0;4.2;4.7;3.3;#0000ff;#008000;-1.0;1.0;-67.0";
         String result = ellipse.toString();
         assertEquals(expRes, result);
     }

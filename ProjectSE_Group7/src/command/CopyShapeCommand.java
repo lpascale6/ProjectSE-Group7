@@ -63,6 +63,9 @@ public class CopyShapeCommand implements Command {
             shapeToCopy.setStroke(line.getStroke());
             shapeToCopy.setStrokeWidth(3);
             shapeToCopy.setFill(line.getFill());
+            shapeToCopy.setScaleX(line.getScaleX());
+            shapeToCopy.setScaleY(line.getScaleY());
+            shapeToCopy.setRotate(line.getRotate());
             this.drawingPane.setCopiedShape(shapeToCopy);
         } else if (this.selectedShape.getClass() == Rectangle.class) {
             Rectangle rectangle = (Rectangle) this.selectedShape;
@@ -74,6 +77,9 @@ public class CopyShapeCommand implements Command {
             shapeToCopy.setStroke(rectangle.getStroke());
             shapeToCopy.setStrokeWidth(3);
             shapeToCopy.setFill(rectangle.getFill());
+            shapeToCopy.setScaleX(rectangle.getScaleX());
+            shapeToCopy.setScaleY(rectangle.getScaleY());
+            shapeToCopy.setRotate(rectangle.getRotate());
             this.drawingPane.setCopiedShape(shapeToCopy);
         } else if (this.selectedShape.getClass() == Ellipse.class) {
             Ellipse ellipse = (Ellipse) this.selectedShape;
@@ -85,6 +91,9 @@ public class CopyShapeCommand implements Command {
             shapeToCopy.setStroke(ellipse.getStroke());
             shapeToCopy.setStrokeWidth(3);
             shapeToCopy.setFill(ellipse.getFill());
+            shapeToCopy.setScaleX(ellipse.getScaleX());
+            shapeToCopy.setScaleY(ellipse.getScaleY());
+            shapeToCopy.setRotate(ellipse.getRotate());
             this.drawingPane.setCopiedShape(shapeToCopy);
 
         }

@@ -52,48 +52,66 @@ public class LoadCommand implements Command {
             String[] data = line.split(";");  //split read line to get shape data.
             String shapeType = data[0];     //get shape type: line, rectangle or ellipse.
 
-            if ("line".equals(shapeType) && data.length == 6) {  //if shape type is line, reconstruct a line segment.
+            if ("line".equals(shapeType) && data.length == 9) {  //if shape type is line, reconstruct a line segment.
                 Double startX = Double.parseDouble(data[1]);
                 Double startY = Double.parseDouble(data[2]);
                 Double endX = Double.parseDouble(data[3]);
                 Double endY = Double.parseDouble(data[4]);
                 Paint color = Paint.valueOf(data[5]);
+                double scaleX = Double.parseDouble(data[6]);
+                double scaleY = Double.parseDouble(data[7]);
+                double rotate = Double.parseDouble(data[8]);
 
                 Line lineShape = new Line(startX, startY, endX, endY, color);
                 lineShape.setStrokeWidth(3);
+                lineShape.setScaleX(scaleX);
+                lineShape.setScaleY(scaleY);
+                lineShape.setRotate(rotate);
                 lineShape.setOnMouseClicked(e -> {
                     drawingPane.selectShape((Shape) e.getSource());
                 });
                 shapeList.add(lineShape);  //add reconstructed line segment to shape list.
 
-            } else if ("rectangle".equals(shapeType) && data.length == 7) { //if shape type is rectangle, reconstruct rectangle.
+            } else if ("rectangle".equals(shapeType) && data.length == 10) { //if shape type is rectangle, reconstruct rectangle.
                 Double x = Double.parseDouble(data[1]);
                 Double y = Double.parseDouble(data[2]);
                 Double width = Double.parseDouble(data[3]);
                 Double height = Double.parseDouble(data[4]);
                 Paint outer = Paint.valueOf(data[5]);
                 Paint fill = Paint.valueOf(data[6]);
+                double scaleX = Double.parseDouble(data[7]);
+                double scaleY = Double.parseDouble(data[8]);
+                double rotate = Double.parseDouble(data[9]);
 
                 Rectangle rectangleShape = new Rectangle(x, y, width, height, fill, outer);
                 rectangleShape.setStrokeWidth(3);
+                rectangleShape.setScaleX(scaleX);
+                rectangleShape.setScaleY(scaleY);
+                rectangleShape.setRotate(rotate);
                 rectangleShape.setOnMouseClicked(e -> {
                     drawingPane.selectShape((Shape) e.getSource());
                 });
                 shapeList.add(rectangleShape); //add reconstructed rectangle to shape list.
 
-            } else if ("ellipse".equals(shapeType) && data.length == 7) { //if shape type is ellipse, reconstruct ellipse.
+            } else if ("ellipse".equals(shapeType) && data.length == 10) { //if shape type is ellipse, reconstruct ellipse.
                 Double hPosition = Double.parseDouble(data[1]);
                 Double vPosition = Double.parseDouble(data[2]);
                 Double width = Double.parseDouble(data[3]);
                 Double height = Double.parseDouble(data[4]);
                 Paint outlineColor = Paint.valueOf(data[5]);
                 Paint fillColor = Paint.valueOf(data[6]);
+                double scaleX = Double.parseDouble(data[7]);
+                double scaleY = Double.parseDouble(data[8]);
+                double rotate = Double.parseDouble(data[9]);
 
                 Ellipse ellipseShape = new Ellipse(hPosition, vPosition, width, height, outlineColor, fillColor);
                 ellipseShape.setOnMouseClicked(e -> {
                     drawingPane.selectShape((Shape) e.getSource());
                 });
                 ellipseShape.setStrokeWidth(3);
+                ellipseShape.setScaleX(scaleX);
+                ellipseShape.setScaleY(scaleY);
+                ellipseShape.setRotate(rotate);
 
                 shapeList.add(ellipseShape); //add reconstructed ellipse to shape list.
 

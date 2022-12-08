@@ -73,7 +73,7 @@ public class SelectionManager {
         border.setStrokeWidth(strokeWidth);
         border.setCursor(Cursor.MOVE);
         border.getStrokeDashArray().addAll(15d, 10d);
-
+        
         // this part is to create the border animation
         double maxOffset
                 = border.getStrokeDashArray().stream().reduce(0d, (a, b) -> a + b);
@@ -175,7 +175,7 @@ public class SelectionManager {
         Border bottomRightBorder = setupBottomRightBorder(drawingPane, border);
 
         bordersGroup = new Group(border, topLeftBorder, topRightBorder, bottomLeftBorder, bottomRightBorder);
-
+        bordersGroup.setRotate(selectedShape.getRotate());
         drawingPane.setBordersGroup(bordersGroup);
         drawingPane.getChildren().add(bordersGroup);
 
@@ -189,7 +189,6 @@ public class SelectionManager {
         topLeftBorder.setFillColor(Color.DARKCYAN);
         topLeftBorder.setStrokeType(StrokeType.OUTSIDE);
         topLeftBorder.setCursor(Cursor.NW_RESIZE);
-        
         drawingPane.setTopLeftBorder(topLeftBorder);
 
         double xPosition = border.getRectangleX();

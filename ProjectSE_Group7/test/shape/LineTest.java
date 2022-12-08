@@ -321,9 +321,15 @@ public class LineTest {
         Double expLineEndY = 10.0;
         String expLineColorStr = "#ffffff";
         Paint expLineColor = Paint.valueOf(expLineColorStr);
+        double scaleX = -1.0;
+        double scaleY = 1.0;
+        double rotate = 34.0;
         
-        String expRepresentation = "line;" + expLineStartX + ";" + expLineStartY + ";" + expLineEndX + ";" + expLineEndY + ";" + expLineColorStr;
+        String expRepresentation = "line;" + expLineStartX + ";" + expLineStartY + ";" + expLineEndX + ";" + expLineEndY + ";" + expLineColorStr + ";" + scaleX + ";" + scaleY + ";" + rotate;
         Line resLine = new Line(expLineStartX, expLineStartY, expLineEndX, expLineEndY, expLineColor);
+        resLine.setScaleX(scaleX);
+        resLine.setScaleY(scaleY);
+        resLine.setRotate(rotate);
         String resRepresentation = resLine.toString();
         
         assertEquals(expRepresentation, resRepresentation);
@@ -336,9 +342,15 @@ public class LineTest {
         expLineEndY = 9.7;
         expLineColorStr = "#0a0f0d";
         expLineColor = Paint.valueOf(expLineColorStr);
+        scaleX = 1.0;
+        scaleY = -1.0;
+        rotate = -45.0;
         
-        expRepresentation = "line;" + expLineStartX + ";" + expLineStartY + ";" + expLineEndX + ";" + expLineEndY + ";" + expLineColorStr;
+        expRepresentation = "line;" + expLineStartX + ";" + expLineStartY + ";" + expLineEndX + ";" + expLineEndY + ";" + expLineColorStr + ";" + scaleX + ";" + scaleY + ";" + rotate;
         resLine = new Line(expLineStartX, expLineStartY, expLineEndX, expLineEndY, expLineColor);
+        resLine.setScaleX(scaleX);
+        resLine.setScaleY(scaleY);
+        resLine.setRotate(rotate);
         resRepresentation = resLine.toString();
         
         assertEquals(expRepresentation, resRepresentation);

@@ -1,12 +1,17 @@
 package gui;
 
 import command.*;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
 import javafx.beans.property.DoubleProperty;
 import javafx.scene.paint.*;
 import javafx.scene.*;
 import javafx.scene.control.*;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Pane;
@@ -229,9 +234,32 @@ public class DrawingPane extends Pane {
             } catch (Exception ex) {
             }
         });
-
+        
+        // setting up vertical mirrorring menu item and its operations
+        MenuItem rotateMenuItem = new MenuItem("Rotate");
+        rotateMenuItem.disableProperty().bind(isShapeSelected.not());
+        rotateMenuItem.setOnAction(event -> {
+        TextInputDialog td = new TextInputDialog();
+        td.setTitle("Choose angle");
+        td.setHeaderText("Enter angle to rotate");
+        Optional<String> result = td.showAndWait();
+        
+        try{
+            double angle = Double.parseDouble(result.get());
+            RotateShapeCommand rotateShapeCommand = new RotateShapeCommand(this.selectedShape, angle);
+            invoker.execute(rotateShapeCommand);
+            this.getBordersGroup().setRotate(angle);
+        } catch (Exception ex) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Invalid Input");
+            alert.setContentText("");
+            alert.showAndWait();
+        }
+        });
+        
         // adding all the menu items in the manage shape ContextMenu
-        manageShape.getItems().addAll(deleteMenuItem, toFrontMenuItem, toBackMenuItem, copyMenuItem, cutMenuItem, pasteMenuItem, hMirrorMenuItem, vMirrorMenuItem);
+        manageShape.getItems().addAll(deleteMenuItem, toFrontMenuItem, toBackMenuItem, copyMenuItem, cutMenuItem, pasteMenuItem, hMirrorMenuItem, vMirrorMenuItem, rotateMenuItem);
         this.setOnContextMenuRequested(event -> {
             if (selectShapeToggleButton.isSelected()) {
                 manageShape.show(this.getScene().getWindow(), event.getScreenX(), event.getScreenY());

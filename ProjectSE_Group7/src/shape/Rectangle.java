@@ -173,7 +173,8 @@ public class Rectangle extends javafx.scene.shape.Rectangle {
         Color outlineColor = (Color) this.getOutlineColor();
         Color fillColor = (Color) this.getFillColor();
         return "rectangle;" + this.getRectangleX() + ";" + this.getRectangleY() + ";" + this.getRectangleWidth() + ";"
-                + this.getRectangleHeight() + ";" + toHexString(outlineColor) + ";" + toHexString(fillColor);
+                + this.getRectangleHeight() + ";" + toHexString(outlineColor) + ";" + toHexString(fillColor) + ";"
+                + this.getScaleX() + ";" + this.getScaleY() + ";" + this.getRotate();
     }
 
     /**

@@ -308,7 +308,10 @@ public class RectangleTest {
         instance.setRectangleHeight(3.3);
         instance.setOutlineColor(Color.BLUE);
         instance.setFillColor(Color.GREEN);
-        String expRes = "rectangle;2.0;4.2;4.7;3.3;#0000ff;#008000";
+        instance.setScaleX(-1.0);
+        instance.setScaleY(1.0);
+        instance.setRotate(-33.0);
+        String expRes = "rectangle;2.0;4.2;4.7;3.3;#0000ff;#008000;-1.0;1.0;-33.0";
         String result = instance.toString();
         assertEquals(expRes, result);
     }
