@@ -6,6 +6,7 @@ import org.junit.*;
 import static org.junit.Assert.*;
 import shape.Ellipse;
 import shape.Line;
+import shape.Polygon;
 import shape.Rectangle;
 
 /**
@@ -71,6 +72,16 @@ public class AddShapeCommandTest {
         assertTrue(drawingPane.getChildren().contains(creatingShape));
         // the position of the added ellipse should be the last in the children array, if not the test fails
         assertEquals(drawingPane.getChildren().indexOf(creatingShape), drawingPane.getChildren().size() - 1);
+        
+        // testing for the insertion of a Polygon Shape
+        creatingShape = new Polygon();
+        instance = new AddShapeCommand(drawingPane, creatingShape);
+        instance.execute();
+        // if the ellipse is not contained in the drawing, the test fails
+        assertTrue(drawingPane.getChildren().contains(creatingShape));
+        // the position of the added ellipse should be the last in the children array, if not the test fails
+        assertEquals(drawingPane.getChildren().indexOf(creatingShape), drawingPane.getChildren().size() - 1);
+        
     }
 
     /**
@@ -111,6 +122,19 @@ public class AddShapeCommandTest {
 
         // testing undo for the removal of a Ellipse Shape
         creatingShape = new Ellipse();
+        instance = new AddShapeCommand(drawingPane, creatingShape);
+        // executes the command, it adds the ellipse to the drawing
+        instance.execute();
+        // actual size of the children array
+        size = drawingPane.getChildren().size();
+        // undo the operation by removing the inserted ellipse from the drawing
+        instance.undo();
+
+        assertFalse(drawingPane.getChildren().contains(creatingShape));
+        assertEquals(size - 1, drawingPane.getChildren().size());
+        
+        // testing undo for the removal of a Polygon Shape
+        creatingShape = new Polygon();
         instance = new AddShapeCommand(drawingPane, creatingShape);
         // executes the command, it adds the ellipse to the drawing
         instance.execute();

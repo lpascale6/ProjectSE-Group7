@@ -1,5 +1,6 @@
 package shape;
 
+import exception.InvalidNumberOfPointsException;
 import java.util.ArrayList;
 import javafx.collections.ObservableList;
 import javafx.scene.paint.Color;
@@ -17,15 +18,20 @@ public class Polygon extends javafx.scene.shape.Polygon {
      */
     public Polygon() {
         super();
+        this.setOutlineColor(Color.BLACK);
+        this.setFillColor(Color.WHITE);
     }
 
     /**
      * Constructor method of Polygon class.
+     *
      * @param xStartPoint Coordinate x of the first vertex of the polygon.
      * @param yStartPoint Coordinate y of the first vertex of the polygon.
      */
     public Polygon(double xStartPoint, double yStartPoint) {
         super(xStartPoint, yStartPoint);
+        this.setOutlineColor(Color.BLACK);
+        this.setFillColor(Color.WHITE);
     }
 
     /**
@@ -59,9 +65,13 @@ public class Polygon extends javafx.scene.shape.Polygon {
 
     /**
      * Sets all the points of the polygon to the ones passed as argument.
+     *
      * @param points The new points of the polygon.
      */
-    public void setPolygonPoints(ArrayList<Double> points) {
+    public void setPolygonPoints(ArrayList<Double> points) throws InvalidNumberOfPointsException {
+        if (points.size() % 2 != 0) {
+            throw new InvalidNumberOfPointsException("Points size must be a multiple of 2.");
+        }
         this.getPoints().setAll(points);
     }
 
@@ -69,8 +79,14 @@ public class Polygon extends javafx.scene.shape.Polygon {
      * Adds the points passed as argument to the polygon points array.
      *
      * @param points The points to add to the polygon.
+     * @throws exception.InvalidNumberOfPointsException When the size of the
+     * points array is not a multiple of two.
      */
-    public void addPoints(double... points) {
+    public void addPoints(double... points) throws InvalidNumberOfPointsException {
+        if (points.length % 2 != 0) {
+            throw new InvalidNumberOfPointsException("Points size must be a multiple of 2.");
+        }
+
         for (double point : points) {
             this.getPoints().add(point);
         }
