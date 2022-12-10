@@ -11,6 +11,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 import javafx.beans.property.DoubleProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -20,6 +22,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ColorPicker;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -96,7 +99,6 @@ public class FXMLDocumentController implements Initializable {
     private MenuItem loadMenuItem;
     @FXML
     private MenuItem newDrawingMenuItem;
-    @FXML
     private MenuItem helpMenuItem;
 
     @FXML
@@ -104,14 +106,17 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private TextField textTextField;
     @FXML
-    private ChoiceBox<Integer> fontDimensionChoiceBox;
-    
+    private ComboBox<Integer> fontDimensionComboBox;
+    @FXML
+    private MenuItem helpPolygonMenuItem;
+    @FXML
+    private MenuItem helpTextMenuItem;
 
-    private void setupChoiceBox() {
-        for (int i = 8; i <= 24; i++) {
-            fontDimensionChoiceBox.getItems().add(i);
+    private void setupComboBox() {
+        for (int i = 8; i <= 100; i++) {
+            fontDimensionComboBox.getItems().add(i);
         }
-        fontDimensionChoiceBox.getSelectionModel().select(8);
+        fontDimensionComboBox.getSelectionModel().selectFirst();
     }
 
     /**
@@ -174,13 +179,13 @@ public class FXMLDocumentController implements Initializable {
             }
         });
     }
-    
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         invoker = Invoker.getInstance();
 
         // setting up the drawing pane
-        drawingPane = new DrawingPane(invoker, lineToggleButton, rectangleToggleButton, ellipseToggleButton, selectShapeToggleButton, polygonToggleButton, textToggleButton, outlineColorImage, fillColorImage, gridSlider, gridCheckBox, textTextField, fontDimensionChoiceBox);
+        drawingPane = new DrawingPane(invoker, lineToggleButton, rectangleToggleButton, ellipseToggleButton, selectShapeToggleButton, polygonToggleButton, textToggleButton, outlineColorImage, fillColorImage, gridSlider, gridCheckBox, textTextField, fontDimensionComboBox);
         gridCheckBox.selectedProperty().addListener((v, o, n) -> {
             gridSlider.setDisable(!n.booleanValue());
             GridManager.updateGrid(drawingPane, gridSlider, gridCheckBox);
@@ -203,13 +208,11 @@ public class FXMLDocumentController implements Initializable {
         loadMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.L, KeyCombination.CONTROL_DOWN));
         // to abilitate the user to use ctrl+n shortcut
         newDrawingMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.N, KeyCombination.CONTROL_DOWN));
-        // to abilitate the user to use ctrl+h shortcut
-        helpMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.H, KeyCombination.CONTROL_DOWN));
 
         // setting up all toggle buttons
         setupShapeToggleButtons();
         setupColorToggleButtons();
-        setupChoiceBox();
+        setupComboBox();
     }
 
     /**
@@ -353,19 +356,30 @@ public class FXMLDocumentController implements Initializable {
         ZoomManager.zoomOut(drawingPane);
     }
 
-    /**
-     * Method to show information about how to draw a polygon.
-     *
-     * @param event
-     */
     @FXML
-    private void help(ActionEvent event) {
+    private void helpPolygon(ActionEvent event) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Help");
         alert.setHeaderText("How to draw a polygon");
         alert.setContentText("If you want to draw a polygon, select the appropriate toggle button in the \"shape selection section\"."
                 + " After that, click on the drawing pad to insert a vertex of the polygon until you're done. "
                 + "When you're satisfied, click the right mouse button to finish drawing. Note that by inserting only two vertices, the figure will not be inserted.");
+        alert.showAndWait();
+    }
+
+    /**
+     * Method to show information about how to insert text.
+     *
+     * @param event
+     */
+    @FXML
+    private void helpText(ActionEvent event) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Help");
+        alert.setHeaderText("How to insert text");
+        alert.setContentText("If you want to put text in the drawing box, select the appropriate toggle button in the shape selection section. "
+                + "Subsequently, move to the \"Text setup\" section to choose the font to use and the text to insert and, optionally, choose the color in the \"Colors\" section. "
+                + "After performing these steps, click on the drawing pad and the text you composed earlier will appear. Now you can change its color, size, rotate it, mirror it and so on.");
         alert.showAndWait();
     }
 

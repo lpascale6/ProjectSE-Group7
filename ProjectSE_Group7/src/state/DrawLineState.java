@@ -35,7 +35,7 @@ public class DrawLineState implements DrawState {
      * @param fillColor The fill color of the Line (null).
      */
     @Override
-    public void startDrawing(double xStartPoint, double yStartPoint, Color outlineColor, Color fillColor, String textString, int textSize){
+    public void startDrawing(double xStartPoint, double yStartPoint, Color outlineColor, Color fillColor){
         this.creatingLine = new Line(xStartPoint, yStartPoint, xStartPoint, yStartPoint);
         this.creatingLine.setStroke(outlineColor);
         this.creatingLine.setStrokeWidth(DrawingPane.strokeWidth);

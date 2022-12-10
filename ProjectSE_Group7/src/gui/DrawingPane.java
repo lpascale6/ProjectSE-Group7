@@ -31,15 +31,13 @@ public class DrawingPane extends Pane {
     private boolean isDrawingAPolygon = false;
     private double xStartPoint;
     private double yStartPoint;
-    
+    TextField textTextField;
+    ComboBox<Integer> fontDimensionComboBox;
+
     public final static double strokeWidth = 3;
 
     private Color selectedOutlineColor = Color.BLACK;
     private Color selectedFillColor = Color.WHITE;
-    
-    
-    private String textString = "";
-    private int textSize = 0;
 
     private ToggleButton lineToggleButton;
     private ToggleButton rectangleToggleButton;
@@ -104,9 +102,12 @@ public class DrawingPane extends Pane {
      * @param fillColorImage Cirlce image that represents the selected fill
      * color.
      */
-    public DrawingPane(Invoker invoker, ToggleButton lineToggleButton, ToggleButton rectangleToggleButton, ToggleButton ellipseToggleButton, ToggleButton selectShapeToggleButton, ToggleButton polygonToggleButton, ToggleButton textToggleButton, Circle outlineColorImage, Circle fillColorImage, Slider gridSlider, CheckBox gridCheckBox, TextField textTextField, ChoiceBox<Integer> fontDimensionChoiceBox) {
+    public DrawingPane(Invoker invoker, ToggleButton lineToggleButton, ToggleButton rectangleToggleButton, ToggleButton ellipseToggleButton, ToggleButton selectShapeToggleButton, ToggleButton polygonToggleButton, ToggleButton textToggleButton, Circle outlineColorImage, Circle fillColorImage, Slider gridSlider, CheckBox gridCheckBox, TextField textTextField, ComboBox<Integer> fontDimensionComboBox) {
         super();
         this.invoker = invoker;
+
+        this.textTextField = textTextField;
+        this.fontDimensionComboBox = fontDimensionComboBox;
 
         // setting up line toggle button
         this.lineToggleButton = lineToggleButton;
@@ -144,15 +145,11 @@ public class DrawingPane extends Pane {
             deselectShape();
         });
 
-         // setting up text toggle button
+        // setting up text toggle button
         this.textToggleButton = textToggleButton;
         this.textToggleButton.setOnAction(event -> {
-            
-        this.textString = textTextField.getText();
-        this.textSize = fontDimensionChoiceBox.getValue();
-   
-        
-        drawState = new DrawTextState(this);
+
+            drawState = new DrawTextState(this);
             checkPolygonCreation();
             deselectShape();
         });
@@ -324,8 +321,8 @@ public class DrawingPane extends Pane {
                     xStartPoint = event.getX();
                     yStartPoint = event.getY();
 
-                    drawState.startDrawing(xStartPoint, yStartPoint, selectedOutlineColor, selectedFillColor, textString, textSize);
-                   
+                    drawState.startDrawing(xStartPoint, yStartPoint, selectedOutlineColor, selectedFillColor);
+
                 } else if (polygonToggleButton.isSelected()) {
                     isDrawingAPolygon = true;
                     double x = event.getX();
@@ -335,8 +332,8 @@ public class DrawingPane extends Pane {
                         drawState.draw(x, y);
                     } else {
                         isDrawing = true;
-                        drawState.startDrawing(x, y, selectedOutlineColor, selectedFillColor, textString, textSize);
-                  
+                        drawState.startDrawing(x, y, selectedOutlineColor, selectedFillColor);
+
                     }
 
                 } else if (selectShapeToggleButton.isSelected()) {
@@ -717,7 +714,7 @@ public class DrawingPane extends Pane {
     public void setSelectedShape(Shape shape) {
         selectedShape = shape;
     }
-    
+
     /**
      * Returns the value of oldSelectedShapeRotation.
      *
@@ -817,6 +814,24 @@ public class DrawingPane extends Pane {
      */
     public void setGridSize(double gridSize) {
         this.gridSize = gridSize;
+    }
+
+    /**
+     * Returns the value of textTextField.
+     *
+     * @return The value of textTextField.
+     */
+    public TextField getTextTextField() {
+        return textTextField;
+    }
+
+    /**
+     * Returns the value of fontDimensionComboBox.
+     *
+     * @return The value of fontDimensionComboBox.
+     */
+    public ComboBox<Integer> getFontDimensionComboBox() {
+        return fontDimensionComboBox;
     }
 
 }

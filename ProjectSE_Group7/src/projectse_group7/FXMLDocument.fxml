@@ -52,7 +52,8 @@
                   </Menu>
                   <Menu mnemonicParsing="false" text="Help">
                     <items>
-                      <MenuItem fx:id="helpMenuItem" mnemonicParsing="false" onAction="#help" text="How to draw a polygon" />
+                      <MenuItem fx:id="helpPolygonMenuItem" mnemonicParsing="false" onAction="#helpPolygon" text="How to draw a polygon" />
+                        <MenuItem fx:id="helpTextMenuItem" mnemonicParsing="false" onAction="#helpText" text="How to insert a text" />
                     </items>
                   </Menu>
               </menus>
@@ -178,7 +179,7 @@
                                                    <children>
                                                       <HBox layoutX="14.0" layoutY="14.0" spacing="10.0">
                                                          <children>
-                                                            <ColorPicker fx:id="colorPicker" prefHeight="30.0" prefWidth="100.0" />
+                                                            <ColorPicker fx:id="colorPicker" prefHeight="30.0" />
                                                          </children>
                                                       </HBox>
                                                    </children>
@@ -203,7 +204,7 @@
                                                 <Label text="Text" />
                                                 <TextField fx:id="textTextField" prefHeight="25.0" prefWidth="500.0" promptText="Insert text here..." />
                                                 <Label text="Font dimension" />
-                                                <ChoiceBox fx:id="fontDimensionChoiceBox" prefWidth="50.0" />
+                                                <ComboBox fx:id="fontDimensionComboBox" prefWidth="75.0" />
                                              </children>
                                              <padding>
                                                 <Insets left="5.0" right="5.0" />

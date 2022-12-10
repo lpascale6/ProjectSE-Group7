@@ -37,7 +37,7 @@ public class DrawRectangleState implements DrawState {
      * @param fillColor The fill color of the Rectangle.
      */
     @Override
-   public void startDrawing(double xStartPoint, double yStartPoint, Color outlineColor, Color fillColor, String textString, int textSize) {
+   public void startDrawing(double xStartPoint, double yStartPoint, Color outlineColor, Color fillColor) {
         this.xStartPoint = xStartPoint;
         this.yStartPoint = yStartPoint;
 

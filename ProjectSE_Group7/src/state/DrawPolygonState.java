@@ -35,7 +35,7 @@ public class DrawPolygonState implements DrawState {
      * @param fillColor The fill color of the Polygon.
      */
     @Override
-    public void startDrawing(double xStartPoint, double yStartPoint, Color outlineColor, Color fillColor, String textString, int textSize) {
+    public void startDrawing(double xStartPoint, double yStartPoint, Color outlineColor, Color fillColor) {
         this.creatingPolygon = new Polygon(xStartPoint, yStartPoint);
         this.creatingPolygon.setOutlineColor(outlineColor);
         this.creatingPolygon.setFillColor(fillColor);
