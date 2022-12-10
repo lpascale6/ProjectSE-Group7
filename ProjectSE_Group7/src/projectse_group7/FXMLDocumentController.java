@@ -93,6 +93,8 @@ public class FXMLDocumentController implements Initializable {
     private MenuItem newDrawingMenuItem;
     @FXML
     private Label zoomLabel;
+    @FXML
+    private MenuItem helpMenuItem;
 
     /**
      * Sets up all the toggle buttons in the "Shape selection" section by
@@ -180,6 +182,8 @@ public class FXMLDocumentController implements Initializable {
         loadMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.L, KeyCombination.CONTROL_DOWN));
         // to abilitate the user to use ctrl+n shortcut
         newDrawingMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.N, KeyCombination.CONTROL_DOWN));
+        // to abilitate the user to use ctrl+n shortcut
+        helpMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.H, KeyCombination.CONTROL_DOWN));
         
 
         // setting up all toggle buttons
@@ -412,6 +416,17 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private void zoomOut(ActionEvent event) {
         ZoomManager.zoomOut(drawingPane);
+    }
+    
+    @FXML
+    private void help(ActionEvent event) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Help");
+        alert.setHeaderText("How to draw a polygon");
+        alert.setContentText("If you want to draw a polygon, select the appropriate toggle button in the \"shape selection section\"."
+                + " After that, click on the drawing pad to insert a vertex of the polygon until you're done. "
+                + "When you're satisfied, click the right mouse button to finish drawing. Note that by inserting only two vertices, the figure will not be inserted.");
+        alert.showAndWait();
     }
 
 }
