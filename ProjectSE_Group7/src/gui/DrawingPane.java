@@ -32,15 +32,14 @@ public class DrawingPane extends Pane {
     private double xStartPoint;
     private double yStartPoint;
     
-    private String textStartString = "text";
-    private Double textStartSize = 30.0;
-    TextInputDialog textInput = new TextInputDialog("enter text here");
-    TextInputDialog textSizeInput = new TextInputDialog("30");
-    
     public final static double strokeWidth = 3;
 
     private Color selectedOutlineColor = Color.BLACK;
     private Color selectedFillColor = Color.WHITE;
+    
+    
+    private String textString = "";
+    private int textSize = 0;
 
     private ToggleButton lineToggleButton;
     private ToggleButton rectangleToggleButton;
@@ -105,7 +104,7 @@ public class DrawingPane extends Pane {
      * @param fillColorImage Cirlce image that represents the selected fill
      * color.
      */
-    public DrawingPane(Invoker invoker, ToggleButton lineToggleButton, ToggleButton rectangleToggleButton, ToggleButton ellipseToggleButton, ToggleButton selectShapeToggleButton, ToggleButton polygonToggleButton, ToggleButton textToggleButton, Circle outlineColorImage, Circle fillColorImage, Slider gridSlider, CheckBox gridCheckBox) {
+    public DrawingPane(Invoker invoker, ToggleButton lineToggleButton, ToggleButton rectangleToggleButton, ToggleButton ellipseToggleButton, ToggleButton selectShapeToggleButton, ToggleButton polygonToggleButton, ToggleButton textToggleButton, Circle outlineColorImage, Circle fillColorImage, Slider gridSlider, CheckBox gridCheckBox, TextField textTextField, ChoiceBox<Integer> fontDimensionChoiceBox) {
         super();
         this.invoker = invoker;
 
@@ -148,31 +147,10 @@ public class DrawingPane extends Pane {
          // setting up text toggle button
         this.textToggleButton = textToggleButton;
         this.textToggleButton.setOnAction(event -> {
-        textInput.setHeaderText("Enter any text");
-        textSizeInput.setHeaderText("Enter any size");
-        
-        textInput.showAndWait();
-        textSizeInput.showAndWait();
-        textStartString = textInput.getEditor().getText();
-        
-        try{
-        textStartSize = Double.parseDouble(textSizeInput.getEditor().getText());
-        } catch (Exception ex){
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Invalid size");
-                alert.setHeaderText("Error");
-                alert.setContentText("The size must be numeric.\n(Size has been set to default value.)");
-                alert.showAndWait();
-        }
-        if (textStartSize < 0){
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Invalid size");
-                alert.setHeaderText("Error");
-                alert.setContentText("The size must be a positive number.\n(The entered size has been made positive.)");
-                alert.showAndWait();
-                textStartSize *= -1;
-                
-        }
+            
+        this.textString = textTextField.getText();
+        this.textSize = fontDimensionChoiceBox.getValue();
+   
         
         drawState = new DrawTextState(this);
             checkPolygonCreation();
@@ -346,7 +324,7 @@ public class DrawingPane extends Pane {
                     xStartPoint = event.getX();
                     yStartPoint = event.getY();
 
-                    drawState.startDrawing(xStartPoint, yStartPoint, selectedOutlineColor, selectedFillColor, textStartString, textStartSize);
+                    drawState.startDrawing(xStartPoint, yStartPoint, selectedOutlineColor, selectedFillColor, textString, textSize);
                    
                 } else if (polygonToggleButton.isSelected()) {
                     isDrawingAPolygon = true;
@@ -357,7 +335,7 @@ public class DrawingPane extends Pane {
                         drawState.draw(x, y);
                     } else {
                         isDrawing = true;
-                        drawState.startDrawing(x, y, selectedOutlineColor, selectedFillColor, textStartString, textStartSize);
+                        drawState.startDrawing(x, y, selectedOutlineColor, selectedFillColor, textString, textSize);
                   
                     }
 

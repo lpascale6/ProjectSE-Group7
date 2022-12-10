@@ -8,6 +8,7 @@ import shape.Ellipse;
 import shape.Line;
 import shape.Polygon;
 import shape.Rectangle;
+import shape.Text;
 
 /**
  *
@@ -95,6 +96,19 @@ public class CopyShapeCommand implements Command {
             shapeToCopy.setRotate(ellipse.getRotate());
             this.drawingPane.setCopiedShape(shapeToCopy);
 
+        } else if (this.selectedShape.getClass() == Text.class){
+            Text text = (Text) this.selectedShape;
+            Text shapeToCopy = new Text();
+            shapeToCopy.setX(this.startPoint);
+            shapeToCopy.setY(this.startPoint + text.getTextHeight()/2);
+            shapeToCopy.setTextString(text.getTextString());
+            shapeToCopy.setTextFontSize(text.getTextFontSize());
+            shapeToCopy.setStroke(text.getStroke());
+            shapeToCopy.setFill(text.getFill());
+            shapeToCopy.setScaleX(text.getScaleX());
+            shapeToCopy.setScaleY(text.getScaleY());
+            shapeToCopy.setRotate(text.getRotate());
+            this.drawingPane.setCopiedShape(shapeToCopy);
         } else if (this.selectedShape.getClass() == Polygon.class) {
             Polygon polygon = (Polygon) this.selectedShape;
             Polygon shapeToCopy = new Polygon();

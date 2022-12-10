@@ -174,13 +174,13 @@ public class FXMLDocumentController implements Initializable {
             }
         });
     }
-
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         invoker = Invoker.getInstance();
 
         // setting up the drawing pane
-        drawingPane = new DrawingPane(invoker, lineToggleButton, rectangleToggleButton, ellipseToggleButton, selectShapeToggleButton, polygonToggleButton, textToggleButton, outlineColorImage, fillColorImage, gridSlider, gridCheckBox);
+        drawingPane = new DrawingPane(invoker, lineToggleButton, rectangleToggleButton, ellipseToggleButton, selectShapeToggleButton, polygonToggleButton, textToggleButton, outlineColorImage, fillColorImage, gridSlider, gridCheckBox, textTextField, fontDimensionChoiceBox);
         gridCheckBox.selectedProperty().addListener((v, o, n) -> {
             gridSlider.setDisable(!n.booleanValue());
             GridManager.updateGrid(drawingPane, gridSlider, gridCheckBox);

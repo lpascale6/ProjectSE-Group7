@@ -8,6 +8,7 @@ import shape.Ellipse;
 import shape.Line;
 import shape.Polygon;
 import shape.Rectangle;
+import shape.Text;
 
 /**
  *
@@ -20,7 +21,7 @@ public class ResizeShapeCommand implements Command {
 
     private double oldWidth;
     private double oldHeight;
-
+    private int oldFontSize;
     private double oldStartingXPoint;
     private double oldStartingYPoint;
     private double oldEndingXPoint;
@@ -61,6 +62,13 @@ public class ResizeShapeCommand implements Command {
             this.oldHeight = ellipseToResize.getEllipseRadiusY();
             this.oldX = ellipseToResize.getEllipseCenterX();
             this.oldY = ellipseToResize.getEllipseCenterY();
+            
+        } else if (this.selectedShape.getClass() == Text.class) {
+            Text textToResize = (Text) this.selectedShape;
+            this.oldX = textToResize.getTextX();
+            this.oldY = textToResize.getTextY();
+            this.oldFontSize = textToResize.getTextFontSize();
+            
         } else if (this.selectedShape.getClass() == Polygon.class) {
             Polygon polygonToResize = (Polygon) this.selectedShape;
             
@@ -143,6 +151,21 @@ public class ResizeShapeCommand implements Command {
             
             ellipse.setEllipseRadiusX(border.getRectangleWidth() / 2);
             ellipse.setEllipseRadiusY(border.getRectangleHeight() / 2);
+            
+        } else if(selectedShape.getClass() == Text.class){
+            Text text = (Text) selectedShape;
+            double borderWidth = border.getRectangleWidth();
+            double borderHeight = border.getRectangleHeight();
+            double heightRatio = borderHeight / text.getTextHeight();
+            double widthRatio = borderWidth / text.getTextWidth();
+            int newFontSize = this.oldFontSize;
+            if (heightRatio < widthRatio){
+               newFontSize = (int) (text.getTextFontSize() * heightRatio); 
+            } else {
+               newFontSize = (int) (text.getTextFontSize() * widthRatio);
+            }
+            text.setTextFontSize(newFontSize);
+           
         } else if (this.selectedShape.getClass() == Polygon.class) {
             Polygon polygon = (Polygon) this.selectedShape;
             
@@ -195,6 +218,12 @@ public class ResizeShapeCommand implements Command {
             ellipseToResize.setEllipseCenterX(this.oldX);
             ellipseToResize.setEllipseCenterY(this.oldY);
 
+        } else if(this.selectedShape.getClass() == Text.class){
+            Text textToResize = (Text) this.selectedShape;
+            textToResize.setTextX(this.oldX);
+            textToResize.setTextY(this.oldY);
+            textToResize.setTextFontSize(this.oldFontSize);
+            
         } else if (this.selectedShape.getClass() == Polygon.class) {
             Polygon polygon = (Polygon) this.selectedShape;
             // restores all the vertex the polygon had before the resizing

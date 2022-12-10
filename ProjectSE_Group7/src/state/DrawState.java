@@ -15,7 +15,7 @@ public interface DrawState {
      * @param outlineColor
      * @param fillColor
      */
-    public void startDrawing(double xStartPoint, double yStartPoint, Color outlineColor, Color fillColor);
+    public void startDrawing(double xStartPoint, double yStartPoint, Color outlineColor, Color fillColor, String textString, int textSize);
     
     /**
      * Generic draw method to be implemented in the implementing subclasses. 

@@ -11,6 +11,7 @@ import shape.Ellipse;
 import shape.Line;
 import shape.Polygon;
 import shape.Rectangle;
+import shape.Text;
 
 /**
  *
@@ -115,6 +116,28 @@ public class LoadCommand implements Command {
 
                 shapeList.add(ellipseShape); //add reconstructed ellipse to shape list.
 
+            } else if ("text".equals(shapeType) && data.length == 10){
+                Double x = Double.parseDouble(data[1]);
+                Double y = Double.parseDouble(data[2]);
+                String string = data[3];
+                int fontSize = Integer.parseInt(data[4]);
+                Paint outlineColor = Paint.valueOf(data[5]);
+                Paint fillColor = Paint.valueOf(data[6]);
+                double scaleX = Double.parseDouble(data[7]);
+                double scaleY = Double.parseDouble(data[8]);
+                double rotate = Double.parseDouble(data[9]);
+                
+                Text textShape = new Text(x, y, string, fontSize, outlineColor, fillColor);
+                textShape.setOnMouseClicked(e -> {
+                    drawingPane.selectShape((Shape) e.getSource());
+                });
+                
+                textShape.setScaleX(scaleX);
+                textShape.setScaleY(scaleY);
+                textShape.setRotate(rotate);
+                shapeList.add(textShape);
+                
+                
             } else if ("polygon".equals(shapeType) && data.length == 7) {
                 Polygon polygonShape = new Polygon();
                 polygonShape.setOnMouseClicked(e -> {

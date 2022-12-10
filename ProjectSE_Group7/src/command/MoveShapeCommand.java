@@ -44,6 +44,9 @@ public class MoveShapeCommand implements Command {
         } else if (shapeToMove.getClass() == Ellipse.class) {
             Ellipse ellipse = (Ellipse) shapeToMove;
             ellipse.moveOf(deltaX, deltaY);
+        } else if (shapeToMove.getClass() == Text.class){
+            Text text = (Text) shapeToMove;
+            text.moveOf(deltaX, deltaY);
         } else if (shapeToMove.getClass() == Polygon.class) {
             Polygon polygon = (Polygon) shapeToMove;
             polygon.moveOf(deltaX, deltaY);
@@ -66,6 +69,10 @@ public class MoveShapeCommand implements Command {
         } else if (shapeToMove.getClass() == Ellipse.class) {
             Ellipse ellipse = (Ellipse) shapeToMove;
             ellipse.moveOf(-deltaX, -deltaY);
+        } else if(shapeToMove.getClass() == Text.class){
+            Text text = (Text) shapeToMove;
+            text.moveOf(-deltaX, -deltaY);
+           
         } else if (shapeToMove.getClass() == Polygon.class) {
             Polygon polygon = (Polygon) shapeToMove;
             polygon.moveOf(-deltaX, -deltaY);

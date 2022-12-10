@@ -37,7 +37,7 @@ public class DrawEllipseState implements DrawState {
      * @param fillColor The fill color of the Ellipse.
      */
     @Override
-    public void startDrawing(double xStartPoint, double yStartPoint, Color outlineColor, Color fillColor) {
+    public void startDrawing(double xStartPoint, double yStartPoint, Color outlineColor, Color fillColor, String textString, int textSize) {
         this.xStartPoint = xStartPoint;
         this.yStartPoint = yStartPoint;
 

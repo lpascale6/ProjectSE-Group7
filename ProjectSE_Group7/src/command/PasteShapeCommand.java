@@ -9,6 +9,7 @@ import shape.Ellipse;
 import shape.Line;
 import shape.Polygon;
 import shape.Rectangle;
+import shape.Text;
 
 /**
  *
@@ -100,6 +101,25 @@ public class PasteShapeCommand implements Command {
 
             this.drawingPane.getChildren().add(pastedEll);  //add the copy to the drawingPane
             this.pastedShape = pastedEll; //save the pastedShape to use it in undo operation
+        } else if (copiedShape instanceof Text){
+            Text copiedTxt = (Text) copiedShape;
+            Double copiedX = copiedTxt.getTextX();
+            Double copiedY = copiedTxt.getTextY();
+            String copiedString = copiedTxt.getTextString();
+            int copiedFontSize = copiedTxt.getTextFontSize();
+            Paint copiedFill = copiedTxt.getFillColor();
+            Paint copiedOutline = copiedTxt.getOutlineColor();
+            Text pastedTxt = new Text(copiedX, copiedY, copiedString,copiedFontSize, copiedOutline, copiedFill);
+            
+            pastedTxt.setScaleX(copiedTxt.getScaleX());
+            pastedTxt.setScaleY(copiedTxt.getScaleY());
+            pastedTxt.setRotate(copiedTxt.getRotate());
+            pastedTxt.setOnMouseClicked(e -> {  //make the pasted shape selectable
+                this.drawingPane.selectShape((Shape) e.getSource());
+            });
+            this.drawingPane.getChildren().add(pastedTxt);  //add the copy to the drawingPane
+            this.pastedShape = pastedTxt; //save the pastedShape to use it in undo operation
+            
         } else if (copiedShape instanceof Polygon) {
             Polygon copiedPolygon = (Polygon) copiedShape;
             

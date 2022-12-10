@@ -21,6 +21,7 @@ import shape.Ellipse;
 import shape.Line;
 import shape.Polygon;
 import shape.Rectangle;
+import shape.Text;
 
 /**
  *
@@ -144,6 +145,12 @@ public class SelectionManager {
                         moveBordersGroup(bordersGroup, deltaX, deltaY);
                         xEndingPoint = event.getX();
                         yEndingPoint = event.getY();
+                    } else if (selectedShape.getClass() == Text.class){
+                        Text text = (Text) selectedShape;
+                        text.moveOf(deltaX, deltaY);
+                        moveBordersGroup(bordersGroup, deltaX, deltaY);
+                        xEndingPoint = event.getX();
+                        yEndingPoint = event.getY();
                     } else if (selectedShape.getClass() == Polygon.class) {
                         Polygon polygon = (Polygon) selectedShape;
                         polygon.moveOf(deltaX, deltaY);
@@ -173,6 +180,9 @@ public class SelectionManager {
                 } else if (selectedShape.getClass() == Ellipse.class) {
                     Ellipse ellipse = (Ellipse) selectedShape;
                     ellipse.moveOf(-totalDeltaX, -totalDeltaY);
+                } else if (selectedShape.getClass() == Text.class){
+                    Text text = (Text) selectedShape;
+                    text.moveOf(-totalDeltaX, -totalDeltaY);
                 } else if (selectedShape.getClass() == Polygon.class) {
                     Polygon polygon = (Polygon) selectedShape;
                     polygon.moveOf(-totalDeltaX, -totalDeltaY);
