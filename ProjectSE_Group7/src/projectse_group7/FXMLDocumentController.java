@@ -23,7 +23,6 @@ import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
@@ -32,7 +31,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Shape;
@@ -347,6 +345,22 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private void zoomOut(ActionEvent event) {
         ZoomManager.zoomOut(drawingPane);
+    }
+
+    /**
+     * Method to show information about how to draw a polygon.
+     *
+     * @param event
+     */
+    @FXML
+    private void help(ActionEvent event) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Help");
+        alert.setHeaderText("How to draw a polygon");
+        alert.setContentText("If you want to draw a polygon, select the appropriate toggle button in the \"shape selection section\"."
+                + " After that, click on the drawing pad to insert a vertex of the polygon until you're done. "
+                + "When you're satisfied, click the right mouse button to finish drawing. Note that by inserting only two vertices, the figure will not be inserted.");
+        alert.showAndWait();
     }
 
 }

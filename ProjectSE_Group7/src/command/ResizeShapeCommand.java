@@ -2,7 +2,6 @@ package command;
 
 import java.util.ArrayList;
 import javafx.collections.ObservableList;
-import javafx.geometry.Bounds;
 import javafx.scene.shape.Shape;
 import shape.Border;
 import shape.Ellipse;
@@ -32,6 +31,12 @@ public class ResizeShapeCommand implements Command {
 
     private ArrayList<Double> oldPoints;
 
+    /**
+     * Constructor of ResizeShapeCommand class.
+     *
+     * @param selectedShape the selected shape
+     * @param border the border of the selected shape
+     */
     public ResizeShapeCommand(Shape selectedShape, Border border) {
         this.selectedShape = selectedShape;
         this.border = border;
