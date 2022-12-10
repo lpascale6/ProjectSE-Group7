@@ -19,6 +19,11 @@ public class PasteShapeCommand implements Command {
     DrawingPane drawingPane;
     Shape pastedShape;  //shape this command has pasted, needed for undoing paste
 
+    /**
+     * Constructor of PasteShapeCommand class.
+     *
+     * @param drawingPane the drawing pane in which paste the shape.
+     */
     public PasteShapeCommand(DrawingPane drawingPane) {
         this.drawingPane = drawingPane;
     }

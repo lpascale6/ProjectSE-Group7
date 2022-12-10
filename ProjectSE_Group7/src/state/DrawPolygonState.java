@@ -16,6 +16,10 @@ public class DrawPolygonState implements DrawState {
     private Invoker invoker;
     private Polygon creatingPolygon;
 
+    /**
+     * Constructor method of DrawPolygonState.
+     * @param drawingPane 
+     */
     public DrawPolygonState(DrawingPane drawingPane) {
         this.drawingPane = drawingPane;
         this.invoker = Invoker.getInstance();

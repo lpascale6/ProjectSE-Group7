@@ -55,6 +55,10 @@ public class Invoker {
         this.commands.clear();
     }
     
+    /**
+     * Returns the stack.
+     * @return the commands stack.
+     */
     public Stack<Command> getStack(){
         return this.commands;
     }

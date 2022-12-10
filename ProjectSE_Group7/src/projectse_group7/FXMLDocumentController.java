@@ -21,7 +21,6 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Slider;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
@@ -29,7 +28,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Shape;
@@ -82,8 +80,6 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private Slider gridSlider;
     @FXML
-    private BorderPane borderPane;
-    @FXML
     private Button zoomIn;
     @FXML
     private Button zoomOut;
@@ -95,8 +91,6 @@ public class FXMLDocumentController implements Initializable {
     private MenuItem loadMenuItem;
     @FXML
     private MenuItem newDrawingMenuItem;
-    @FXML
-    private ScrollPane scrollPane;
     @FXML
     private Label zoomLabel;
 

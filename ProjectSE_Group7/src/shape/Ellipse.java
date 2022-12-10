@@ -206,6 +206,11 @@ public class Ellipse extends javafx.scene.shape.Ellipse {
                 + this.getScaleX() + ";" +this.getScaleY() + ";" + this.getRotate();
     }
 
+    /**
+     * Function that returns a hexadecimal representation of a Color object
+     * @param color Input Color object.
+     * @return 
+     */
     private static String toHexString(Color color) {
         int r = ((int) Math.round(color.getRed() * 255));
         int g = ((int) Math.round(color.getGreen() * 255));

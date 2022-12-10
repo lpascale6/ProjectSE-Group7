@@ -116,8 +116,6 @@ public class SelectionManager {
 
         border.setOnMouseDragged(event -> {
             if (selectShapeToggleButton.isSelected() && isMoving) {
-                double x = event.getX();
-                double y = event.getY();
                 double deltaX = event.getX() - xEndingPoint;
                 double deltaY = event.getY() - yEndingPoint;
 
@@ -226,7 +224,6 @@ public class SelectionManager {
 
         drawingPane.setTopBorder(topBorder);
 
-        double xPosition = border.getRectangleX();
         double yPosition = border.getRectangleY();
         double startingHeight = border.getRectangleHeight();
 
@@ -293,9 +290,7 @@ public class SelectionManager {
 
         drawingPane.setBottomBorder(bottomBorder);
 
-        double xPosition = border.getRectangleX() + border.getRectangleWidth();
         double yPosition = border.getRectangleY() + border.getRectangleHeight();
-        double startingWidth = border.getRectangleWidth();
         double startingHeight = border.getRectangleHeight();
 
         // topleft corner event handlers
@@ -360,7 +355,6 @@ public class SelectionManager {
         drawingPane.setRightBorder(rightBorder);
 
         double xPosition = border.getRectangleX() + border.getRectangleWidth();
-        double yPosition = border.getRectangleY() + border.getRectangleHeight();
         double startingWidth = border.getRectangleWidth();
 
         // topleft corner event handlers
@@ -425,7 +419,6 @@ public class SelectionManager {
         drawingPane.setLeftBorder(leftBorder);
 
         double xPosition = border.getRectangleX();
-        double yPosition = border.getRectangleY() + border.getRectangleHeight();
         double startingWidth = border.getRectangleWidth();
 
         // topleft corner event handlers

@@ -18,6 +18,10 @@ public class DrawRectangleState implements DrawState {
     private double xStartPoint;
     private double yStartPoint;
 
+    /**
+     * Constructor method of DrawRectangleState.
+     * @param drawingPane 
+     */
     public DrawRectangleState(DrawingPane drawingPane) {
         this.drawingPane = drawingPane;
         invoker = Invoker.getInstance();

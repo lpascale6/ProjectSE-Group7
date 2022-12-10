@@ -171,11 +171,9 @@ public class Line extends javafx.scene.shape.Line {
     }
 
     /**
-     * method that takes a Color and returns a string with the corresponding Hex
-     * representation.
-     *
-     * @param color the color to get the hex representation for.
-     * @return
+     * Function that returns a hexadecimal representation of a Color object
+     * @param color Input Color object.
+     * @return 
      */
     private static String toHexString(Color color) {
         int r = ((int) Math.round(color.getRed() * 255));

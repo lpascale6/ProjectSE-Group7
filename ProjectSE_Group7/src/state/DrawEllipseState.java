@@ -18,6 +18,10 @@ public class DrawEllipseState implements DrawState {
     private double xStartPoint;
     private double yStartPoint;
 
+    /**
+     * Constructor method of DrawEllipseState.
+     * @param drawingPane 
+     */
     public DrawEllipseState(DrawingPane drawingPane) {
         this.drawingPane = drawingPane;
         invoker = Invoker.getInstance();

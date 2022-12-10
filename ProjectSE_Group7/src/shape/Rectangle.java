@@ -179,9 +179,8 @@ public class Rectangle extends javafx.scene.shape.Rectangle {
 
     /**
      * Function that returns a hexadecimal representation of a Color object
-     *
      * @param color Input Color object.
-     * @return
+     * @return 
      */
     private static String toHexString(Color color) {
         int r = ((int) Math.round(color.getRed() * 255));

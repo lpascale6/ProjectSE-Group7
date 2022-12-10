@@ -1,18 +1,14 @@
 package gui;
 
 import command.*;
-import java.util.HashSet;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.Set;
 import javafx.beans.property.DoubleProperty;
 import javafx.scene.paint.*;
 import javafx.scene.*;
 import javafx.scene.control.*;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Pane;

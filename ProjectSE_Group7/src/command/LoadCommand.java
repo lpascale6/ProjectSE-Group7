@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
-import javafx.scene.layout.Pane;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Shape;
 import shape.Ellipse;
@@ -166,7 +165,6 @@ public class LoadCommand implements Command {
      */
     @Override
     public void undo() throws Exception {
-        return;
     }
 
 }

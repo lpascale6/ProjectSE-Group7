@@ -16,6 +16,10 @@ public class DrawLineState implements DrawState {
     private Invoker invoker;
     private Line creatingLine;
 
+    /**
+     * Constructor method of DrawLineState.
+     * @param drawingPane 
+     */
     public DrawLineState(DrawingPane drawingPane) {
         this.drawingPane = drawingPane;
         invoker = Invoker.getInstance();

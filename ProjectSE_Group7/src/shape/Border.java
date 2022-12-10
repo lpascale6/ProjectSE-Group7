@@ -4,7 +4,7 @@ import javafx.scene.paint.Color;
 
 /**
  *
- * @author group7s
+ * @author group7
  */
 public class Border extends Rectangle{
     
