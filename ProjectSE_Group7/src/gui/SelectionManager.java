@@ -55,6 +55,8 @@ public class SelectionManager {
         drawingPane.setSelectedShape(shapeToSelect);
 
         selectedShape = drawingPane.getSelectedShape();
+        drawingPane.setOldSelectedShapeRotation(selectedShape.getRotate());
+        selectedShape.setRotate(0);
 
         drawingPane.setOutlineColorImage((Color) selectedShape.getStroke());
         drawingPane.setOutlineColor((Color) selectedShape.getStroke());
@@ -814,6 +816,7 @@ public class SelectionManager {
      */
     public static void deselectShape(DrawingPane drawingPane, Shape selectedShape) {
         if (drawingPane.getSelectedShape() != null) {
+            selectedShape.setRotate(drawingPane.getOldSelectedShapeRotation());
             drawingPane.setSelectedShape(null);
             drawingPane.getChildren().remove(drawingPane.getBordersGroup());
             drawingPane.setShapeBorder(null);

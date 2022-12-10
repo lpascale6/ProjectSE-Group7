@@ -52,6 +52,7 @@ public class DrawingPane extends Pane {
 
     SimpleBooleanProperty isShapeSelected;
     private Shape selectedShape;
+    private double oldSelectedShapeRotation;
 
     SimpleBooleanProperty isShapeCopied;
     private Shape copiedShape = null;
@@ -236,7 +237,8 @@ public class DrawingPane extends Pane {
                 double angle = Double.parseDouble(result.get());
                 RotateShapeCommand rotateShapeCommand = new RotateShapeCommand(this.selectedShape, angle);
                 invoker.execute(rotateShapeCommand);
-                SelectionManager.selectShape(this, selectedShape);
+                setOldSelectedShapeRotation(selectedShape.getRotate());
+                SelectionManager.deselectShape(this, selectedShape);
             } catch (NoSuchElementException noSuchElementException) {
             } catch (Exception exception) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -698,18 +700,36 @@ public class DrawingPane extends Pane {
     }
 
     /**
-     * Sets the copied shape attribute to the one passed as argument.
+     * Sets the selected shape attribute to the one passed as argument.
      *
      * @param shape The new selected shape.
      */
     public void setSelectedShape(Shape shape) {
         selectedShape = shape;
     }
+    
+    /**
+     * Returns the value of oldSelectedShapeRotation.
+     *
+     * @return The value of oldSelectedShapeRotation.
+     */
+    public double getOldSelectedShapeRotation() {
+        return this.oldSelectedShapeRotation;
+    }
+
+    /**
+     * Sets the value shape of oldSelectedShapeRotation.
+     *
+     * @param value The new value.
+     */
+    public void setOldSelectedShapeRotation(double value) {
+        oldSelectedShapeRotation = value;
+    }
 
     /**
      * Sets the value of isShapeSelected to the value passed as argument.
      *
-     * @param bool The value to set.
+     * @param value The value to set.
      */
     public void setIsShapeSelected(boolean value) {
         this.isShapeSelected.set(value);
