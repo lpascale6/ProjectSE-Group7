@@ -35,24 +35,31 @@ public class ZoomManager {
         ZoomManager.setDrawingPaneHeight(drawingPane.getPrefHeight());
         zoomLabel.textProperty().bind(zoomString);
         anchorPane.setOnScroll(event -> {
-            if (scale.get() > 1.0) {
-                if (event.isShiftDown()) {
-                    // horizontal scroll
-                    if (event.getDeltaX() > 0) {
-                        horizontalScrollBar.decrement();
+            if (event.isControlDown()) {
+                if (event.getDeltaY() > 0) {
+                            ZoomManager.zoomIn(drawingPane);
+                        } else {
+                            ZoomManager.zoomOut(drawingPane);
+                        }
+            } else {
+                if (scale.get() > 1.0) {
+                    if (event.isShiftDown()) {
+                        // horizontal scroll
+                        if (event.getDeltaX() > 0) {
+                            horizontalScrollBar.decrement();
+                        } else {
+                            horizontalScrollBar.increment();
+                        }
                     } else {
-                        horizontalScrollBar.increment();
-                    }
-                } else {
-                    // vertical scroll
-                    if (event.getDeltaY() > 0) {
-                        verticalScrollBar.decrement();
-                    } else {
-                        verticalScrollBar.increment();
+                        // vertical scroll
+                        if (event.getDeltaY() > 0) {
+                            verticalScrollBar.decrement();
+                        } else {
+                            verticalScrollBar.increment();
+                        }
                     }
                 }
             }
-
         });
 
         // setting up horizontal scroll bar
@@ -116,7 +123,7 @@ public class ZoomManager {
             // updating scaleValue
             scaleValue += 0.1;
             scale.set(scaleValue);
-            zoomString.set("Zoom: " + (int)(scaleValue * 100) + "%");
+            zoomString.set("Zoom: " + (int) (scaleValue * 100) + "%");
 
             // updating horizontal scroll bar
             horizontalScrollBar.setUnitIncrement(drawingPaneWidth / 10);
@@ -148,7 +155,7 @@ public class ZoomManager {
             // updating scaleValue
             scaleValue -= 0.1;
             scale.set(scaleValue);
-            zoomString.set("Zoom: " + (int)(scaleValue * 100) + "%");
+            zoomString.set("Zoom: " + (int) (scaleValue * 100) + "%");
 
             // getting old values to zoom where focused
             double horizontalOldValue = horizontalScrollBar.getValue() / scaleValue;
