@@ -31,6 +31,12 @@ public class DrawingPane extends Pane {
     private boolean isDrawingAPolygon = false;
     private double xStartPoint;
     private double yStartPoint;
+    
+    private String textStartString = "text";
+    private Double textStartSize = 30.0;
+    TextInputDialog textInput = new TextInputDialog("enter text here");
+    TextInputDialog textSizeInput = new TextInputDialog("30");
+    
     public final static double strokeWidth = 3;
 
     private Color selectedOutlineColor = Color.BLACK;
@@ -139,8 +145,36 @@ public class DrawingPane extends Pane {
             deselectShape();
         });
 
+         // setting up text toggle button
         this.textToggleButton = textToggleButton;
         this.textToggleButton.setOnAction(event -> {
+        textInput.setHeaderText("Enter any text");
+        textSizeInput.setHeaderText("Enter any size");
+        
+        textInput.showAndWait();
+        textSizeInput.showAndWait();
+        textStartString = textInput.getEditor().getText();
+        
+        try{
+        textStartSize = Double.parseDouble(textSizeInput.getEditor().getText());
+        } catch (Exception ex){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Invalid size");
+                alert.setHeaderText("Error");
+                alert.setContentText("The size must be numeric.\n(Size has been set to default value.)");
+                alert.showAndWait();
+        }
+        if (textStartSize < 0){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Invalid size");
+                alert.setHeaderText("Error");
+                alert.setContentText("The size must be a positive number.\n(The entered size has been made positive.)");
+                alert.showAndWait();
+                textStartSize *= -1;
+                
+        }
+        
+        drawState = new DrawTextState(this);
             checkPolygonCreation();
             deselectShape();
         });
@@ -299,7 +333,7 @@ public class DrawingPane extends Pane {
         this.setOnMousePressed(event -> {
             if (event.isPrimaryButtonDown()) {
                 // starts to draw only if a shape toggle button is selected
-                if (lineToggleButton.isSelected() || rectangleToggleButton.isSelected() || ellipseToggleButton.isSelected()) {
+                if (lineToggleButton.isSelected() || rectangleToggleButton.isSelected() || ellipseToggleButton.isSelected() || textToggleButton.isSelected()) {
                     if (event.isSecondaryButtonDown()) {
                         try {
                             invoker.undo();
@@ -312,7 +346,8 @@ public class DrawingPane extends Pane {
                     xStartPoint = event.getX();
                     yStartPoint = event.getY();
 
-                    drawState.startDrawing(xStartPoint, yStartPoint, selectedOutlineColor, selectedFillColor);
+                    drawState.startDrawing(xStartPoint, yStartPoint, selectedOutlineColor, selectedFillColor, textStartString, textStartSize);
+                   
                 } else if (polygonToggleButton.isSelected()) {
                     isDrawingAPolygon = true;
                     double x = event.getX();
@@ -322,7 +357,8 @@ public class DrawingPane extends Pane {
                         drawState.draw(x, y);
                     } else {
                         isDrawing = true;
-                        drawState.startDrawing(x, y, selectedOutlineColor, selectedFillColor);
+                        drawState.startDrawing(x, y, selectedOutlineColor, selectedFillColor, textStartString, textStartSize);
+                  
                     }
 
                 } else if (selectShapeToggleButton.isSelected()) {
