@@ -3,6 +3,7 @@ package gui;
 import command.*;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.function.UnaryOperator;
 import javafx.beans.property.DoubleProperty;
 import javafx.scene.paint.*;
 import javafx.scene.*;
@@ -107,6 +108,19 @@ public class DrawingPane extends Pane {
         this.invoker = invoker;
 
         this.textTextField = textTextField;
+
+        // using a filter to avoid the insert of semicolon character
+        UnaryOperator<TextFormatter.Change> filter = c -> {
+            if (!c.getText().matches("[;]")) {
+                c.setText(c.getText());
+                return c;
+            } else if (c.getText().isEmpty()) {
+                return c;
+            }
+            return null;
+        };
+        textTextField.setTextFormatter(new TextFormatter<String>(filter));
+
         this.fontDimensionComboBox = fontDimensionComboBox;
 
         // setting up line toggle button
@@ -133,11 +147,13 @@ public class DrawingPane extends Pane {
             deselectShape();
         });
 
+        // setting up selectShape toggle button
         this.selectShapeToggleButton = selectShapeToggleButton;
         this.selectShapeToggleButton.setOnAction(event -> {
             checkPolygonCreation();
         });
 
+        // setting up polygon toggle button
         this.polygonToggleButton = polygonToggleButton;
         this.polygonToggleButton.setOnAction(event -> {
             drawState = new DrawPolygonState(this);
@@ -148,7 +164,6 @@ public class DrawingPane extends Pane {
         // setting up text toggle button
         this.textToggleButton = textToggleButton;
         this.textToggleButton.setOnAction(event -> {
-
             drawState = new DrawTextState(this);
             checkPolygonCreation();
             deselectShape();
@@ -480,7 +495,6 @@ public class DrawingPane extends Pane {
         }
     }
 
-    // ----- getters and setters -----
     /**
      * Sets the selectedOutlineColor to the new color passed as argument.
      *
@@ -742,7 +756,6 @@ public class DrawingPane extends Pane {
         this.isShapeSelected.set(value);
     }
 
-    // ----- copiedShape getter and setter -----
     /**
      * Returns the copied shape.
      *
@@ -761,7 +774,6 @@ public class DrawingPane extends Pane {
         this.copiedShape = copiedShape;
     }
 
-    // ----- isShapeCopied getter and setter -----
     /**
      * Returns the value of isShapeCopied.
      *
