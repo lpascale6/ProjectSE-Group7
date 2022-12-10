@@ -21,10 +21,10 @@ public class ProjectSE_Group7 extends Application {
         
         stage.setScene(scene);
         stage.setTitle("Shape Draw Editor");
-        stage.setMinWidth(1200);
-        stage.setMinHeight(800);
+        //stage.setMinWidth(1200);
+        //stage.setMinHeight(800);
         stage.getIcons().add(new Image("images/applicationLogo.png"));
-        //stage.setResizable(false);
+        stage.setResizable(false);
         stage.show();
     }
 

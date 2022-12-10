@@ -40,9 +40,9 @@
               <menus>
                 <Menu mnemonicParsing="false" text="File">
                   <items>
-                    <MenuItem mnemonicParsing="false" onAction="#saveDrawing" text="Save as..." />
-                        <MenuItem mnemonicParsing="false" onAction="#loadDrawing" text="Load from..." />
-                        <MenuItem mnemonicParsing="false" onAction="#newDrawing" text="New drawing" />
+                    <MenuItem fx:id="saveMenuItem" mnemonicParsing="false" onAction="#saveDrawing" text="Save as..." />
+                        <MenuItem fx:id="loadMenuItem" mnemonicParsing="false" onAction="#loadDrawing" text="Load from..." />
+                        <MenuItem fx:id="newDrawingMenuItem" mnemonicParsing="false" onAction="#newDrawing" text="New drawing" />
                   </items>
                 </Menu>
                   <Menu mnemonicParsing="false" text="Edit">
@@ -323,7 +323,10 @@
       </VBox>
    </top>
    <center>
-      <ScrollPane fx:id="scrollPane" BorderPane.alignment="CENTER">
+      <ScrollPane fx:id="scrollPane" hbarPolicy="NEVER" vbarPolicy="NEVER" BorderPane.alignment="CENTER">
+        <content>
+          <AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" />
+        </content>
          <padding>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </padding>

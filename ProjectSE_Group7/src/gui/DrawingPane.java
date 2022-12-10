@@ -152,7 +152,7 @@ public class DrawingPane extends Pane {
         this.fillColorImage = fillColorImage;
 
         // setting up drawing pane style
-        this.setPrefSize(2048, 1024);
+        this.setPrefSize(1190, 625);
         this.scaleXProperty().bind(scale);
         this.scaleYProperty().bind(scale);
         this.setBackground(new Background(backgroundFill1));

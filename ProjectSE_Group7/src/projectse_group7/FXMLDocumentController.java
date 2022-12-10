@@ -10,13 +10,10 @@ import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import javafx.beans.property.DoubleProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Insets;
-import javafx.scene.SnapshotParameters;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -27,18 +24,14 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Slider;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
-import javafx.scene.control.Tooltip;
-import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Shape;
-import javafx.scene.transform.Scale;
 import javafx.stage.FileChooser;
 
 /**
@@ -51,8 +44,6 @@ public class FXMLDocumentController implements Initializable {
     private Invoker invoker;
     @FXML
     private MenuBar menuBar;
-    @FXML
-    private ScrollPane scrollPane;
 
     // toggle group variable, useful for selecting only 
     // one toggle button at a time
@@ -95,6 +86,16 @@ public class FXMLDocumentController implements Initializable {
     private Button zoomIn;
     @FXML
     private Button zoomOut;
+    @FXML
+    private AnchorPane anchorPane;
+    @FXML
+    private MenuItem saveMenuItem;
+    @FXML
+    private MenuItem loadMenuItem;
+    @FXML
+    private MenuItem newDrawingMenuItem;
+    @FXML
+    private ScrollPane scrollPane;
 
     /**
      * Sets up all the toggle buttons in the "Shape selection" section by
@@ -166,10 +167,23 @@ public class FXMLDocumentController implements Initializable {
         gridSlider.valueProperty().addListener((v, o, n) -> {
             GridManager.updateGrid(drawingPane, gridSlider, gridCheckBox);
         });
-        scrollPane.setContent(drawingPane);
-
+        anchorPane.getChildren().add(drawingPane);
+        
+        ZoomManager.setupZoomManager(anchorPane, drawingPane);
+        DoubleProperty scale = ZoomManager.getScale();
+        zoomIn.disableProperty().bind(scale.greaterThanOrEqualTo(2.0));
+        zoomOut.disableProperty().bind(scale.lessThanOrEqualTo(0.7));
+        
+        
         // to abilitate the user to use ctrl+z shortcut
         undoMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.Z, KeyCombination.CONTROL_DOWN));
+        // to abilitate the user to use ctrl+s shortcut
+        saveMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN));
+        // to abilitate the user to use ctrl+l shortcut
+        loadMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.L, KeyCombination.CONTROL_DOWN));
+        // to abilitate the user to use ctrl+n shortcut
+        newDrawingMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.N, KeyCombination.CONTROL_DOWN));
+        
 
         // setting up all toggle buttons
         setupShapeToggleButtons();
