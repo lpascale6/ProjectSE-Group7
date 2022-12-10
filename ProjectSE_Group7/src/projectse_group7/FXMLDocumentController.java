@@ -97,11 +97,15 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private MenuItem newDrawingMenuItem;
     @FXML
+    private MenuItem helpMenuItem;
+
+    @FXML
     private Label zoomLabel;
     @FXML
     private TextField textTextField;
     @FXML
     private ChoiceBox<Integer> fontDimensionChoiceBox;
+    
 
     private void setupChoiceBox() {
         for (int i = 8; i <= 24; i++) {
@@ -199,6 +203,8 @@ public class FXMLDocumentController implements Initializable {
         loadMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.L, KeyCombination.CONTROL_DOWN));
         // to abilitate the user to use ctrl+n shortcut
         newDrawingMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.N, KeyCombination.CONTROL_DOWN));
+        // to abilitate the user to use ctrl+h shortcut
+        helpMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.H, KeyCombination.CONTROL_DOWN));
 
         // setting up all toggle buttons
         setupShapeToggleButtons();

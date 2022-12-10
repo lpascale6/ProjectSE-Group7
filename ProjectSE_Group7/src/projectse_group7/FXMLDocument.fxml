@@ -50,6 +50,11 @@
                       <MenuItem fx:id="undoMenuItem" mnemonicParsing="false" onAction="#undo" text="Undo" />
                      </items>
                   </Menu>
+                  <Menu mnemonicParsing="false" text="Help">
+                    <items>
+                      <MenuItem fx:id="helpMenuItem" mnemonicParsing="false" onAction="#help" text="How to draw a polygon" />
+                    </items>
+                  </Menu>
               </menus>
             </MenuBar>
             <ToolBar maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
@@ -140,13 +145,13 @@
                            </HBox.margin>
                         </TitledPane>
                         <Separator orientation="VERTICAL" />
-                        <TitledPane alignment="CENTER" animated="false" collapsible="false" prefHeight="130.0" prefWidth="220.0" text="Colors">
+                        <TitledPane alignment="CENTER" animated="false" collapsible="false" prefHeight="130.0" prefWidth="230.0" text="Colors">
                           <content>
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                  <children>
-                                    <HBox maxWidth="1.7976931348623157E308" prefHeight="100.0" spacing="4.0">
+                                    <HBox maxWidth="1.7976931348623157E308" prefHeight="100.0" spacing="5.0">
                                        <children>
-                                          <VBox prefHeight="200.0" prefWidth="100.0" spacing="2.0">
+                                          <VBox prefHeight="200.0" spacing="2.0">
                                              <children>
                                                 <Label text="Outline Color" />
                                                 <ToggleButton fx:id="outlineColorToggleButton" mnemonicParsing="false" prefHeight="30.0" prefWidth="50.0" selected="true">
@@ -165,7 +170,7 @@
                                                 <Insets left="5.0" />
                                              </padding>
                                           </VBox>
-                                          <Separator orientation="VERTICAL" prefHeight="200.0" />
+                                          <Separator orientation="VERTICAL" />
                                           <VBox spacing="2.0">
                                              <children>
                                                 <Label text="Selected color" />
