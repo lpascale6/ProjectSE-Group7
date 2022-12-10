@@ -418,6 +418,10 @@ public class FXMLDocumentController implements Initializable {
         ZoomManager.zoomOut(drawingPane);
     }
     
+    /**
+     * Method to show information about how to draw a polygon.
+     * @param event 
+     */
     @FXML
     private void help(ActionEvent event) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
