@@ -7,6 +7,7 @@ import javafx.scene.control.ScrollBar;
 import javafx.scene.layout.AnchorPane;
 
 /**
+ * Class ZoomManager, for zoom functionalities.
  *
  * @author group7
  */
@@ -18,6 +19,12 @@ public class ZoomManager {
     private static ScrollBar horizontalScrollBar;
     private static ScrollBar verticalScrollBar;
 
+    /**
+     * Sets up all the needed variables for zoom.
+     *
+     * @param anchorPane The anchor pane in which insert scroll bars.
+     * @param drawingPane The drawing pane on which the user draws.
+     */
     public static void setupZoomManager(AnchorPane anchorPane, DrawingPane drawingPane) {
         ZoomManager.setDrawingPaneWidth(drawingPane.getPrefWidth());
         ZoomManager.setDrawingPaneHeight(drawingPane.getPrefHeight());
@@ -43,8 +50,6 @@ public class ZoomManager {
 
         });
 
-        // - drawing pane / scale
-        // 
         // setting up horizontal scroll bar
         horizontalScrollBar = new ScrollBar();
         // setting up style
@@ -63,17 +68,20 @@ public class ZoomManager {
             drawingPane.setTranslateX(-newValue.doubleValue());
         });
 
+        // setting up vertical scroll bar 
         verticalScrollBar = new ScrollBar();
+        // setting up style
         verticalScrollBar.setPrefSize(20, 605);
         verticalScrollBar.visibleProperty().bind(scale.greaterThan(1.0));
         verticalScrollBar.setOrientation(Orientation.VERTICAL);
-
         verticalScrollBar.setLayoutX(drawingPaneWidth - verticalScrollBar.getPrefWidth());
-        verticalScrollBar.setUnitIncrement(1);
 
+        verticalScrollBar.setVisibleAmount(drawingPaneHeight / scale.get());
+        verticalScrollBar.setUnitIncrement(10);
         verticalScrollBar.setMin(0);
         verticalScrollBar.setMax(drawingPaneHeight);
         verticalScrollBar.setValue(0);
+
         verticalScrollBar.valueProperty().addListener((observable, oldValue, newValue) -> {
             drawingPane.setTranslateY(-newValue.doubleValue());
         });
@@ -94,16 +102,16 @@ public class ZoomManager {
      */
     public static void zoomIn(DrawingPane drawingPane) {
         double scaleValue = scale.get();
-        
+
         if (scaleValue < 2.0) {
             // getting old values to zoom where focused
             double horizontalOldValue = horizontalScrollBar.getValue() / scaleValue;
             double verticalOldValue = verticalScrollBar.getValue() / scaleValue;
-            
+
             // updating scaleValue
             scaleValue += 0.1;
             scale.set(scaleValue);
-            
+
             // updating horizontal scroll bar
             horizontalScrollBar.setUnitIncrement(drawingPaneWidth / 10);
             horizontalScrollBar.setVisibleAmount((drawingPaneWidth / 2) / scale.get());
@@ -130,15 +138,15 @@ public class ZoomManager {
         double scaleValue = scale.get();
 
         if (scaleValue > 0.7) {
-            
+
             // updating scaleValue
             scaleValue -= 0.1;
             scale.set(scaleValue);
-            
+
             // getting old values to zoom where focused
             double horizontalOldValue = horizontalScrollBar.getValue() / scaleValue;
             double verticalOldValue = verticalScrollBar.getValue() / scaleValue;
-            
+
             // updating horizontal scroll bar
             horizontalScrollBar.setUnitIncrement(drawingPaneWidth / 10);
             horizontalScrollBar.setVisibleAmount((drawingPaneWidth / 2) / scale.get());
@@ -152,7 +160,8 @@ public class ZoomManager {
             verticalScrollBar.setMax(drawingPaneHeight / 2 * scaleValue);
             verticalScrollBar.setMin(-drawingPaneHeight / 2 * scaleValue);
             verticalScrollBar.setValue(verticalOldValue * scaleValue);
-            
+
+            // resets the positioning if no zoom
             if (scaleValue == 1.0) {
                 drawingPane.setTranslateX(0.0);
                 drawingPane.setTranslateY(0.0);
@@ -163,29 +172,60 @@ public class ZoomManager {
 
     }
 
+    /**
+     * Gets the value of scale attribute.
+     *
+     * @return The value of scale attribute.
+     */
     public static DoubleProperty getScale() {
         return scale;
     }
 
+    /**
+     * Sets the value of scale attribute to the one passed as argument.
+     *
+     * @param scale New value of scale.
+     */
     public static void setScale(DoubleProperty scale) {
         ZoomManager.scale = scale;
     }
 
+    /**
+     * Gets the value of drawingPaneWidth attribute.
+     *
+     * @return The value of drawingPaneWidth attribute.
+     */
     public static double getDrawingPaneWidth() {
         return drawingPaneWidth;
     }
 
+    /**
+     * Sets the value of drawingPaneWidth attribute to the one passed as
+     * argument.
+     *
+     * @param drawingPaneWidth New value of drawingPaneWidth.
+     */
     public static void setDrawingPaneWidth(double drawingPaneWidth) {
         ZoomManager.drawingPaneWidth = drawingPaneWidth;
     }
 
+    /**
+     * Gets the value of drawingPaneHeight attribute.
+     *
+     * @return The value of drawingPaneWidth attribute.
+     */
     public static double getDrawingPaneHeight() {
         return drawingPaneHeight;
     }
 
+    /**
+     * Sets the value of drawingPaneHeight attribute to the one passed as
+     * argument.
+     *
+     * @param drawingPaneHeight New value of drawingPaneHeight.
+     */
     public static void setDrawingPaneHeight(double drawingPaneHeight) {
         ZoomManager.drawingPaneHeight = drawingPaneHeight;
-
     }
 
 }

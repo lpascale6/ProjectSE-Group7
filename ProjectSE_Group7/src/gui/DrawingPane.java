@@ -803,7 +803,7 @@ public class DrawingPane extends Pane {
     /**
      * Sets the value of gridSize to the value passed as argument.
      *
-     * @param double The value to set.
+     * @param gridSize The value to set.
      */
     public void setGridSize(double gridSize) {
         this.gridSize = gridSize;
