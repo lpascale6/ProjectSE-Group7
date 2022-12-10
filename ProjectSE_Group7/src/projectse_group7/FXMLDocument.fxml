@@ -260,7 +260,7 @@
                                  <children>
                                     <HBox layoutX="19.6" layoutY="19.6" prefHeight="90.0" prefWidth="280.0" spacing="20.0" AnchorPane.topAnchor="0.4000000000000057">
                                        <children>
-                                          <VBox alignment="CENTER_LEFT" spacing="10.0">
+                                          <VBox alignment="CENTER_LEFT" spacing="20.0">
                                              <children>
                                                 <CheckBox fx:id="gridCheckBox" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" text="Grid">
                                                    <VBox.margin>
@@ -270,37 +270,45 @@
                                                       <Tooltip text="Show Grid" />
                                                    </tooltip>
                                                 </CheckBox>
-                                                <Slider fx:id="gridSlider" blockIncrement="5.0" disable="true" majorTickUnit="35.0" max="80.0" min="10.0" minorTickCount="5" showTickMarks="true" value="45.0">
+                                                <Slider fx:id="gridSlider" blockIncrement="5.0" disable="true" majorTickUnit="35.0" max="80.0" min="10.0" minorTickCount="5" prefWidth="100.0" showTickMarks="true" value="45.0">
                                                    <tooltip>
                                                       <Tooltip text="Slide to change grid dimension" />
                                                    </tooltip>
                                                 </Slider>
                                              </children>
                                           </VBox>
+                                          <Separator orientation="VERTICAL" prefHeight="200.0" />
                                           <VBox alignment="CENTER_LEFT" layoutX="150.0" layoutY="10.0" spacing="20.0">
                                              <children>
-                                                <Button fx:id="zoomIn" mnemonicParsing="false" onAction="#zoomIn" prefHeight="30.0" prefWidth="50.0">
-                                                   <graphic>
-                                                      <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                                                         <image>
-                                                            <Image url="@../images/zoomInImage.png" />
-                                                         </image>
-                                                      </ImageView>
-                                                   </graphic>
-                                                   <tooltip>
-                                                      <Tooltip text="Zoom in" />
-                                                   </tooltip></Button>
-                                                <Button fx:id="zoomOut" mnemonicParsing="false" onAction="#zoomOut" prefHeight="30.0" prefWidth="50.0">
-                                                   <graphic>
-                                                      <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                                                         <image>
-                                                            <Image url="@../images/zoomOutImage.png" />
-                                                         </image>
-                                                      </ImageView>
-                                                   </graphic>
-                                                   <tooltip>
-                                                      <Tooltip text="Zoom out" />
-                                                   </tooltip></Button>
+                                                <Label fx:id="zoomLabel" text="Zoom: " />
+                                                <HBox spacing="10.0">
+                                                   <children>
+                                                      <Button fx:id="zoomIn" mnemonicParsing="false" onAction="#zoomIn" prefHeight="30.0" prefWidth="50.0">
+                                                         <graphic>
+                                                            <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                                               <image>
+                                                                  <Image url="@../images/zoomInImage.png" />
+                                                               </image>
+                                                            </ImageView>
+                                                         </graphic>
+                                                         <tooltip>
+                                                            <Tooltip text="Zoom in" />
+                                                         </tooltip>
+                                                      </Button>
+                                                      <Button fx:id="zoomOut" mnemonicParsing="false" onAction="#zoomOut" prefHeight="30.0" prefWidth="50.0">
+                                                         <graphic>
+                                                            <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                                               <image>
+                                                                  <Image url="@../images/zoomOutImage.png" />
+                                                               </image>
+                                                            </ImageView>
+                                                         </graphic>
+                                                         <tooltip>
+                                                            <Tooltip text="Zoom out" />
+                                                         </tooltip>
+                                                      </Button>
+                                                   </children>
+                                                </HBox>
                                              </children>
                                           </VBox>
                                        </children>
@@ -323,7 +331,7 @@
       </VBox>
    </top>
    <center>
-      <ScrollPane fx:id="scrollPane" hbarPolicy="NEVER" vbarPolicy="NEVER" BorderPane.alignment="CENTER">
+      <ScrollPane fx:id="scrollPane" BorderPane.alignment="CENTER">
         <content>
           <AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" />
         </content>

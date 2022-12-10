@@ -18,6 +18,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
@@ -96,6 +97,8 @@ public class FXMLDocumentController implements Initializable {
     private MenuItem newDrawingMenuItem;
     @FXML
     private ScrollPane scrollPane;
+    @FXML
+    private Label zoomLabel;
 
     /**
      * Sets up all the toggle buttons in the "Shape selection" section by
@@ -169,7 +172,7 @@ public class FXMLDocumentController implements Initializable {
         });
         anchorPane.getChildren().add(drawingPane);
         
-        ZoomManager.setupZoomManager(anchorPane, drawingPane);
+        ZoomManager.setupZoomManager(anchorPane, drawingPane, zoomLabel);
         DoubleProperty scale = ZoomManager.getScale();
         zoomIn.disableProperty().bind(scale.greaterThanOrEqualTo(2.0));
         zoomOut.disableProperty().bind(scale.lessThanOrEqualTo(0.7));

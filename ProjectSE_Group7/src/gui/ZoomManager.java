@@ -2,7 +2,10 @@ package gui;
 
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.geometry.Orientation;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.layout.AnchorPane;
 
@@ -14,6 +17,7 @@ import javafx.scene.layout.AnchorPane;
 public class ZoomManager {
 
     private static DoubleProperty scale = new SimpleDoubleProperty(1.0);
+    private static StringProperty zoomString = new SimpleStringProperty("Zoom: 100%");
     private static double drawingPaneWidth;
     private static double drawingPaneHeight;
     private static ScrollBar horizontalScrollBar;
@@ -25,10 +29,10 @@ public class ZoomManager {
      * @param anchorPane The anchor pane in which insert scroll bars.
      * @param drawingPane The drawing pane on which the user draws.
      */
-    public static void setupZoomManager(AnchorPane anchorPane, DrawingPane drawingPane) {
+    public static void setupZoomManager(AnchorPane anchorPane, DrawingPane drawingPane, Label zoomLabel) {
         ZoomManager.setDrawingPaneWidth(drawingPane.getPrefWidth());
         ZoomManager.setDrawingPaneHeight(drawingPane.getPrefHeight());
-
+        zoomLabel.textProperty().bind(zoomString);
         anchorPane.setOnScroll(event -> {
             if (scale.get() > 1.0) {
                 if (event.isShiftDown()) {
@@ -111,6 +115,7 @@ public class ZoomManager {
             // updating scaleValue
             scaleValue += 0.1;
             scale.set(scaleValue);
+            zoomString.set("Zoom: " + (int)(scaleValue * 100) + "%");
 
             // updating horizontal scroll bar
             horizontalScrollBar.setUnitIncrement(drawingPaneWidth / 10);
@@ -142,6 +147,7 @@ public class ZoomManager {
             // updating scaleValue
             scaleValue -= 0.1;
             scale.set(scaleValue);
+            zoomString.set("Zoom: " + (int)(scaleValue * 100) + "%");
 
             // getting old values to zoom where focused
             double horizontalOldValue = horizontalScrollBar.getValue() / scaleValue;
