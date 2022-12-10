@@ -58,6 +58,7 @@ public class SelectionManager {
         selectedShape = drawingPane.getSelectedShape();
         drawingPane.setOldSelectedShapeRotation(selectedShape.getRotate());
         selectedShape.setRotate(0);
+        
 
         drawingPane.setOutlineColorImage((Color) selectedShape.getStroke());
         drawingPane.setOutlineColor((Color) selectedShape.getStroke());
@@ -212,6 +213,10 @@ public class SelectionManager {
         
         bordersGroup = new Group(border, topLeftBorder, topRightBorder, bottomLeftBorder, bottomRightBorder, topBorder, bottomBorder, rightBorder, leftBorder);
         bordersGroup.setRotate(selectedShape.getRotate());
+
+        bordersGroup.setScaleX(selectedShape.getScaleX());
+        bordersGroup.setScaleY(selectedShape.getScaleY());
+
         drawingPane.setBordersGroup(bordersGroup);
         drawingPane.getChildren().add(bordersGroup);
 
@@ -806,6 +811,7 @@ public class SelectionManager {
         try {
             Invoker invoker = Invoker.getInstance();
             invoker.execute(resizeShapeCommand);
+            
         } catch (Exception ex) {
         }
 

@@ -167,8 +167,6 @@ public class ResizeShapeCommand implements Command {
             
             text.setScaleX(newScaleX);
             text.setScaleY(newScaleY);
-            text.setTextX(border.getRectangleX());
-            text.setTextY(border.getRectangleY());
            
         } else if (this.selectedShape.getClass() == Polygon.class) {
             Polygon polygon = (Polygon) this.selectedShape;

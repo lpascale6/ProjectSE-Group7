@@ -1,6 +1,7 @@
 package shape;
 
 import com.sun.javafx.sg.prism.NGShape;
+import javafx.geometry.VPos;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
@@ -16,6 +17,8 @@ public class Text extends javafx.scene.text.Text{
      */
     public Text() {
         super();
+        this.setTextOrigin(VPos.TOP);
+        
     }
 
     /**
@@ -24,6 +27,7 @@ public class Text extends javafx.scene.text.Text{
      */
     public Text(String string) {
         super(string);
+        this.setTextOrigin(VPos.TOP);
     }
 
     /**
@@ -34,6 +38,7 @@ public class Text extends javafx.scene.text.Text{
      */
     public Text(double x, double y, String string) {
         super(x, y, string);
+        this.setTextOrigin(VPos.TOP);
         
     }
     
@@ -47,6 +52,7 @@ public class Text extends javafx.scene.text.Text{
     public Text(double x, double y, String string, int fontSize){
         super(x, y, string);
         this.setTextFontSize(fontSize);
+        this.setTextOrigin(VPos.TOP);
     }
 
     /**
@@ -63,6 +69,7 @@ public class Text extends javafx.scene.text.Text{
         this.setTextFontSize(fontSize);
         this.setFillColor(fillColor);
         this.setOutlineColor(outlineColor);
+        this.setTextOrigin(VPos.TOP);
     }
     
     /**
