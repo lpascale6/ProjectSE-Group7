@@ -28,6 +28,7 @@ public class ZoomManager {
      *
      * @param anchorPane The anchor pane in which insert scroll bars.
      * @param drawingPane The drawing pane on which the user draws.
+     * @param zoomLabel Label in tools section.
      */
     public static void setupZoomManager(AnchorPane anchorPane, DrawingPane drawingPane, Label zoomLabel) {
         ZoomManager.setDrawingPaneWidth(drawingPane.getPrefWidth());

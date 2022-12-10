@@ -135,8 +135,8 @@ public class Polygon extends javafx.scene.shape.Polygon {
      */
     @Override
     public String toString() {
-        String outlineColor = toHexString((Color) this.getOutlineColor());
-        String fillColor = toHexString((Color) this.getFillColor());
+        String outlineColor = this.getOutlineColor().toString();
+        String fillColor = this.getFillColor().toString();
         String listOfPoints = "";
         for (double point : this.getPoints()) {
             listOfPoints += point + " ";
@@ -148,14 +148,5 @@ public class Polygon extends javafx.scene.shape.Polygon {
 
         // polygon;[listOfPoints];outlineColor;fillColor;scaleX;scaleY;rotation
         return "polygon;" + listOfPoints + ";" + outlineColor + ";" + fillColor + ";" + scaleX + ";" + scaleY + ";" + rotation;
-    }
-
-    private static String toHexString(Color color) {
-        int r = ((int) Math.round(color.getRed() * 255));
-        int g = ((int) Math.round(color.getGreen() * 255));
-        int b = ((int) Math.round(color.getBlue() * 255));
-
-        return String.format("#%02x%02x%02x", r, g, b).toLowerCase();
-
     }
 }

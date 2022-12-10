@@ -298,8 +298,8 @@ public class PolygonTest {
         
         String name = "polygon";
         String points = "1.0 1.0 -2.2 12.7 100.0 -11.0 0.0 0.0 -47.21 -3.2";
-        String outlineColor = "#000000";
-        String fillColor = "#ffffff";
+        String outlineColor = "0x000000ff";
+        String fillColor = "0xffffffff";
         String scaleX = "1.0";
         String scaleY = "1.0";
         String rotate = "0.0";

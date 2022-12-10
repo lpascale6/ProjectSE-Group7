@@ -18,11 +18,14 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Slider;
+import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.KeyCode;
@@ -72,6 +75,8 @@ public class FXMLDocumentController implements Initializable {
     private Circle outlineColorImage;
     @FXML
     private Circle fillColorImage;
+    @FXML
+    private ColorPicker colorPicker;
 
     // drawing variables
     private DrawingPane drawingPane;
@@ -81,8 +86,6 @@ public class FXMLDocumentController implements Initializable {
     private CheckBox gridCheckBox;
     @FXML
     private Slider gridSlider;
-    @FXML
-    private BorderPane borderPane;
     @FXML
     private Button zoomIn;
     @FXML
@@ -96,9 +99,18 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private MenuItem newDrawingMenuItem;
     @FXML
-    private ScrollPane scrollPane;
-    @FXML
     private Label zoomLabel;
+    @FXML
+    private TextField textTextField;
+    @FXML
+    private ChoiceBox<Integer> fontDimensionChoiceBox;
+
+    private void setupChoiceBox() {
+        for (int i = 8; i <= 24; i++) {
+            fontDimensionChoiceBox.getItems().add(i);
+        }
+        fontDimensionChoiceBox.getSelectionModel().select(8);
+    }
 
     /**
      * Sets up all the toggle buttons in the "Shape selection" section by
@@ -145,6 +157,10 @@ public class FXMLDocumentController implements Initializable {
      * creating a toggle group.
      */
     private void setupColorToggleButtons() {
+        colorPicker.setOnAction(event -> {
+            changeToggleButtonColor(colorPicker.getValue());
+            System.out.println(colorPicker.getValue());
+        });
         colorToggleGroup = new ToggleGroup();
         outlineColorToggleButton.setToggleGroup(colorToggleGroup);
         fillColorToggleButton.setToggleGroup(colorToggleGroup);
@@ -171,13 +187,12 @@ public class FXMLDocumentController implements Initializable {
             GridManager.updateGrid(drawingPane, gridSlider, gridCheckBox);
         });
         anchorPane.getChildren().add(drawingPane);
-        
+
         ZoomManager.setupZoomManager(anchorPane, drawingPane, zoomLabel);
         DoubleProperty scale = ZoomManager.getScale();
         zoomIn.disableProperty().bind(scale.greaterThanOrEqualTo(2.0));
         zoomOut.disableProperty().bind(scale.lessThanOrEqualTo(0.7));
-        
-        
+
         // to abilitate the user to use ctrl+z shortcut
         undoMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.Z, KeyCombination.CONTROL_DOWN));
         // to abilitate the user to use ctrl+s shortcut
@@ -186,99 +201,11 @@ public class FXMLDocumentController implements Initializable {
         loadMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.L, KeyCombination.CONTROL_DOWN));
         // to abilitate the user to use ctrl+n shortcut
         newDrawingMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.N, KeyCombination.CONTROL_DOWN));
-        
 
         // setting up all toggle buttons
         setupShapeToggleButtons();
         setupColorToggleButtons();
-    }
-
-    /**
-     * Changes the selected toggle button color to black and updates the
-     * selected color variable.
-     *
-     * @param event The event created when the button is clicked.
-     */
-    @FXML
-    private void setBlackColor(ActionEvent event) {
-        changeToggleButtonColor(Color.BLACK);
-    }
-
-    /**
-     * Changes the selected toggle button color to grey and updates the selected
-     * color variable.
-     *
-     * @param event The event created when the button is clicked.
-     */
-    @FXML
-    private void setGreyColor(ActionEvent event) {
-        changeToggleButtonColor(Color.GREY);
-    }
-
-    /**
-     * Changes the selected toggle button color to white and updates the
-     * selected color variable.
-     *
-     * @param event The event created when the button is clicked.
-     */
-    @FXML
-    private void setWhiteColor(ActionEvent event) {
-        changeToggleButtonColor(Color.WHITE);
-    }
-
-    /**
-     * Changes the selected toggle button color to blue and updates the selected
-     * color variable.
-     *
-     * @param event The event created when the button is clicked.
-     */
-    @FXML
-    private void setBlueColor(ActionEvent event) {
-        changeToggleButtonColor(Color.BLUE);
-    }
-
-    /**
-     * Changes the selected toggle button color to red and updates the selected
-     * color variable.
-     *
-     * @param event The event created when the button is clicked.
-     */
-    @FXML
-    private void setRedColor(ActionEvent event) {
-        changeToggleButtonColor(Color.RED);
-    }
-
-    /**
-     * Changes the selected toggle button color to orange and updates the
-     * selected color variable.
-     *
-     * @param event The event created when the button is clicked.
-     */
-    @FXML
-    private void setOrangeColor(ActionEvent event) {
-        changeToggleButtonColor(Color.ORANGE);
-    }
-
-    /**
-     * Changes the selected toggle button color to yellow and updates the
-     * selected color variable.
-     *
-     * @param event The event created when the button is clicked.
-     */
-    @FXML
-    private void setYellowColor(ActionEvent event) {
-        changeToggleButtonColor(Color.YELLOW);
-    }
-
-    /**
-     * Changes the selected toggle button color to green and updates the
-     * selected color variable.
-     *
-     * @param event The event created when the button is clicked.
-     */
-    @FXML
-    private void setGreenColor(ActionEvent event) {
-        changeToggleButtonColor(Color.GREEN);
+        setupChoiceBox();
     }
 
     /**
@@ -404,7 +331,8 @@ public class FXMLDocumentController implements Initializable {
 
     /**
      * Method to increase the zoom.
-     * @param event 
+     *
+     * @param event
      */
     @FXML
     private void zoomIn(ActionEvent event) {
@@ -413,7 +341,8 @@ public class FXMLDocumentController implements Initializable {
 
     /**
      * Method to reduce the zoom.
-     * @param event 
+     *
+     * @param event
      */
     @FXML
     private void zoomOut(ActionEvent event) {

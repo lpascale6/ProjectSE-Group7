@@ -319,7 +319,7 @@ public class LineTest {
         Double expLineStartY = 0.0;
         Double expLineEndX = 10.0;
         Double expLineEndY = 10.0;
-        String expLineColorStr = "#ffffff";
+        String expLineColorStr = "0xffffffff";
         Paint expLineColor = Paint.valueOf(expLineColorStr);
         double scaleX = -1.0;
         double scaleY = 1.0;
@@ -334,13 +334,12 @@ public class LineTest {
         
         assertEquals(expRepresentation, resRepresentation);
         
-        
         System.out.println("toString -5.3 -10.2 15.1 9.7 #0a0f0d");
         expLineStartX = -5.3;
         expLineStartY = -10.2;
         expLineEndX = 15.1;
         expLineEndY = 9.7;
-        expLineColorStr = "#0a0f0d";
+        expLineColorStr = "0x0a0f0dff";
         expLineColor = Paint.valueOf(expLineColorStr);
         scaleX = 1.0;
         scaleY = -1.0;
