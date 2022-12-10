@@ -21,7 +21,10 @@ public class ResizeShapeCommand implements Command {
 
     private double oldWidth;
     private double oldHeight;
-    private int oldFontSize;
+    
+    private double oldScaleX;
+    private double oldScaleY;
+    
     private double oldStartingXPoint;
     private double oldStartingYPoint;
     private double oldEndingXPoint;
@@ -67,7 +70,8 @@ public class ResizeShapeCommand implements Command {
             Text textToResize = (Text) this.selectedShape;
             this.oldX = textToResize.getTextX();
             this.oldY = textToResize.getTextY();
-            this.oldFontSize = textToResize.getTextFontSize();
+            this.oldScaleX = textToResize.getScaleX();
+            this.oldScaleY = textToResize.getScaleY();
             
         } else if (this.selectedShape.getClass() == Polygon.class) {
             Polygon polygonToResize = (Polygon) this.selectedShape;
@@ -158,13 +162,13 @@ public class ResizeShapeCommand implements Command {
             double borderHeight = border.getRectangleHeight();
             double heightRatio = borderHeight / text.getTextHeight();
             double widthRatio = borderWidth / text.getTextWidth();
-            int newFontSize = this.oldFontSize;
-            if (heightRatio < widthRatio){
-               newFontSize = (int) (text.getTextFontSize() * heightRatio); 
-            } else {
-               newFontSize = (int) (text.getTextFontSize() * widthRatio);
-            }
-            text.setTextFontSize(newFontSize);
+            double newScaleX = this.oldScaleX * widthRatio;
+            double newScaleY = this.oldScaleY * heightRatio;
+            
+            text.setScaleX(newScaleX);
+            text.setScaleY(newScaleY);
+            text.setTextX(border.getRectangleX());
+            text.setTextY(border.getRectangleY());
            
         } else if (this.selectedShape.getClass() == Polygon.class) {
             Polygon polygon = (Polygon) this.selectedShape;
@@ -222,7 +226,10 @@ public class ResizeShapeCommand implements Command {
             Text textToResize = (Text) this.selectedShape;
             textToResize.setTextX(this.oldX);
             textToResize.setTextY(this.oldY);
-            textToResize.setTextFontSize(this.oldFontSize);
+            textToResize.setScaleX(this.oldScaleX);
+            textToResize.setScaleY(this.oldScaleY);
+            textToResize.setTextX(this.oldX);
+            textToResize.setTextY(this.oldY);
             
         } else if (this.selectedShape.getClass() == Polygon.class) {
             Polygon polygon = (Polygon) this.selectedShape;
