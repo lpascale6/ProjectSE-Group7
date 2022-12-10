@@ -44,7 +44,7 @@ public class PasteShapeCommand implements Command {
             pastedLine.setStrokeWidth(3);
             pastedLine.setScaleX(copiedLine.getScaleX());
             pastedLine.setScaleY(copiedLine.getScaleY());
-            pastedLine.setRotate(copiedLine.getRotate());
+            pastedLine.setRotate(drawingPane.getOldSelectedShapeRotation());
 
             pastedLine.setOnMouseClicked(e -> {  //make the pasted shape selectable
                 this.drawingPane.selectShape((Shape) e.getSource());
@@ -66,7 +66,7 @@ public class PasteShapeCommand implements Command {
             pastedRect.setStrokeWidth(3);
             pastedRect.setScaleX(copiedRect.getScaleX());
             pastedRect.setScaleY(copiedRect.getScaleY());
-            pastedRect.setRotate(copiedRect.getRotate());
+            pastedRect.setRotate(drawingPane.getOldSelectedShapeRotation());
             pastedRect.setOnMouseClicked(e -> {  //make the pasted shape selectable
                 this.drawingPane.selectShape((Shape) e.getSource());
             });
@@ -87,7 +87,7 @@ public class PasteShapeCommand implements Command {
             pastedEll.setStrokeWidth(3);
             pastedEll.setScaleX(copiedEll.getScaleX());
             pastedEll.setScaleY(copiedEll.getScaleY());
-            pastedEll.setRotate(copiedEll.getRotate());
+            pastedEll.setRotate(drawingPane.getOldSelectedShapeRotation());
 
             pastedEll.setOnMouseClicked(e -> {  //make the pasted shape selectable
                 this.drawingPane.selectShape((Shape) e.getSource());
@@ -118,7 +118,7 @@ public class PasteShapeCommand implements Command {
             pastedPolygon.setFillColor(copiedPolygon.getFillColor());
             pastedPolygon.setScaleX(copiedPolygon.getScaleX());
             pastedPolygon.setScaleY(copiedPolygon.getScaleY());
-            pastedPolygon.setRotate(copiedPolygon.getRotate());
+            pastedPolygon.setRotate(drawingPane.getOldSelectedShapeRotation());
             
             pastedPolygon.moveOf(-x, -y);
             
