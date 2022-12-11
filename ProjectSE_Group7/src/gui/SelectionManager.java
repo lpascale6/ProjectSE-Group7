@@ -58,7 +58,7 @@ public class SelectionManager {
         selectedShape = drawingPane.getSelectedShape();
         drawingPane.setOldSelectedShapeRotation(selectedShape.getRotate());
         selectedShape.setRotate(0);
-        
+
 
         drawingPane.setOutlineColorImage((Color) selectedShape.getStroke());
         drawingPane.setOutlineColor((Color) selectedShape.getStroke());
@@ -88,7 +88,7 @@ public class SelectionManager {
         border.setStrokeWidth(strokeWidth);
         border.setCursor(Cursor.MOVE);
         border.getStrokeDashArray().addAll(15d, 10d);
-        
+
         // this part is to create the border animation
         double maxOffset
                 = border.getStrokeDashArray().stream().reduce(0d, (a, b) -> a + b);
@@ -158,7 +158,7 @@ public class SelectionManager {
                         moveBordersGroup(bordersGroup, deltaX, deltaY);
                         xEndingPoint = event.getX();
                         yEndingPoint = event.getY();
-                    } 
+                    }
 
                     totalDeltaX = xEndingPoint - xStartPoint;
                     totalDeltaY = yEndingPoint - yStartPoint;
@@ -204,18 +204,20 @@ public class SelectionManager {
         Border topRightBorder = setupTopRightBorder(drawingPane, border);
         Border bottomLeftBorder = setupBottomLeftBorder(drawingPane, border);
         Border bottomRightBorder = setupBottomRightBorder(drawingPane, border);
-        
+
         // setting up edge borders
         Border topBorder = setupTopBorder(drawingPane, border);
         Border rightBorder = setupRightBorder(drawingPane, border);
         Border leftBorder = setupLeftBorder(drawingPane, border);
         Border bottomBorder = setupBottomBorder(drawingPane, border);
-        
+
         bordersGroup = new Group(border, topLeftBorder, topRightBorder, bottomLeftBorder, bottomRightBorder, topBorder, bottomBorder, rightBorder, leftBorder);
         bordersGroup.setRotate(selectedShape.getRotate());
 
-        bordersGroup.setScaleX(selectedShape.getScaleX());
-        bordersGroup.setScaleY(selectedShape.getScaleY());
+        if (selectedShape instanceof Text) {
+            bordersGroup.setScaleX(Math.abs(selectedShape.getScaleX()));
+            bordersGroup.setScaleY(Math.abs(selectedShape.getScaleY()));
+        }
 
         drawingPane.setBordersGroup(bordersGroup);
         drawingPane.getChildren().add(bordersGroup);
@@ -226,7 +228,7 @@ public class SelectionManager {
      * Method to setup the top edge of the border (to help stretching).
      * @param drawingPane the drawing pane which the selected shape belongs
      * @param border the border of the selected shape
-     * @return 
+     * @return
      */
     private static Border setupTopBorder(DrawingPane drawingPane, Border border) {
         Border topBorder = new Border(selectedShape.getLayoutBounds().getMinX() + selectedShape.getLayoutBounds().getWidth()/2 - 5,
@@ -274,7 +276,7 @@ public class SelectionManager {
                             drawingPane.getLeftBorder().setRectangleY(y + border.getRectangleHeight()/2 - 5);
                             border.setRectangleHeight(startingHeight - (y - yPosition));
                         }
-                        
+
                     }
                 }
             }
@@ -286,12 +288,12 @@ public class SelectionManager {
 
         return topBorder;
     }
-    
+
     /**
      * Method to setup the bottom edge of the border (to help stretching).
      * @param drawingPane the drawing pane which the selected shape belongs
      * @param border the border of the selected shape
-     * @return 
+     * @return
      */
     private static Border setupBottomBorder(DrawingPane drawingPane, Border border) {
 
@@ -350,12 +352,12 @@ public class SelectionManager {
 
         return bottomBorder;
     }
-    
+
     /**
      * Method to setup the right edge of the border (to help stretching).
      * @param drawingPane the drawing pane which the selected shape belongs
      * @param border the border of the selected shape
-     * @return 
+     * @return
      */
     private static Border setupRightBorder(DrawingPane drawingPane, Border border) {
 
@@ -415,12 +417,12 @@ public class SelectionManager {
 
         return rightBorder;
     }
-    
+
     /**
      * Method to setup the left edge of the border (to help stretching).
      * @param drawingPane the drawing pane which the selected shape belongs
      * @param border the border of the selected shape
-     * @return 
+     * @return
      */
     private static Border setupLeftBorder(DrawingPane drawingPane, Border border) {
         Border leftBorder = new Border(selectedShape.getLayoutBounds().getMinX() - 5,
@@ -481,12 +483,12 @@ public class SelectionManager {
 
         return leftBorder;
     }
-    
+
     /**
      * Method to setup the top left corner of the border (to help resizing).
      * @param drawingPane the drawing pane which the selected shape belongs
      * @param border the border of the selected shape
-     * @return 
+     * @return
      */
     private static Border setupTopLeftBorder(DrawingPane drawingPane, Border border) {
         Border topLeftBorder = new Border(selectedShape.getLayoutBounds().getMinX() - 5,
@@ -546,7 +548,7 @@ public class SelectionManager {
                             drawingPane.getLeftBorder().setRectangleY(y + border.getRectangleHeight()/2 - 5);
                             border.setRectangleHeight(startingHeight - (y - yPosition));
                         }
-                        
+
                     }
                 }
             }
@@ -563,7 +565,7 @@ public class SelectionManager {
      * Method to setup the top right corner of the border (to help resizing).
      * @param drawingPane the drawing pane which the selected shape belongs
      * @param border the border of the selected shape
-     * @return 
+     * @return
      */
     private static Border setupTopRightBorder(DrawingPane drawingPane, Border border) {
         Border topRightBorder = new Border(selectedShape.getLayoutBounds().getMinX() + selectedShape.getLayoutBounds().getWidth() - 5,
@@ -638,7 +640,7 @@ public class SelectionManager {
      * Method to setup the bottom left corner of the border (to help resizing).
      * @param drawingPane the drawing pane which the selected shape belongs
      * @param border the border of the selected shape
-     * @return 
+     * @return
      */
     private static Border setupBottomLeftBorder(DrawingPane drawingPane, Border border) {
         Border bottomLeftBorder = new Border(selectedShape.getLayoutBounds().getMinX() - 5,
@@ -714,7 +716,7 @@ public class SelectionManager {
      * Method to setup the bottom right corner of the border (to help resizing).
      * @param drawingPane the drawing pane which the selected shape belongs
      * @param border the border of the selected shape
-     * @return 
+     * @return
      */
     private static Border setupBottomRightBorder(DrawingPane drawingPane, Border border) {
 
@@ -811,7 +813,7 @@ public class SelectionManager {
         try {
             Invoker invoker = Invoker.getInstance();
             invoker.execute(resizeShapeCommand);
-            
+
         } catch (Exception ex) {
         }
 
@@ -820,7 +822,7 @@ public class SelectionManager {
 
     /**
      * Method to deselect the selected shape.
-     * @param drawingPane the drawing pane which the selected shape belongs 
+     * @param drawingPane the drawing pane which the selected shape belongs
      * @param selectedShape the selected shape
      */
     public static void deselectShape(DrawingPane drawingPane, Shape selectedShape) {
