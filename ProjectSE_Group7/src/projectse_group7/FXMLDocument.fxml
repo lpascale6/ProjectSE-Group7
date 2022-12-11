@@ -32,7 +32,7 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.shape.Rectangle?>
 
-<BorderPane minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="projectse_group7.FXMLDocumentController">
+<BorderPane minWidth="-Infinity" prefHeight="810.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="projectse_group7.FXMLDocumentController">
    <top>
       <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" BorderPane.alignment="CENTER_LEFT">
          <children>
@@ -52,15 +52,18 @@
                   </Menu>
                   <Menu mnemonicParsing="false" text="Help">
                     <items>
-                      <MenuItem fx:id="helpPolygonMenuItem" mnemonicParsing="false" onAction="#helpPolygon" text="How to draw a polygon" />
-                        <MenuItem fx:id="helpTextMenuItem" mnemonicParsing="false" onAction="#helpText" text="How to insert a text" />
+                        <MenuItem mnemonicParsing="false" onAction="#helpLine" text="How to draw a line" />
+                        <MenuItem mnemonicParsing="false" onAction="#helpRectangle" text="How to draw a rectangle" />
+                        <MenuItem mnemonicParsing="false" onAction="#helpEllipse" text="How to draw an ellispe" />
+                      <MenuItem mnemonicParsing="false" onAction="#helpPolygon" text="How to draw a polygon" />
+                        <MenuItem mnemonicParsing="false" onAction="#helpText" text="How to insert a text" />
                     </items>
                   </Menu>
               </menus>
             </MenuBar>
             <ToolBar maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
                <items>
-                  <HBox alignment="CENTER_LEFT" minWidth="1000.0" spacing="15.0">
+                  <HBox alignment="CENTER_LEFT" prefHeight="140.0" spacing="15.0">
                      <children>
                         <TitledPane alignment="CENTER" animated="false" collapsible="false" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="130.0" prefWidth="210.0" text="Shapes selection">
                           <content>
@@ -146,11 +149,11 @@
                            </HBox.margin>
                         </TitledPane>
                         <Separator orientation="VERTICAL" />
-                        <TitledPane alignment="CENTER" animated="false" collapsible="false" prefHeight="130.0" prefWidth="230.0" text="Colors">
+                        <TitledPane alignment="CENTER" animated="false" collapsible="false" prefHeight="130.0" prefWidth="250.0" text="Colors">
                           <content>
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                  <children>
-                                    <HBox maxWidth="1.7976931348623157E308" prefHeight="100.0" spacing="5.0">
+                                    <HBox maxWidth="1.7976931348623157E308" prefHeight="100.0" spacing="10.0" AnchorPane.leftAnchor="5.0">
                                        <children>
                                           <VBox prefHeight="200.0" spacing="2.0">
                                              <children>
@@ -207,8 +210,11 @@
                                                 <ComboBox fx:id="fontDimensionComboBox" prefWidth="75.0" />
                                              </children>
                                              <padding>
-                                                <Insets left="5.0" right="5.0" />
+                                                <Insets left="5.0" right="5.0" top="5.0" />
                                              </padding>
+                                             <HBox.margin>
+                                                <Insets />
+                                             </HBox.margin>
                                           </VBox>
                                        </children>
                                     </HBox>

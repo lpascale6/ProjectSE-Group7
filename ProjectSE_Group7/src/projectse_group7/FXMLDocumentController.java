@@ -11,8 +11,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 import javafx.beans.property.DoubleProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -20,7 +18,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
-import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -49,10 +46,14 @@ public class FXMLDocumentController implements Initializable {
     private Invoker invoker;
     @FXML
     private MenuBar menuBar;
+    @FXML
+    private MenuItem undoMenuItem;
 
     // toggle group variable, useful for selecting only 
     // one toggle button at a time
     ToggleGroup shapeToggleGroup;
+
+    // Shapes Selection section variables
     @FXML
     private ToggleButton lineToggleButton;
     @FXML
@@ -66,7 +67,7 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private ToggleButton textToggleButton;
 
-    // color selection section variables
+    // Colors section variables
     ToggleGroup colorToggleGroup;
     @FXML
     private ToggleButton outlineColorToggleButton;
@@ -81,12 +82,14 @@ public class FXMLDocumentController implements Initializable {
 
     // drawing variables
     private DrawingPane drawingPane;
-    @FXML
-    private MenuItem undoMenuItem;
+
+    // Tools section variables
     @FXML
     private CheckBox gridCheckBox;
     @FXML
     private Slider gridSlider;
+    @FXML
+    private Label zoomLabel;
     @FXML
     private Button zoomIn;
     @FXML
@@ -99,18 +102,30 @@ public class FXMLDocumentController implements Initializable {
     private MenuItem loadMenuItem;
     @FXML
     private MenuItem newDrawingMenuItem;
-    private MenuItem helpMenuItem;
 
-    @FXML
-    private Label zoomLabel;
+    // Text Setup section variables
     @FXML
     private TextField textTextField;
     @FXML
     private ComboBox<Integer> fontDimensionComboBox;
-    @FXML
-    private MenuItem helpPolygonMenuItem;
-    @FXML
-    private MenuItem helpTextMenuItem;
+
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        invoker = Invoker.getInstance();
+
+        drawingPane = new DrawingPane(invoker, lineToggleButton, rectangleToggleButton,
+                ellipseToggleButton, selectShapeToggleButton, polygonToggleButton,
+                textToggleButton, outlineColorImage, fillColorImage, gridSlider,
+                gridCheckBox, textTextField, fontDimensionComboBox);
+        anchorPane.getChildren().add(drawingPane);
+
+        setupGridManager();
+        setupZoomManager();
+        setupAccelerators();
+        setupShapeToggleButtons();
+        setupColorToggleButtons();
+        setupComboBox();
+    }
 
     private void setupComboBox() {
         for (int i = 8; i <= 100; i++) {
@@ -160,13 +175,49 @@ public class FXMLDocumentController implements Initializable {
     }
 
     /**
-     * Sets up all the toggle buttons in the "Color selection" section by
-     * creating a toggle group.
+     * Sets up the drawing pane for the grid functionality.
+     */
+    private void setupGridManager() {
+        gridCheckBox.selectedProperty().addListener((v, o, n) -> {
+            gridSlider.setDisable(!n.booleanValue());
+            GridManager.updateGrid(drawingPane, gridSlider, gridCheckBox);
+        });
+        gridSlider.valueProperty().addListener((v, o, n) -> {
+            GridManager.updateGrid(drawingPane, gridSlider, gridCheckBox);
+        });
+    }
+
+    /**
+     * Sets up the drawing pane for the zoom functionality.
+     */
+    private void setupZoomManager() {
+        ZoomManager.setupZoomManager(anchorPane, drawingPane, zoomLabel);
+        DoubleProperty scale = ZoomManager.getScale();
+        zoomIn.disableProperty().bind(scale.greaterThanOrEqualTo(2.0));
+        zoomOut.disableProperty().bind(scale.lessThanOrEqualTo(0.7));
+    }
+
+    /**
+     * Sets up shortcuts to use menu items.
+     */
+    private void setupAccelerators() {
+        // to abilitate the user to use ctrl+z shortcut
+        undoMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.Z, KeyCombination.CONTROL_DOWN));
+        // to abilitate the user to use ctrl+s shortcut
+        saveMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN));
+        // to abilitate the user to use ctrl+l shortcut
+        loadMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.L, KeyCombination.CONTROL_DOWN));
+        // to abilitate the user to use ctrl+n shortcut
+        newDrawingMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.N, KeyCombination.CONTROL_DOWN));
+    }
+
+    /**
+     * Sets up the handle method of the color picker and all the toggle buttons
+     * in the "Color selection" section by creating a toggle group.
      */
     private void setupColorToggleButtons() {
         colorPicker.setOnAction(event -> {
             changeToggleButtonColor(colorPicker.getValue());
-            System.out.println(colorPicker.getValue());
         });
         colorToggleGroup = new ToggleGroup();
         outlineColorToggleButton.setToggleGroup(colorToggleGroup);
@@ -178,41 +229,6 @@ public class FXMLDocumentController implements Initializable {
                 oldValue.setSelected(true);
             }
         });
-    }
-
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        invoker = Invoker.getInstance();
-
-        // setting up the drawing pane
-        drawingPane = new DrawingPane(invoker, lineToggleButton, rectangleToggleButton, ellipseToggleButton, selectShapeToggleButton, polygonToggleButton, textToggleButton, outlineColorImage, fillColorImage, gridSlider, gridCheckBox, textTextField, fontDimensionComboBox);
-        gridCheckBox.selectedProperty().addListener((v, o, n) -> {
-            gridSlider.setDisable(!n.booleanValue());
-            GridManager.updateGrid(drawingPane, gridSlider, gridCheckBox);
-        });
-        gridSlider.valueProperty().addListener((v, o, n) -> {
-            GridManager.updateGrid(drawingPane, gridSlider, gridCheckBox);
-        });
-        anchorPane.getChildren().add(drawingPane);
-
-        ZoomManager.setupZoomManager(anchorPane, drawingPane, zoomLabel);
-        DoubleProperty scale = ZoomManager.getScale();
-        zoomIn.disableProperty().bind(scale.greaterThanOrEqualTo(2.0));
-        zoomOut.disableProperty().bind(scale.lessThanOrEqualTo(0.7));
-
-        // to abilitate the user to use ctrl+z shortcut
-        undoMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.Z, KeyCombination.CONTROL_DOWN));
-        // to abilitate the user to use ctrl+s shortcut
-        saveMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN));
-        // to abilitate the user to use ctrl+l shortcut
-        loadMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.L, KeyCombination.CONTROL_DOWN));
-        // to abilitate the user to use ctrl+n shortcut
-        newDrawingMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.N, KeyCombination.CONTROL_DOWN));
-
-        // setting up all toggle buttons
-        setupShapeToggleButtons();
-        setupColorToggleButtons();
-        setupComboBox();
     }
 
     /**
@@ -356,30 +372,85 @@ public class FXMLDocumentController implements Initializable {
         ZoomManager.zoomOut(drawingPane);
     }
 
+    /**
+     * Shows to the user the steps to draw a Line.
+     *
+     * @param event The event generated by the menu item.
+     */
+    @FXML
+    private void helpLine(ActionEvent event) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Help");
+        alert.setHeaderText("How to draw a line");
+        alert.setContentText("If you want to draw a line, select the appropriate toggle button in the \"Shapes Selection\" section."
+                + "\nAfter that, left click and drag on the drawing pad to insert the desired line."
+                + "\nWhen you're satisfied, release the left mouse button to complete the creation.");
+        alert.showAndWait();
+    }
+
+    /**
+     * Shows to the user the steps to draw a Rectangle.
+     *
+     * @param event The event generated by the menu item.
+     */
+    @FXML
+    private void helpRectangle(ActionEvent event) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Help");
+        alert.setHeaderText("How to draw a rectangle");
+        alert.setContentText("If you want to draw a rectangle, select the appropriate toggle button in the \"Shapes Selection\" section."
+                + "\nAfter that, left click and drag on the drawing pad to insert the desired rectangle."
+                + "\nWhen you're satisfied, release the left mouse button to complete the creation.");
+        alert.showAndWait();
+    }
+
+    /**
+     * Shows to the user the steps to draw an Ellipse.
+     *
+     * @param event The event generated by the menu item.
+     */
+    @FXML
+    private void helpEllipse(ActionEvent event) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Help");
+        alert.setHeaderText("How to draw an ellipse");
+        alert.setContentText("If you want to draw a ellipse, select the appropriate toggle button in the \"Shapes Selection\" section."
+                + "\nAfter that, left click and drag on the drawing pad to insert the desired ellipse."
+                + "\nWhen you're satisfied, release the left mouse button to complete the creation.");
+        alert.showAndWait();
+    }
+
+    /**
+     * Shows to the user the steps to draw a Polygon.
+     *
+     * @param event The event generated by the menu item.
+     */
     @FXML
     private void helpPolygon(ActionEvent event) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Help");
         alert.setHeaderText("How to draw a polygon");
-        alert.setContentText("If you want to draw a polygon, select the appropriate toggle button in the \"shape selection section\"."
-                + " After that, click on the drawing pad to insert a vertex of the polygon until you're done. "
-                + "When you're satisfied, click the right mouse button to finish drawing. Note that by inserting only two vertices, the figure will not be inserted.");
+        alert.setContentText("If you want to draw a polygon, select the appropriate toggle button in the \"Shapes Selection\" section."
+                + "\nAfter that, click on the drawing pad to insert a new vertex of the polygon until you're done."
+                + "\nWhen you're satisfied, click the right mouse button to finish drawing."
+                + "\nNote that by inserting only two vertices, the figure will not be inserted.");
         alert.showAndWait();
     }
 
     /**
-     * Method to show information about how to insert text.
+     * Shows to the user the steps to insert a Text.
      *
-     * @param event
+     * @param event The event generated by the menu item.
      */
     @FXML
     private void helpText(ActionEvent event) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Help");
         alert.setHeaderText("How to insert text");
-        alert.setContentText("If you want to put text in the drawing box, select the appropriate toggle button in the shape selection section. "
-                + "Subsequently, move to the \"Text setup\" section to choose the font to use and the text to insert and, optionally, choose the color in the \"Colors\" section. "
-                + "After performing these steps, click on the drawing pad and the text you composed earlier will appear. Now you can change its color, size, rotate it, mirror it and so on.");
+        alert.setContentText("If you want to put text in the drawing box, select the appropriate toggle button in the \"Shapes Selection\" section."
+                + "\nSubsequently, move to the \"Text Setup\" section to choose the font to use and the text to insert and, optionally, choose the color in the \"Colors\" section."
+                + "\nAfter performing these steps, click on the drawing pad and the text you composed earlier will appear."
+                + "\nNow you can change its color, size, rotate it, mirror it and so on.");
         alert.showAndWait();
     }
 

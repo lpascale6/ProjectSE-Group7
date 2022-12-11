@@ -73,7 +73,7 @@ public class ZoomManager {
         horizontalScrollBar.setVisibleAmount(drawingPaneWidth / scale.get());
         horizontalScrollBar.setUnitIncrement(10);
         horizontalScrollBar.setMin(0);
-        horizontalScrollBar.setMax(drawingPaneWidth / 2);
+        horizontalScrollBar.setMax(drawingPaneWidth);
         horizontalScrollBar.setValue(0);
 
         horizontalScrollBar.valueProperty().addListener((observable, oldValue, newValue) -> {
