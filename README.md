@@ -7,6 +7,9 @@ This is the repository for the project of Software Engineering of the group numb
 3. Pepe Paolo, p.pepe17@studenti.unisa.it, 0622702005
 4. Vicidomini Luigi, l.vicidomini11@studenti.unisa.it, 0622701949
 
+# Video Demo of the software
+A video demo is available both on this GitHub repository and on the Drive folder (link below)
+
 # Drive content
 All files are stored on a Drive folder: 
 https://drive.google.com/drive/folders/1oXK5H3zwofQiL9vCBdBYc65Q2whjh2Qs?usp=sharing
